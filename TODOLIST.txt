@@ -1,0 +1,1 @@
+LILY : sender : former des paquets de max 512 octets, TR à 0, c'est le network qui change, voir spécifications etc\n Alex : receiver, bien gérer les ACK et NACK, attention au seqnum, écrire dans le fichier donné en -f ou sur la sortie standard redirigée, discard les TR1 et renvoyer NACK
