@@ -1,29 +1,23 @@
 #include "real_address.h"
 #include <stdio.h>
 
+//Resolve the resource name to an usable IPv6 address
 const char * real_address(const char *address, struct sockaddr_in6 *rval){
-    // UDP : Datagram -> datagram sockets ?
     struct addrinfo hints;
-    struct addrinfo *result;
-    int s;
+    struct addrinfo *res;
 
-    memset(&hints, 0, sizeof(struct addrinfo)); // to be sure that memory is set to 0
-    hints.ai_family = AF_INET6;    /* Allow IPv6 */
-    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket, since it's UDP no ? */
-    /* Following lines : useless because of memset 0 */
-    //hints.ai_flags = 0;    /* ? */
-    //hints.ai_protocol = 0;          /* Any protocol, is it ok ? */
+    hints.ai_family = AF_INET6;
+    hints.ai_protocol = IPPROTO_UDP;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_flags = AI_PASSIVE; // check if needed
 
-    // int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res);
-    s = getaddrinfo(address, NULL, &hints, &result);
-    if (s != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
-        return(gai_strerror(s));
-        //exit(EXIT_FAILURE);
+    int err = getaddrinfo(address, NULL, &hints, &res);
+    if(err!=0){
+        return gai_strerror(err);
     }
-    //rval = (struct sockaddr_in6 *)result->ai_addr;
-    memcpy(rval, result->ai_addr, result->ai_addrlen);
-    freeaddrinfo(result);
-    fprintf(stderr, "rval a été set, flowinfo: %d\n",rval->sin6_flowinfo);
+
+    memcpy(rval, res->ai_addr, res->ai_addrlen);
+
+    freeaddrinfo(res);
     return NULL;
 }
