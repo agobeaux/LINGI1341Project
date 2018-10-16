@@ -119,7 +119,7 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "I'm in no-f option!\n");
         res_hostname = argv[1];
         src_port = atoi(argv[2]);
-        fd = STDIN_FILENO;
+        fd = STDOUT_FILENO;
     }
     else{
         fprintf(stderr, "I'm in f option!\n");
