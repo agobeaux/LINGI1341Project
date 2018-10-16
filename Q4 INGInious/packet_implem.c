@@ -301,7 +301,7 @@ void pkt_print(pkt_t* pkt){
 	printf("crc2 : %u\n",pkt->crc2);
 }
 
-int main (int argc, char* argv[]){
+/*int main (int argc, char* argv[]){
 	pkt_t *pkt = pkt_new();
 	pkt_set_type(pkt, PTYPE_DATA);
 	pkt_set_tr(pkt,0);
@@ -309,14 +309,14 @@ int main (int argc, char* argv[]){
 	pkt_set_seqnum(pkt,1);
 	pkt_set_length(pkt,12);
 	pkt_set_timestamp(pkt,3);
-	pkt->length = htons(pkt->length);
+	pkt->length = htons(pkt->length);*/
 
 	/*
 	printf("JUST BEFORE CALCULATING CRC1 :\n");pkt_print(pkt);
 	pkt_set_crc1(pkt, crc32(0, (const Bytef*)pkt, 8));
 	printf("CRC CALCULATED %u, crc32 : %u\n",pkt->crc1,crc32(0, (const Bytef*)pkt, 8));
 	*/
-	pkt->crc1 = 0;
+	/*pkt->crc1 = 0;
 	pkt->length = ntohs(pkt->length);
 	int ret = pkt_set_payload(pkt, "hello world",12);
 	printf("============ ret pkt : %d ========\n",ret);
@@ -337,4 +337,4 @@ int main (int argc, char* argv[]){
 	printf("pkt1 :\n"); pkt_print(pkt);
 	printf("pkt2 :\n"); pkt_print(pkt2);
 	return 0;
-}
+}*/
