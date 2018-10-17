@@ -50,6 +50,24 @@ void read_write_loop(const int sfd, const int fd){
                 // 1 ack puis 1 dl de payload à chaque itération, le dl prend + de temps donc
                 // potentiellement un prolème car envois d'acks trop lents
 
+                //QUESTIONS : 1 : poll fonctionne même s'il n'y a qu'1 byte de libre pour écrire
+                // => problème, si on n'écrit pas tout, il va y avoir un problème quand l'autre va essayer de lire
+                // le paquet... il faudrait pouvoir enlever ce qui a été écrit, comment ? ...
+                // 2 : si on a plusieurs ACK à envoyer, on envoie normalement ou alors on fait la synthèse
+                // des acks pour envoyer seulement le dernier (+ les nacks)
+                // 3 : si on reçoit un paquet avec TR = 1 mais length != 0, et CRC1 est bon (alors que le paquet a été modifié)
+                // si ça tombe c'est un paquet tronqué ou alors un paquet avec payload donc on devrait discard tt le socket ?
+                // car pas sûr de la place sur le payload... pareil quand le paquet a un mauvais header...
+                // à chaque fois il faut discard tous les paquets du socket du coup ? ...
+
+                // REPONSES : à nous de gérer la window. -> d'abord taille fixe, ou même en argument du programme
+                //            gérer le changement de taille par après
+                //            poll assure qu'on peut écrire ou lire un paquet UDP entier car protocole UDP -> noworries pour écrire
+                //            plusieurs acks : notre choix : plus facile de juste renvoyer d'abord mais on peut sélectionner le meilleur
+                //            si on a plusieurs ack à envoyer (si 3 acks, on peut en envoyer un seul ou alors en envoyer 3 fois le meilleur)
+                //            paquet tronqué ? erreur etc ? pas grave car on lit paquet par paquet grâce à UDP
+                //            ATTENTION : READ on met la longueur max d'un paquet.
+
                 // que se passe-t-il si on veut écrire mais que tout ne s'écrit pas sur le socket ?
                 // (manque de place) on nous renvoie le nbre de bytes écrits mais
                 // ils sont déjà écrits dans le socket, il faudrait les supprimer..
@@ -60,7 +78,7 @@ void read_write_loop(const int sfd, const int fd){
                     fprintf(stderr, "Error malloc in read_write_loop, pkt_new\n");
                 }
                 // adapter pkt_decode pour qu'il calcule lui-même la longueur ? comme ça pas d'argument len ?
-                //pkt_status_code pkt_decode(packagedata, NOTlen, pkt);
+                // pkt_status_code pkt_decode(packagedata, NOTlen, pkt);
                 // have to create a new node and put it in the sorted queue
 
             }
