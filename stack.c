@@ -18,13 +18,13 @@ int push(pkt_t *pkt)
     
     if (new_node == NULL)
     {
-        printf("Error with malloc in push. \n");
+        fprintf(stderr, "Error with malloc in push. \n");
         return -1;
     }
     
     if (pkt == NULL)
     {
-        printf("Error, NULL structure in push. \n");
+        fprintf(stderr, "Error, NULL structure in push. \n");
         return -1;
     }
     
@@ -64,7 +64,7 @@ int init(int size, int size_buffer)
 {
     node *new_node = malloc(sizeof(struct node));
     if (new_node == NULL){
-        printf("Error with malloc in init. \n");
+        fprintf(stderr, "Error with malloc in init. \n");
         return -1;
     }
     

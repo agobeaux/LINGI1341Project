@@ -86,9 +86,13 @@ int main(int argc, char *argv[]){
     
     
     /* DO THINGS */
-    //make a buffer with all payload to send
-    
-    
+    //envoyer les packets
+    //traiter les ack
+    //traiter les nack
+    //appel bloquant pour le sender, quand il arrete à read? avec quoi?
+    //window taille fixe
+    //retransmission timer
+    //
     
     
     char *buf = "Lily";
