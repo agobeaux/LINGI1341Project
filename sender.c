@@ -2,12 +2,8 @@
 #include <poll.h>
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
-<<<<<<< HEAD
 #include "Q3 INGInious/create_socket.c"
-#include "stack.c"
-=======
 #include "queue.c"
->>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
 
 /* Loop reading a socket and printing to stdout,
  * while reading stdin and writing to the socket
@@ -88,8 +84,6 @@ int main(int argc, char *argv[]){
     char *ser_hostname = "::1";
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
-<<<<<<< HEAD
-    int can_read = 1;//can continue to read from file
     int f_option = 0;//if there is (not) f_option
     char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
     int err;
@@ -97,14 +91,6 @@ int main(int argc, char *argv[]){
     size_t len = 528;
     char *buf = (char*)malloc(528);
     
-    
-=======
-    size_t length = sizeof(char)*40;
-    char *info = (char *)malloc(length); // !!!!!!!!not sure of the value
-
-
-
->>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
     //check if there is enough arguments to continue
     if (argc<2){
         fprintf(stderr, "There is not enough arguments!\n");
@@ -173,7 +159,6 @@ int main(int argc, char *argv[]){
     //faire buffer pour plusieurs payload
     //window taille fixe
     //retransmission timer
-<<<<<<< HEAD
     //implementation of while
     //while(true){
         //lire dans le fichier
@@ -209,16 +194,7 @@ int main(int argc, char *argv[]){
     //traitement de signal, reception de ack, nack, traitement de signal
     //appel bloquant pour le sender, quand il arrete à read? avec quoi?
     
-    
-    
-=======
-    //
 
-
-    char *buf = "Lily";
-    write(socket_fd,(void *) buf, 5);
-
->>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
     close(socket_fd);
     close(fd);
     free(new_payload);

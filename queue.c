@@ -1,5 +1,5 @@
 #include "queue.h"
-#include "Q4 INGInious/packet_implem.h" /* for pkt_del
+#include "Q4 INGInious/packet_interface.h" /* for pkt_del */
 
 /**
  * Adds a pkt to the queue.
