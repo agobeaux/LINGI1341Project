@@ -20,6 +20,11 @@
 
 #define ser_PORT 12345 // to change. Should be an argument
 
+//TODO : numseq à garder en mémoire, window : nombre élts restants, queue + vérification écriture
+//écrire sur le fichier (stdout etc)
+//demande de déconnexion à faire
+// timestamp ? après 2000ms, assuré que le packet disparaît ou il faut le discard ?
+
 void read_write_loop(const int sfd, const int fd){
     struct pollfd pfds[2];
     pfds[0].fd = sfd;
