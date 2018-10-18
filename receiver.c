@@ -68,6 +68,8 @@ void read_write_loop(const int sfd, const int fd){
                 //            paquet tronqué ? erreur etc ? pas grave car on lit paquet par paquet grâce à UDP
                 //            ATTENTION : READ on met la longueur max d'un paquet.
 
+                
+
                 // que se passe-t-il si on veut écrire mais que tout ne s'écrit pas sur le socket ?
                 // (manque de place) on nous renvoie le nbre de bytes écrits mais
                 // ils sont déjà écrits dans le socket, il faudrait les supprimer..

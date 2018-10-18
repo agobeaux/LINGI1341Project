@@ -2,8 +2,12 @@
 #include <poll.h>
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
+<<<<<<< HEAD
 #include "Q3 INGInious/create_socket.c"
 #include "stack.c"
+=======
+#include "queue.c"
+>>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
 
 /* Loop reading a socket and printing to stdout,
  * while reading stdin and writing to the socket
@@ -78,12 +82,13 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
 }
 
 int main(int argc, char *argv[]){
-    
+
     int fd;//file from command line
     char *res_hostname;//hostname from command line
     char *ser_hostname = "::1";
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
+<<<<<<< HEAD
     int can_read = 1;//can continue to read from file
     int f_option = 0;//if there is (not) f_option
     char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
@@ -93,12 +98,19 @@ int main(int argc, char *argv[]){
     char *buf = (char*)malloc(528);
     
     
+=======
+    size_t length = sizeof(char)*40;
+    char *info = (char *)malloc(length); // !!!!!!!!not sure of the value
+
+
+
+>>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
     //check if there is enough arguments to continue
     if (argc<2){
         fprintf(stderr, "There is not enough arguments!\n");
         return EXIT_FAILURE;
     }
-    
+
     //register file if there are an -f option
     int opt;
     while ((opt = getopt(argc, argv, "f:")) != -1){
@@ -133,8 +145,8 @@ int main(int argc, char *argv[]){
         res_hostname = argv[3];
         dst_port = atoi(argv[4]);
     }
-    
-    
+
+
     //Resolve the resource name to an usable IPv6 address for receiver
     struct sockaddr_in6 dest_addr;
     const char *check_message = real_address(res_hostname, &dest_addr);
@@ -147,7 +159,7 @@ int main(int argc, char *argv[]){
     if(check_message){
         fprintf(stderr, "Problem in getaddrinfo %s!\n",check_message);
     }
-    
+
     //Creates a socket and initializes it
     
     socket_fd = create_socket(NULL, -1, &dest_addr, dst_port);
@@ -155,12 +167,13 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "Failed to create the socket!\n");
         exit(EXIT_FAILURE);
     }
-    
-    
+
+
     /* DO THINGS */
     //faire buffer pour plusieurs payload
     //window taille fixe
     //retransmission timer
+<<<<<<< HEAD
     //implementation of while
     //while(true){
         //lire dans le fichier
@@ -198,6 +211,14 @@ int main(int argc, char *argv[]){
     
     
     
+=======
+    //
+
+
+    char *buf = "Lily";
+    write(socket_fd,(void *) buf, 5);
+
+>>>>>>> f02dc3bbe8a16e529a903ccc222de0783e111046
     close(socket_fd);
     close(fd);
     free(new_payload);
