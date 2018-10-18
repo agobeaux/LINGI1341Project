@@ -35,6 +35,9 @@ void pkt_del(pkt_t *pkt)
 		if(!pkt->payload){
 			free(pkt->payload);
 		}
+		else{
+			fprintf(stderr, "pkt_del : a pkt had a NULL payload\n");
+		}
 		free(pkt);
 	}
 }
