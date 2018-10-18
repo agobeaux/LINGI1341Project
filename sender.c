@@ -1,8 +1,66 @@
 #include "sender.h"
+#include <poll.h>
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
 #include "Q3 INGInious/create_socket.c"
 #include "stack.c"
+
+/* Loop reading a socket and printing to stdout,
+ * while reading stdin and writing to the socket
+ * @sfd: The socket file descriptor. It is both bound and connected.
+ * @return: as soon as stdin signals EOF
+ */
+void read_write_loop(const int sfd, char* buf, size_t *len){
+    char buf_ack[12];
+    struct pollfd ptrfd[2];
+    
+    ptrfd[0].fd = sfd;//reader
+    ptrfd[0].events = POLLIN;
+    
+    ptrfd[1].fd = sfd;//writer
+    ptrfd[1].events = POLLOUT;
+    
+    while(1){
+        
+        struct pollfd pfds[3];
+        pfds[0].fd = STDIN_FILENO;
+        pfds[0].events = POLLIN;
+        pfds[0].revents = 0;
+        pfds[1].fd = sfd;
+        pfds[1].events = POLLIN|POLLOUT;
+        pfds[1].revents = 0;
+        pfds[2].fd = STDOUT_FILENO;
+        pfds[2].events = POLLOUT;
+        pfds[2].revents = 0;
+        
+        while(1){
+            int pRet = poll(pfds, 3, 5);
+            if(pRet == -1){
+                fprintf(stderr, "Error poll call: %s\n", strerror(errno));
+            }
+            char buf_ack[13];
+            int readSth = 1; int wroteSth = 1;
+            //fprintf(stderr, "0 Pollin : %d, 1 pollout : %d\n",pfds[0].revents&POLLIN,pfds[1].revents&POLLOUT);
+            if(pfds[1].revents & POLLOUT){
+                fprintf(stderr, "je vais écrire!\n");
+                int wr = write(sfd, (void*)buf, *len);
+                if(wr == -1){
+                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                }
+            }
+            if(pfds[1].revents & POLLIN){
+                fprintf(stderr, "je vais lire!\n");
+                int rd = read(sfd, (void*)buf_ack, 12);
+                if(rd == -1){
+                    fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
+                }
+                break;
+            }
+            fprintf(stderr, "je tourne!\n");
+        }
+        return;
+    }
+}
 
 
 static int size_buffer = 0;
@@ -91,7 +149,8 @@ int main(int argc, char *argv[]){
     }
     
     //Creates a socket and initializes it
-    socket_fd = create_socket(&source_addr, -1, &dest_addr, dst_port);
+    
+    socket_fd = create_socket(NULL, -1, &dest_addr, dst_port);
     if(socket_fd == -1){
         fprintf(stderr, "Failed to create the socket!\n");
         exit(EXIT_FAILURE);
@@ -108,29 +167,27 @@ int main(int argc, char *argv[]){
     
     
     //pour le moment traiter qu'un seul payload reçu
-        if(can_read){
-            //if we have a file
-            if(f_option){
-                err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
-                if(err == -1){
-                    fprintf(stderr, "Failed to read a new payload!\n");
-                    exit(EXIT_FAILURE);
-                }
-            }
-            //if we must read from stdin
-            else{
-                err = read(0, (void *)new_payload, MAX_PAYLOAD_SIZE);
-                if(err == -1){
-                    fprintf(stderr, "Failed to read a new payload!\n");
-                    exit(EXIT_FAILURE);
-                }
-            }
-            //when we have a payload, create a packet
-            pkt_t* pkt = pkt_new();
-            pkt = create_packet(new_payload, pkt);
-            pkt_encode(pkt, buf, &len);
-            write(socket_fd,(void *) buf, &len + 16);
+    if(f_option){
+        err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
+        if(err == -1){
+            fprintf(stderr, "Failed to read a new payload!\n");
+            exit(EXIT_FAILURE);
         }
+    }
+    //if we must read from stdin
+    else{
+        err = read(STDIN_FILENO , (void *)new_payload, MAX_PAYLOAD_SIZE);
+        if(err == -1){
+            fprintf(stderr, "Failed to read a new payload!\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    //when we have a payload, create a packet
+    pkt_t* pkt = pkt_new();
+    pkt = create_packet(new_payload, pkt);
+    pkt_encode(pkt, buf, &len);
+    read_write_loop(socket_fd, buf, &len);
     
     //}
     
