@@ -61,18 +61,34 @@ int main(int argc, char *argv[]){
     pkt_t* pkt1 = pkt_new();
     pkt_t* pkt2 = pkt_new();
     pkt_t* pkt3 = pkt_new();
+    pkt_t* pkt4 = pkt_new();
+
     pkt1 = create_packet(new_payload, pkt1);
     pkt2 = create_packet(new_payload, pkt2);
     pkt3 = create_packet(new_payload, pkt3);
+    pkt4 = create_packet(new_payload, pkt4);
     pkt_encode(pkt1, buf, &len);
     pkt_encode(pkt2, buf, &len);
     pkt_encode(pkt3, buf, &len);
+    pkt_encode(pkt4, buf, &len);
+
     
     queue_t *buf_structure = malloc(sizeof(struct queue));
-    fprintf(stderr, "I can!\n");
+    pkt_set_seqnum (pkt1, 1);
     queue_push(buf_structure, pkt1);
+    pkt_set_seqnum (pkt2, 2);
     queue_push(buf_structure, pkt2);
+    pkt_set_seqnum (pkt3, 3);
     queue_push(buf_structure, pkt3);
-    pkt_set_seqnum (pkt2, 5);
-    fprintf(stderr, "I deleted payload with seqNum %d\n", (find_nack_structure(buf_structure, 5))->seqNum);
+    pkt_set_seqnum (pkt4, 4);
+    queue_push(buf_structure, pkt4);
+    fprintf(stderr, "Head of queue has seqNum %d\n", buf_structure->head->pkt->seqNum);
+    fprintf(stderr, "2nd of queue has seqNum %d\n", buf_structure->head->next->pkt->seqNum);
+    fprintf(stderr, "3d of queue has seqNum %d\n", buf_structure->head->next->next->pkt->seqNum);
+    fprintf(stderr, "Nack's pkt seqNum is %d\n", (find_nack_structure(buf_structure, 3))->seqNum);
+    fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
+    fprintf(stderr, "Pkt's seqNum is %d\n", (delete(buf_structure, 1))->seqNum);
+    fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
+    fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->next->pkt->seqNum);
+
 }

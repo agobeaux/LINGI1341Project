@@ -11,25 +11,32 @@
  */
 int queue_push(queue_t *list, pkt_t *pkt){
     
-    //if(list->head == NULL){
-        //fprintf(stderr, "push function called on NULL head (argument), queue\n");
-        //return -1;
-    //}
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
         return -1;
     }
-    
     node_t *new_node = malloc(sizeof(struct node));
     if (new_node == NULL){
         fprintf(stderr, "Error with malloc in push, queue. \n");
         return -1;
     }
     
+    if(list->size == 0){
+        new_node->pkt = pkt;
+        new_node->next = list->head;
+        list->head = new_node;
+        list->size += 1;
+        return 0;
+    }
+    
+    node_t *run = list->head;
+    while(run->next != NULL){
+        run = run->next;
+    }
     new_node->pkt = pkt;
-    new_node->next = list->head;
-    list->head = new_node;
-
+    new_node->next = run->next;
+    run->next = new_node;
+    list->size += 1;
     return 0;
 }
 
@@ -42,15 +49,15 @@ int queue_push(queue_t *list, pkt_t *pkt){
  * @return the most recently added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *list){
-    if(list->head == NULL){
+    if(list->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
     }
     pkt_t *pkt = list->head->pkt;
     node_t *save = list->head;
     list->head = list->head->next;
-    fprintf(stderr, "I want delete %s\n", pkt->payload);
     free(save);
+    list->size -= 1;
     return pkt;
 }
 
@@ -62,6 +69,12 @@ pkt_t *queue_pop(queue_t *list){
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
 pkt_t *delete(queue_t *list, int seqNum){
+    
+    if(list->size == 0){
+        fprintf(stderr, "head NULL, pop in queue.c\n");
+        return NULL;
+    }
+    
     struct node *run = list->head;
     if(run->pkt->seqNum == seqNum){
         return queue_pop(list);
@@ -69,14 +82,13 @@ pkt_t *delete(queue_t *list, int seqNum){
     
     while (run->next != NULL)
     {
-        fprintf(stderr, "I'm in %d\n", run->next->pkt->seqNum);
         if (run->next->pkt->seqNum==seqNum)
         {
             pkt_t *pkt = run->next->pkt;
             node_t *save = run->next;
             run = run->next->next;
-            fprintf(stderr, "I want delete %s\n", pkt->payload);
             free(save);
+            list->size -= 1;
             return pkt;
         }
         run = run->next;
@@ -89,7 +101,7 @@ pkt_t *delete(queue_t *list, int seqNum){
  *
  * @head : the head of the queue
  *
- * @return return the structure with seqnum 
+ * @return return the structure with seqnum
  */
 pkt_t *find_nack_structure(queue_t *list, int seqNum){
     struct node *run = list->head;
