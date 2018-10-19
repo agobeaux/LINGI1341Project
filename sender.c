@@ -11,6 +11,7 @@ static int timer = 5; //change !!!!!!!!!!!!!!!!!!!!!
 static seqNum = 0;
 
 
+
 /**
  * Create a new structure pkt.
  *
@@ -54,24 +55,9 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
  */
 void read_write_loop(const int sfd, int fd){
     int err;
-<<<<<<< HEAD
     int seqnum_delete;//sequence number of the payload to delete
     int seqnum_nack;//sequence number of the payload to resend
     
-    char buf_ack[12];//buffer for (n)ack
-    queue_t *buf_structure = malloc(sizeof(struct queue));//stock all structures to send
-    if(buf_structure != NULL){
-        fprintf(stderr, "malloc problem in read_write_loop");
-    }
-    queue_t *buf_nack_structure = malloc(sizeof(struct queue));//stock all structures to resend
-    if(buf_nack_structure != NULL){
-        fprintf(stderr, "malloc problem in read_write_loop");
-    }
-    
-=======
-    int seqnum_delete;
-    int seqnum_nack;
-
     char buf_ack[12];//buffer for (n)ack
     queue_t *buf_structure = queue_init();//stock all structures to send
     if(buf_structure == NULL){
@@ -85,7 +71,7 @@ void read_write_loop(const int sfd, int fd){
         return;
     }
 
->>>>>>> 4208f6b64fb4cade6fe895470ea93f146e621830
+
     struct pollfd pfds[2];
     pfds[0].fd = STDIN_FILENO;
     pfds[0].events = POLLIN;
@@ -193,19 +179,11 @@ void read_write_loop(const int sfd, int fd){
                 pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
                 queue_push(buf_nack_structure, pkt_nack);
             }
-<<<<<<< HEAD
         }
     }
+
     queue_free(buf_structure->head);
     queue_free(buf_nack_structure);
-=======
-            //TODO LILY : why break ? seems like it breaks if we read the socket
-            break;
-        }
-    }
-    free(buf_structure);
-    free(buf_nack_structure);
->>>>>>> 4208f6b64fb4cade6fe895470ea93f146e621830
     return;
 }
 
