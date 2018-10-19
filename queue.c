@@ -4,40 +4,99 @@
 /**
  * Adds a pkt to the queue.
  *
- * @head : the head of the queue
- * @pkt : the content of the new node to push on the queue pkt is a structure to be added to the queue
+ * @queue : the queue on which we have to push a node containing pkt
+ * @pkt : the content of the new node to push on the queue
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
-int queue_push(queue_t *list, pkt_t *pkt){
-    
+int queue_push(queue_t *queue, pkt_t *pkt){
+
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
         return -1;
     }
-    node_t *new_node = malloc(sizeof(struct node));
-    if (new_node == NULL){
+    node_t *newnode = malloc(sizeof(struct node));
+    if (newnode == NULL){
         fprintf(stderr, "Error with malloc in push, queue. \n");
         return -1;
     }
-    
-    if(list->size == 0){
-        new_node->pkt = pkt;
-        new_node->next = list->head;
-        list->head = new_node;
-        list->size += 1;
+
+    if(queue->size == 0){
+        newnode->pkt = pkt;
+        newnode->next = NULL;
+        queue->head = newnode;
+        queue->size += 1;
         return 0;
     }
-    
-    node_t *run = list->head;
+
+    node_t *run = queue->head;
     while(run->next != NULL){
         run = run->next;
     }
-    new_node->pkt = pkt;
-    new_node->next = run->next;
-    run->next = new_node;
-    list->size += 1;
+    newnode->pkt = pkt;
+    newnode->next = run->next;
+    run->next = newnode;
+    queue->size += 1;
     return 0;
+}
+
+/**
+ * Adds a pkt to the queue, ordered by seqNum
+ *
+ * @queue : the queue on which we have to push a node containing pkt
+ * @pkt : the content of the new node to push on the queue
+ *
+ * @return : 0 if the pkt if successful, -1 otherwise
+ */
+int queue_ordered_push(queue_t *queue, pkt_t *pkt){
+
+    if (pkt == NULL){
+        fprintf(stderr, "Error : NULL pkt in queue_ordered_push. \n");
+        return -1;
+    }
+    node_t *newnode = malloc(sizeof(struct node));
+    if (newnode == NULL){
+        fprintf(stderr, "Error with malloc in queue_ordered_push. \n");
+        return -1;
+    }
+
+    if(queue->size == 0){
+        newnode->pkt = pkt;
+        newnode->next = NULL;
+        queue->head = newnode;
+        queue->size += 1;
+        return 0;
+    }
+    node_t *before = NULL;
+    node_t *run = queue->head;
+    while(run->pkt->seqNum < pkt->seqNum && run->next != NULL){
+        before = run;
+        run = run->next;
+    }
+    newnode->pkt = pkt;
+    if(run->pkt->seqNum > pkt->seqNum){
+        newnode->next = run;
+        if(before == NULL){ // queue->size = 1;
+            queue->head = newnode->next;
+        }
+        else{
+            before->next = newnode;
+        }
+        queue->size += 1;
+        return 0;
+    }
+    else if(run->pkt->seqNum == pkt->seqNum){
+        // pkt already in queue
+        free(newnode);
+        return -1;
+    }
+    else{
+        // run->next == NULL, run->pkt->seqNum > pkt->seqNum
+        run->next = newnode;
+        newnode->next = NULL;
+        queue->size += 1;
+        return 0;
+    }
 }
 
 
@@ -48,16 +107,16 @@ int queue_push(queue_t *list, pkt_t *pkt){
  *
  * @return the most recently added pkt on the queue, NULL if queue is empty
  */
-pkt_t *queue_pop(queue_t *list){
-    if(list->size == 0){
+pkt_t *queue_pop(queue_t *queue){
+    if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
     }
-    pkt_t *pkt = list->head->pkt;
-    node_t *save = list->head;
-    list->head = list->head->next;
+    pkt_t *pkt = queue->head->pkt;
+    node_t *save = queue->head;
+    queue->head = queue->head->next;
     free(save);
-    list->size -= 1;
+    queue->size -= 1;
     return pkt;
 }
 
@@ -68,18 +127,18 @@ pkt_t *queue_pop(queue_t *list){
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-pkt_t *delete(queue_t *list, int seqNum){
-    
-    if(list->size == 0){
+pkt_t *delete(queue_t *queue, int seqNum){
+
+    if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
     }
-    
-    struct node *run = list->head;
+
+    struct node *run = queue->head;
     if(run->pkt->seqNum == seqNum){
-        return queue_pop(list);
+        return queue_pop(queue);
     }
-    
+
     while (run->next != NULL)
     {
         if (run->next->pkt->seqNum==seqNum)
@@ -88,7 +147,7 @@ pkt_t *delete(queue_t *list, int seqNum){
             node_t *save = run->next;
             run = run->next->next;
             free(save);
-            list->size -= 1;
+            queue->size -= 1;
             return pkt;
         }
         run = run->next;
@@ -103,9 +162,9 @@ pkt_t *delete(queue_t *list, int seqNum){
  *
  * @return return the structure with seqnum
  */
-pkt_t *find_nack_structure(queue_t *list, int seqNum){
-    struct node *run = list->head;
-    
+pkt_t *find_nack_structure(queue_t *queue, int seqNum){
+    struct node *run = queue->head;
+
     while (run->next != NULL)
     {
         if (run->pkt->seqNum==seqNum)
@@ -118,22 +177,17 @@ pkt_t *find_nack_structure(queue_t *list, int seqNum){
 }
 
 /**
- * Initialises the first node of the queue
- *
- * @pkt the pkt of the first node
+ * Initialises an empty queue
  *
  * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
-node_t* queue_init(pkt_t *pkt){
-    node_t *new_node = malloc(sizeof(struct node));
-    if (new_node == NULL){
-        fprintf(stderr, "Error with malloc in init, queue. \n");
+queue_t* queue_init(){
+    queue_t *newqueue = calloc(1,sizeof(queue_t)); // next and size set to 0
+    if(newqueue == NULL){
+        fprintf(stderr, "Error : queue_init malloc. \n");
         return NULL;
     }
-    new_node->pkt = pkt;
-    new_node->next = NULL;
-
-    return new_node;
+    return newqueue;
 }
 
 /**

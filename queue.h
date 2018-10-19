@@ -9,3 +9,8 @@ typedef struct node {
     pkt_t *pkt;
     struct node *next;
 } node_t;
+
+typedef struct queue{
+    struct node* head;
+    int size;
+} queue_t;
