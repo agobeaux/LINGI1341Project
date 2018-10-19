@@ -54,6 +54,7 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
  */
 void read_write_loop(const int sfd, int fd){
     int err;
+<<<<<<< HEAD
     int seqnum_delete;//sequence number of the payload to delete
     int seqnum_nack;//sequence number of the payload to resend
     
@@ -67,6 +68,24 @@ void read_write_loop(const int sfd, int fd){
         fprintf(stderr, "malloc problem in read_write_loop");
     }
     
+=======
+    int seqnum_delete;
+    int seqnum_nack;
+
+    char buf_ack[12];//buffer for (n)ack
+    queue_t *buf_structure = queue_init();//stock all structures to send
+    if(buf_structure == NULL){
+        fprintf("sender : read_write_loop : buf_structure malloc error");
+        return;
+    }
+    queue_t *buf_nack_structure = queue_init();//stock all structures to resend
+    if(buf_structure == NULL){
+        free(buf_nack_structure);
+        fprintf("sender : read_write_loop : buf_nack_structure malloc error");
+        return;
+    }
+
+>>>>>>> 4208f6b64fb4cade6fe895470ea93f146e621830
     struct pollfd pfds[2];
     pfds[0].fd = STDIN_FILENO;
     pfds[0].events = POLLIN;
@@ -76,17 +95,17 @@ void read_write_loop(const int sfd, int fd){
     pfds[1].revents = 0;
     //TODO while read from buf_structure or from buf_nack_structure
     while(1){
-        
+
         //creation of poll
         int pRet = poll(pfds, 2, 500);
         if(pRet == -1){
             fprintf(stderr, "Error poll call: %s\n", strerror(errno));
         }
-        
-        
+
+
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
-            
+
             //fistly check if there some packages to resend
             if(buf_nack_structure!=NULL){
                 size_t len = 528;
@@ -101,13 +120,13 @@ void read_write_loop(const int sfd, int fd){
                 queue_pop(buf_nack_structure);
                 //changer timer dans cette structure!!!!!!!!!!!
             }
-            
+
             //if there some place in buffer (we compare it with window's size), we full it and we send it
             else if(buf_structure->size < size_buffer){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
-                
+
                 //try to have a new payload
                 err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 if(err == -1){
@@ -118,21 +137,21 @@ void read_write_loop(const int sfd, int fd){
                     fprintf(stderr, "There is no more payloads to read!\n");
                     break;
                 }
-                
+
                 //encode a new structure
                 pkt_t* pkt = pkt_new();
                 pkt = create_packet(new_payload, pkt);
                 pkt_encode(pkt, buf, &len);
-                
+
                 queue_push(buf_structure, pkt);
-                
+
                 pkt_encode(pkt, buf, &len);
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
                 }
             }
-            
+
             //check if there is still element that wasn't sent or their timer is out
             else{
                 node_t *run = buf_structure->head;
@@ -148,12 +167,12 @@ void read_write_loop(const int sfd, int fd){
                     }
                 }
             }
-    
+
         }
-        
+
         //try to read the socket
         if(pfds[1].revents & POLLIN){
-            
+
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
             int rd = read(sfd, (void*)buf_ack, 12);
@@ -174,10 +193,19 @@ void read_write_loop(const int sfd, int fd){
                 pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
                 queue_push(buf_nack_structure, pkt_nack);
             }
+<<<<<<< HEAD
         }
     }
     queue_free(buf_structure->head);
     queue_free(buf_nack_structure);
+=======
+            //TODO LILY : why break ? seems like it breaks if we read the socket
+            break;
+        }
+    }
+    free(buf_structure);
+    free(buf_nack_structure);
+>>>>>>> 4208f6b64fb4cade6fe895470ea93f146e621830
     return;
 }
 
@@ -192,7 +220,7 @@ int main(int argc, char *argv[]){
     int f_option = 0;//if there is (not) f_option
     int err;
     int window_size=5;//for this moment window is fixe and equal to 5
-    
+
     //check if there is enough arguments to continue
     if (argc<2){
         fprintf(stderr, "There is not enough arguments!\n");
@@ -245,7 +273,7 @@ int main(int argc, char *argv[]){
     }
 
     //Creates a socket and initializes it
-    
+
     socket_fd = create_socket(NULL, -1, &dest_addr, dst_port);
     if(socket_fd == -1){
         fprintf(stderr, "Failed to create the socket!\n");
@@ -254,11 +282,11 @@ int main(int argc, char *argv[]){
 
 
     //TODO : Envoyer le premier packet
-    
+
     read_write_loop(socket_fd, fd);
-    
+
     //TODO : Envoyer la déconnection
-   
+
     close(socket_fd);
     close(fd);
     return 0;

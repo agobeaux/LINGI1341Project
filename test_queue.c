@@ -34,13 +34,13 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
 
 
 int main(int argc, char *argv[]){
-    
+
     int err;
 
     size_t len = 528;
     char *buf = (char*)malloc(528);
     char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
-    
+
     int fd = open(argv[1], O_RDONLY);
     if(fd == -1){
         fprintf(stderr, "Can't open the file!\n");
@@ -72,8 +72,11 @@ int main(int argc, char *argv[]){
     pkt_encode(pkt3, buf, &len);
     pkt_encode(pkt4, buf, &len);
 
-    
-    queue_t *buf_structure = malloc(sizeof(struct queue));
+
+    queue_t *buf_structure = queue_init();
+    if(buf_structure == NULL){
+        fprintf(stderr, "Error : test_queue, main, malloc buf_structure");
+    }
     pkt_set_seqnum (pkt1, 1);
     queue_push(buf_structure, pkt1);
     pkt_set_seqnum (pkt2, 2);
