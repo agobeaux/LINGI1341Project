@@ -19,6 +19,10 @@
 
 #endif /* sender_h */
 
+typedef struct queue{
+    struct node* head;
+    int size;
+} queue_t;
 
 /* Resolve the resource name to an usable IPv6 address
  * @address: The name to resolve

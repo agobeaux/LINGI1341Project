@@ -5,63 +5,6 @@
 #include "Q3 INGInious/create_socket.c"
 #include "queue.c"
 
-/* Loop reading a socket and printing to stdout,
- * while reading stdin and writing to the socket
- * @sfd: The socket file descriptor. It is both bound and connected.
- * @return: as soon as stdin signals EOF
- */
-void read_write_loop(const int sfd, char* buf, size_t *len){
-    char buf_ack[12];
-    struct pollfd ptrfd[2];
-    
-    ptrfd[0].fd = sfd;//reader
-    ptrfd[0].events = POLLIN;
-    
-    ptrfd[1].fd = sfd;//writer
-    ptrfd[1].events = POLLOUT;
-    
-    while(1){
-        
-        struct pollfd pfds[3];
-        pfds[0].fd = STDIN_FILENO;
-        pfds[0].events = POLLIN;
-        pfds[0].revents = 0;
-        pfds[1].fd = sfd;
-        pfds[1].events = POLLIN|POLLOUT;
-        pfds[1].revents = 0;
-        pfds[2].fd = STDOUT_FILENO;
-        pfds[2].events = POLLOUT;
-        pfds[2].revents = 0;
-        
-        while(1){
-            int pRet = poll(pfds, 3, 5);
-            if(pRet == -1){
-                fprintf(stderr, "Error poll call: %s\n", strerror(errno));
-            }
-            char buf_ack[13];
-            int readSth = 1; int wroteSth = 1;
-            //fprintf(stderr, "0 Pollin : %d, 1 pollout : %d\n",pfds[0].revents&POLLIN,pfds[1].revents&POLLOUT);
-            if(pfds[1].revents & POLLOUT){
-                fprintf(stderr, "je vais écrire!\n");
-                int wr = write(sfd, (void*)buf, *len);
-                if(wr == -1){
-                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
-                }
-            }
-            if(pfds[1].revents & POLLIN){
-                fprintf(stderr, "je vais lire!\n");
-                int rd = read(sfd, (void*)buf_ack, 12);
-                if(rd == -1){
-                    fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
-                }
-                break;
-            }
-            fprintf(stderr, "je tourne!\n");
-        }
-        return;
-    }
-}
-
 
 static int size_buffer = 0;
 //add  : check if it's OK,if not -> return NULL
@@ -77,6 +20,88 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
     return pkt;
 }
 
+/* Loop reading a socket and printing to stdout,
+ * while reading stdin and writing to the socket
+ * @sfd: The socket file descriptor. It is both bound and connected.
+ * @return: as soon as stdin signals EOF
+ */
+void read_write_loop(const int sfd, int fd){
+    int err;
+    
+    char buf_ack[13];//buffer for (n)ack
+    queue_t *buf_structure;//TODO
+    
+    struct pollfd pfds[2];
+    pfds[0].fd = STDIN_FILENO;
+    pfds[0].events = POLLIN;
+    pfds[0].revents = 0;
+    pfds[1].fd = sfd;
+    pfds[1].events = POLLIN|POLLOUT;
+    pfds[1].revents = 0;
+    
+    while(1){
+        
+        //creation of poll
+        int pRet = poll(pfds, 2, 500);
+        if(pRet == -1){
+            fprintf(stderr, "Error poll call: %s\n", strerror(errno));
+        }
+        
+        
+        //try to write to the socket
+        if(pfds[1].revents & POLLOUT){
+            //buf to stock the structure
+            size_t len = 528;
+            char *buf = (char*)malloc(528);
+            char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
+            
+            //try to have a new payload
+            err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
+            if(err == -1){
+                fprintf(stderr, "Failed to read a new payload!\n");
+                exit(EXIT_FAILURE);
+            }
+            if(err == 0){
+                fprintf(stderr, "There is no more payloads to read!\n");
+                break;
+            }
+            
+            //encode a new structure
+            pkt_t* pkt = pkt_new();
+            pkt = create_packet(new_payload, pkt);
+            pkt_encode(pkt, buf, &len);
+            
+            //send structure
+            int wr = write(sfd, (void*)buf, len);
+            if(wr == -1){
+                fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+            }
+        }
+        
+        //try to read the socket
+        if(pfds[1].revents & POLLIN){
+            
+            //analyse the (n)ack
+            pkt_t* pkt_ack = pkt_new();
+            fprintf(stderr, "je vais lire!\n");
+            int rd = read(sfd, (void*)buf_ack, 12);
+            if(rd == -1){
+                fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
+            }
+            pkt_decode(buf_ack, 12, pkt_ack);
+            //if(pkt_ack->type == 2){
+            //supprimer le packet
+            //}
+            //if(pkt_ack->type == 3){
+            //renvoyer packet
+            //}
+            break;
+        }
+    }
+    return;
+}
+
+
 int main(int argc, char *argv[]){
 
     int fd;//file from command line
@@ -85,11 +110,8 @@ int main(int argc, char *argv[]){
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
     int f_option = 0;//if there is (not) f_option
-    char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
     int err;
     int window_size=5;//for this moment window is fixe and equal to 5
-    size_t len = 528;
-    char *buf = (char*)malloc(528);
     
     //check if there is enough arguments to continue
     if (argc<2){
@@ -120,16 +142,12 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "I'm in no-f option!\n");
         res_hostname = argv[1];
         dst_port = atoi(argv[2]);
-        //int read = getline(&info, &length, stdin);
-        //if(read==-1){
-           // fprintf(stderr, "Problem in geting line stdin!\n");
-        //}
-        //fprintf(stderr, "Info we are getting from stdin %s!\n", info);
     }
     else{
         fprintf(stderr, "I'm in f option!\n");
         res_hostname = argv[3];
         dst_port = atoi(argv[4]);
+        fd = STDIN_FILENO;
     }
 
 
@@ -164,28 +182,10 @@ int main(int argc, char *argv[]){
         //lire dans le fichier
     
     
-    //pour le moment traiter qu'un seul payload reçu
-    if(f_option){
-        err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
-        if(err == -1){
-            fprintf(stderr, "Failed to read a new payload!\n");
-            exit(EXIT_FAILURE);
-        }
-    }
-    //if we must read from stdin
-    else{
-        err = read(STDIN_FILENO , (void *)new_payload, MAX_PAYLOAD_SIZE);
-        if(err == -1){
-            fprintf(stderr, "Failed to read a new payload!\n");
-            exit(EXIT_FAILURE);
-        }
-    }
+    
     
     //when we have a payload, create a packet
-    pkt_t* pkt = pkt_new();
-    pkt = create_packet(new_payload, pkt);
-    pkt_encode(pkt, buf, &len);
-    read_write_loop(socket_fd, buf, &len);
+    read_write_loop(socket_fd, fd);
     
     //}
     
@@ -197,7 +197,5 @@ int main(int argc, char *argv[]){
 
     close(socket_fd);
     close(fd);
-    free(new_payload);
-    free(buf);
     return 0;
 }

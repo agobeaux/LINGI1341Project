@@ -9,8 +9,8 @@
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
-int queue_push(node_t* head, pkt_t *pkt){
-    if(head == NULL){
+int queue_push(queue_t *list, pkt_t *pkt){
+    if(list->head == NULL){
         fprintf(stderr, "push function called on NULL head (argument), queue\n");
         return -1;
     }
@@ -26,11 +26,12 @@ int queue_push(node_t* head, pkt_t *pkt){
     }
 
     new_node->pkt = pkt;
-    new_node->next = head;
-    head = new_node;
+    new_node->next = list->head;
+    list->head = new_node;
 
     return 0;
 }
+
 
 /**
  * Removes and returns a pkt from the queue.
@@ -39,17 +40,16 @@ int queue_push(node_t* head, pkt_t *pkt){
  *
  * @return the most recently added pkt on the queue, NULL if queue is empty
  */
-pkt_t *queue_pop(node_t *head){
-    if(head == NULL){
+pkt_t *queue_pop(queue_t *list){
+    if(list->head == NULL){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
     }
-    pkt_t *pkt = head->pkt;
-    node_t *save = head;
-    head = head->next;
+    pkt_t *pkt = list->head->pkt;
+    node_t *save = list->head;
+    list->head = list->head->next;
 
-    free(save); // are we sure that it only frees the save memory ? what about save pkt
-    // save->pkt isn't freed but... check
+    free(save);
     return pkt;
 }
 
