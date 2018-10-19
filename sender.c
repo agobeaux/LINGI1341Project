@@ -27,9 +27,12 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
  */
 void read_write_loop(const int sfd, int fd){
     int err;
+    int seqnum_delete;
+    int seqnum_nack;
     
     char buf_ack[13];//buffer for (n)ack
-    queue_t *buf_structure;//TODO
+    queue_t *buf_structure = malloc(sizeof(struct queue));
+    queue_t *buf_nack_structure = malloc(sizeof(struct queue));
     
     struct pollfd pfds[2];
     pfds[0].fd = STDIN_FILENO;
@@ -38,7 +41,7 @@ void read_write_loop(const int sfd, int fd){
     pfds[1].fd = sfd;
     pfds[1].events = POLLIN|POLLOUT;
     pfds[1].revents = 0;
-    
+    //TODO while read from buf_structure or from buf_nack_structure
     while(1){
         
         //creation of poll
@@ -71,6 +74,8 @@ void read_write_loop(const int sfd, int fd){
             pkt = create_packet(new_payload, pkt);
             pkt_encode(pkt, buf, &len);
             
+            queue_push(buf_structure, pkt);
+            
             //send structure
             int wr = write(sfd, (void*)buf, len);
             if(wr == -1){
@@ -89,12 +94,19 @@ void read_write_loop(const int sfd, int fd){
                 fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
             }
             pkt_decode(buf_ack, 12, pkt_ack);
-            //if(pkt_ack->type == 2){
-            //supprimer le packet
-            //}
-            //if(pkt_ack->type == 3){
-            //renvoyer packet
-            //}
+            //we have an ack
+            if(pkt_ack->type == 2){
+                seqnum_delete = pkt_ack->seqNum - 1;
+                if(delete(buf_structure, seqnum_delete)==NULL){
+                    fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
+                }
+            }
+            //we have a nack
+            if(pkt_ack->type == 3){
+                seqnum_nack = pkt_ack->seqNum;
+                pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
+                queue_push(buf_nack_structure, pkt_nack);
+            }
             break;
         }
     }
