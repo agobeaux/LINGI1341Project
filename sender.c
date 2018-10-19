@@ -86,6 +86,7 @@ void read_write_loop(const int sfd, int fd){
         int pRet = poll(pfds, 2, 500);
         if(pRet == -1){
             fprintf(stderr, "Error poll call: %s\n", strerror(errno));
+            return;
         }
 
 
@@ -117,7 +118,6 @@ void read_write_loop(const int sfd, int fd){
                 err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 if(err == -1){
                     fprintf(stderr, "Failed to read a new payload!\n");
-                    exit(EXIT_FAILURE);
                 }
                 if(err == 0){
                     fprintf(stderr, "There is no more payloads to read!\n");
@@ -127,11 +127,17 @@ void read_write_loop(const int sfd, int fd){
                 //encode a new structure
                 pkt_t* pkt = pkt_new();
                 pkt = create_packet(new_payload, pkt);
-                pkt_encode(pkt, buf, &len);
+                if(pkt == NULL){
+                    fprintf(stderr, "Problem with packet creation! \n");
+                }
+                if(pkt_encode(pkt, buf, &len)!=PKT_OK){
+                    fprintf(stderr, "Problem with encode! \n");
+                }
 
-                queue_push(buf_structure, pkt);
+                if(queue_push(buf_structure, pkt)==-1){
+                    fprintf(stderr, "Problem in push! \n");
+                }
 
-                pkt_encode(pkt, buf, &len);
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
@@ -145,7 +151,12 @@ void read_write_loop(const int sfd, int fd){
                     if((run->pkt->timestamp == 0) || (run->pkt->timestamp < timer)){
                         size_t len = 528;
                         char *buf = (char*)malloc(528);
-                        pkt_encode(run->pkt, buf, &len);
+                        if(buf==NULL){
+                            fprintf(stderr, "Problem with mallo in read_write_loop! \n");
+                        }
+                        if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
+                            fprintf(stderr, "Problem with encode in read_write_loop! \n");
+                        }
                         int wr = write(sfd, buf, len);
                         if(wr == -1){
                             fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
@@ -165,19 +176,20 @@ void read_write_loop(const int sfd, int fd){
             if(rd == -1){
                 fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
             }
-            pkt_decode(buf_ack, 12, pkt_ack);
-            //we have an ack
-            if(pkt_ack->type == 2){
-                seqnum_delete = pkt_ack->seqNum - 1;
-                if(delete(buf_structure, seqnum_delete)==NULL){
-                    fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
+            if(pkt_decode(buf_ack, 12, pkt_ack)==PKT_OK){
+                //we have an ack
+                if(pkt_ack->type == 2){
+                    seqnum_delete = pkt_ack->seqNum - 1;
+                    if(delete(buf_structure, seqnum_delete)==NULL){
+                        fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
+                    }
                 }
-            }
-            //we have a nack
-            if(pkt_ack->type == 3){
-                seqnum_nack = pkt_ack->seqNum;
-                pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
-                queue_push(buf_nack_structure, pkt_nack);
+                //we have a nack
+                if(pkt_ack->type == 3){
+                    seqnum_nack = pkt_ack->seqNum;
+                    pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
+                    queue_push(buf_nack_structure, pkt_nack);
+                }
             }
         }
     }
@@ -212,7 +224,6 @@ int main(int argc, char *argv[]){
             case 'f':
                 f_option = 1;
                 fd = open(optarg, O_RDONLY);
-                fprintf(stderr, "Find an f option!\n");
                 if(fd == -1){
                     fprintf(stderr, "Can't open the file!\n");
                     exit(EXIT_FAILURE);
