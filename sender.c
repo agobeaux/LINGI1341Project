@@ -8,32 +8,64 @@
 
 static int size_buffer = 0;
 static int timer = 5; //change !!!!!!!!!!!!!!!!!!!!!
+static seqNum = 0;
 
 
+/**
+ * Create a new structure pkt.
+ *
+ * @param f is a payload to be added to the structure pkt.
+ *
+ * @return If the payload is succesfully added onto the pkt, returns pkt. If not, the returned value is NULL.
+ */
 pkt_t *create_packet(char *payload, pkt_t *pkt){
     pkt_set_type(pkt, PTYPE_DATA);
     pkt_set_tr(pkt, 0);
     pkt_set_timestamp(pkt, 0);
-    pkt_set_window(pkt, 1);
-    pkt_set_seqnum(pkt, 0);
-    pkt_set_length(pkt, strlen(payload));
-    pkt_set_payload(pkt, payload, pkt->length);
+    if(pkt_set_window(pkt, 1)!=PKT_OK){
+        fprintf(stderr, "Problem in create_packet with window\n");
+        return NULL;
+    }
+    if(seqNum == 255){
+        pkt_set_seqnum(pkt, 0);
+    }
+    else{
+        pkt_set_seqnum(pkt, (seqNum+1));
+    }
+    if(pkt_set_length(pkt, strlen(payload))!=PKT_OK){
+        fprintf(stderr, "Problem in create_packet with length\n");
+        return NULL;
+    }
+    if(pkt_set_payload(pkt, payload, pkt->length)!=PKT_OK){
+        fprintf(stderr, "Problem in create_packet with payload\n");
+        return NULL;
+    }
     return pkt;
 }
 
-/* Loop reading a socket and printing to stdout,
- * while reading stdin and writing to the socket
- * @sfd: The socket file descriptor. It is both bound and connected.
- * @return: as soon as stdin signals EOF
+
+/**
+ *Loop reading a socket and printing to stdout,
+ *while reading stdin and writing to the socket
+ *
+ * @param The socket file descriptor. It is both bound and connected.
+ *        And a file descriptor with the information to send
+ *
  */
 void read_write_loop(const int sfd, int fd){
     int err;
-    int seqnum_delete;
-    int seqnum_nack;
+    int seqnum_delete;//sequence number of the payload to delete
+    int seqnum_nack;//sequence number of the payload to resend
     
     char buf_ack[12];//buffer for (n)ack
     queue_t *buf_structure = malloc(sizeof(struct queue));//stock all structures to send
+    if(buf_structure != NULL){
+        fprintf(stderr, "malloc problem in read_write_loop");
+    }
     queue_t *buf_nack_structure = malloc(sizeof(struct queue));//stock all structures to resend
+    if(buf_nack_structure != NULL){
+        fprintf(stderr, "malloc problem in read_write_loop");
+    }
     
     struct pollfd pfds[2];
     pfds[0].fd = STDIN_FILENO;
@@ -59,7 +91,9 @@ void read_write_loop(const int sfd, int fd){
             if(buf_nack_structure!=NULL){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
-                pkt_encode(buf_nack_structure->head->pkt, buf, &len);
+                if(pkt_encode(buf_nack_structure->head->pkt, buf, &len)!=PKT_OK){
+                    fprintf(stderr, "Problem to encode structure");
+                }
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
@@ -111,7 +145,6 @@ void read_write_loop(const int sfd, int fd){
                         if(wr == -1){
                             fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
                         }
-                        break;
                     }
                 }
             }
@@ -141,9 +174,10 @@ void read_write_loop(const int sfd, int fd){
                 pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
                 queue_push(buf_nack_structure, pkt_nack);
             }
-            break;
         }
     }
+    queue_free(buf_structure->head);
+    queue_free(buf_nack_structure);
     return;
 }
 
