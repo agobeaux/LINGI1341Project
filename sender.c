@@ -7,9 +7,10 @@
 
 
 static int size_buffer = 0;
-//add  : check if it's OK,if not -> return NULL
+static int timer = 5; //change !!!!!!!!!!!!!!!!!!!!!
+
+
 pkt_t *create_packet(char *payload, pkt_t *pkt){
-    //set data
     pkt_set_type(pkt, PTYPE_DATA);
     pkt_set_tr(pkt, 0);
     pkt_set_timestamp(pkt, 0);
@@ -30,9 +31,9 @@ void read_write_loop(const int sfd, int fd){
     int seqnum_delete;
     int seqnum_nack;
     
-    char buf_ack[13];//buffer for (n)ack
-    queue_t *buf_structure = malloc(sizeof(struct queue));
-    queue_t *buf_nack_structure = malloc(sizeof(struct queue));
+    char buf_ack[12];//buffer for (n)ack
+    queue_t *buf_structure = malloc(sizeof(struct queue));//stock all structures to send
+    queue_t *buf_nack_structure = malloc(sizeof(struct queue));//stock all structures to resend
     
     struct pollfd pfds[2];
     pfds[0].fd = STDIN_FILENO;
@@ -53,34 +54,68 @@ void read_write_loop(const int sfd, int fd){
         
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
-            //buf to stock the structure
-            size_t len = 528;
-            char *buf = (char*)malloc(528);
-            char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
             
-            //try to have a new payload
-            err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
-            if(err == -1){
-                fprintf(stderr, "Failed to read a new payload!\n");
-                exit(EXIT_FAILURE);
-            }
-            if(err == 0){
-                fprintf(stderr, "There is no more payloads to read!\n");
-                break;
+            //fistly check if there some packages to resend
+            if(buf_nack_structure!=NULL){
+                size_t len = 528;
+                char *buf = (char*)malloc(528);
+                pkt_encode(buf_nack_structure->head->pkt, buf, &len);
+                int wr = write(sfd, (void*)buf, len);
+                if(wr == -1){
+                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                }
+                queue_pop(buf_nack_structure);
+                //changer timer dans cette structure!!!!!!!!!!!
             }
             
-            //encode a new structure
-            pkt_t* pkt = pkt_new();
-            pkt = create_packet(new_payload, pkt);
-            pkt_encode(pkt, buf, &len);
-            
-            queue_push(buf_structure, pkt);
-            
-            //send structure
-            int wr = write(sfd, (void*)buf, len);
-            if(wr == -1){
-                fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+            //if there some place in buffer (we compare it with window's size), we full it and we send it
+            else if(buf_structure->size < size_buffer){
+                size_t len = 528;
+                char *buf = (char*)malloc(528);
+                char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
+                
+                //try to have a new payload
+                err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
+                if(err == -1){
+                    fprintf(stderr, "Failed to read a new payload!\n");
+                    exit(EXIT_FAILURE);
+                }
+                if(err == 0){
+                    fprintf(stderr, "There is no more payloads to read!\n");
+                    break;
+                }
+                
+                //encode a new structure
+                pkt_t* pkt = pkt_new();
+                pkt = create_packet(new_payload, pkt);
+                pkt_encode(pkt, buf, &len);
+                
+                queue_push(buf_structure, pkt);
+                
+                pkt_encode(pkt, buf, &len);
+                int wr = write(sfd, (void*)buf, len);
+                if(wr == -1){
+                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                }
             }
+            
+            //check if there is still element that wasn't sent or their timer is out
+            else{
+                node_t *run = buf_structure->head;
+                while(run!=NULL){
+                    if((run->pkt->timestamp == 0) || (run->pkt->timestamp < timer)){
+                        size_t len = 528;
+                        char *buf = (char*)malloc(528);
+                        pkt_encode(run->pkt, buf, &len);
+                        int wr = write(sfd, buf, len);
+                        if(wr == -1){
+                            fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                        }
+                        break;
+                    }
+                }
+            }
+    
         }
         
         //try to read the socket
@@ -88,7 +123,6 @@ void read_write_loop(const int sfd, int fd){
             
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
-            fprintf(stderr, "je vais lire!\n");
             int rd = read(sfd, (void*)buf_ack, 12);
             if(rd == -1){
                 fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
@@ -185,28 +219,12 @@ int main(int argc, char *argv[]){
     }
 
 
-    /* DO THINGS */
-    //faire buffer pour plusieurs payload
-    //window taille fixe
-    //retransmission timer
-    //implementation of while
-    //while(true){
-        //lire dans le fichier
+    //TODO : Envoyer le premier packet
     
-    
-    
-    
-    //when we have a payload, create a packet
     read_write_loop(socket_fd, fd);
     
-    //}
-    
-    
-    //TODO
-    //traitement de signal, reception de ack, nack, traitement de signal
-    //appel bloquant pour le sender, quand il arrete à read? avec quoi?
-    
-
+    //TODO : Envoyer la déconnection
+   
     close(socket_fd);
     close(fd);
     return 0;
