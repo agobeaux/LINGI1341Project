@@ -127,7 +127,7 @@ pkt_t *queue_pop(queue_t *queue){
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-pkt_t *delete(queue_t *queue, int seqNum){
+pkt_t *queue_delete(queue_t *queue, int seqNum){
 
     if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
@@ -162,7 +162,7 @@ pkt_t *delete(queue_t *queue, int seqNum){
  *
  * @return return the structure with seqnum
  */
-pkt_t *find_nack_structure(queue_t *queue, int seqNum){
+pkt_t *queue_find_nack_structure(queue_t *queue, int seqNum){
     struct node *run = queue->head;
 
     while (run->next != NULL)
@@ -193,19 +193,6 @@ queue_t* queue_init(){
 /**
  * @return 0 if the queue is empty, 1 otherwise
  */
-int queue_isempty(node_t *head){
-    return head != NULL;
-}
-
-/**
- * Frees the queue.
- */
-void queue_free(node_t *head){
-    struct node* tmp;
-    while (head != NULL){
-        tmp = head;
-        head = head->next;
-        pkt_del(tmp->pkt);
-        free(tmp);
-    }
+int queue_isempty(queue_t *queue){
+    return queue->size = 0;
 }
