@@ -141,6 +141,10 @@ void read_write_loop(const int sfd, int fd){
                         if(buf==NULL){
                             fprintf(stderr, "sender : read_while_loop : error with malloc\n");
                         }
+                        
+                        clock_gettime(CLOCK_REALTIME, tp);
+                        run->tp = tp;
+                        
                         if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
                             fprintf(stderr, "sender : read_while_loop : error with encode\n");
                         }
@@ -148,6 +152,7 @@ void read_write_loop(const int sfd, int fd){
                         if(wr == -1){
                             fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
                         }
+                        break;
                     }
                 }
             }
