@@ -3,6 +3,7 @@
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
 #include "Q3 INGInious/create_socket.c"
+#include "Q3 INGInious/wait_for_client.c"
 #include "queue_receiver.c"
 
 #define ser_PORT 12345 // to change. Should be an argument
@@ -54,7 +55,12 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
             else{
-                write(sfd, ackBuf, ackLen);
+                fprintf(stderr, "I'm really writing\n");
+                int wr = write(sfd, ackBuf, ackLen);
+                fprintf(stderr, "Wrote %d bytes\n", wr);
+                if(wr == -1){
+                    fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
+                }
             }
         }
         // TODO on process tous les ACK et NACK de la queue ! on envoie tous les acks ou seulement le dernier ?
@@ -223,8 +229,21 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
 
+    if (socket_fd > 0 && wait_for_client(socket_fd) < 0) { /* Connected */
+        fprintf(stderr,
+                "Could not connect the socket after the first message.\n");
+        close(socket_fd);
+        return EXIT_FAILURE;
+    }
+
+    char* str = "Pète les couilles";
+    int wr = write(socket_fd, str, 18);
+    fprintf(stderr, "Write : %d, errno : %d\n", wr, errno);
+
     fprintf(stderr, "Before read_write_loop\n");
     read_write_loop(socket_fd, fd);
+
+
 
     close(socket_fd);
     close(fd);

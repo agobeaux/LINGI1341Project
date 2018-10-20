@@ -165,14 +165,16 @@ void read_write_loop(const int sfd, int fd){
 
         //try to read the socket
         if(pfds[1].revents & POLLIN){
-
+            fprintf(stderr, "I'm in\n");
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
             int rd = read(sfd, (void*)buf_ack, 12);
             if(rd == -1){
                 fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
             }
-            if(pkt_decode(buf_ack, 12, pkt_ack)==PKT_OK){
+            pkt_status_code code = pkt_decode(buf_ack, 12, pkt_ack);
+            if(code == PKT_OK){
+                fprintf(stderr, "Decoded pkt, OK\n");
                 //we have an ack
                 if(pkt_ack->type == 2){
                     seqnum_delete = pkt_ack->seqNum - 1;
@@ -205,6 +207,9 @@ void read_write_loop(const int sfd, int fd){
                         fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
                     }
                 }
+            }
+            else{
+                fprintf(stderr, "Decode pkt not ok, code : %d", code);
             }
         }
     }
