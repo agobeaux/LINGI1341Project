@@ -82,13 +82,11 @@ void read_write_loop(const int sfd, int fd){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
-        fprintf(stderr, "pfds[1]&POLLIN : %d, &POLLOUT : %d\n", pfds[1].revents&POLLIN, pfds[1].revents&POLLOUT);
 
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
 
             if(buf_structure->size < size_buffer){
-                fprintf(stderr, "in if(buf_structure->size < size_buffer)\n");
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
@@ -98,9 +96,7 @@ void read_write_loop(const int sfd, int fd){
                 }
 
                 //try to have a new payload
-                fprintf(stderr, "before read\n");
                 err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
-                fprintf(stderr, "after read\n");
                 if(err == -1){
                     fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
@@ -109,7 +105,6 @@ void read_write_loop(const int sfd, int fd){
                     break;
                 }
 
-                fprintf(stderr, "before encoding new structure\n");
                 //encode a new structure
                 pkt_t* pkt = pkt_new();
                 pkt = create_packet(new_payload, pkt);
@@ -128,7 +123,6 @@ void read_write_loop(const int sfd, int fd){
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
-                fprintf(stderr, "end of if(buf_structure->size < size_buffer)\n");
             }
 
             //check if there is still element that wasn't resent or their timer is out
@@ -139,8 +133,12 @@ void read_write_loop(const int sfd, int fd){
                     struct timespec *tp = malloc(sizeof(struct timespec));
                     clock_gettime(CLOCK_REALTIME, tp);
                     int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
+                    if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000)  > timer) || (run->tp->tv_sec == 0)){
+                        // condition run->tp->tv_sec == 0 will happen when we receive a NACK
+                        // because we set tv_sec to 0 when we receive a NACK.
+                        // it won't be true otherwise because 0 sec is on the 1st of January 1970
 
-                    if(((run->tp->tv_sec + (run->tp->tv_nsec)/1000000000 - time_now) > timer) || (run->tp->tv_sec == 0)){
+                        fprintf(stderr, "\n\n\nI'm in the if run->tp...\n\n\n");
                         size_t len = 528;
                         char *buf = (char*)malloc(528);
                         if(buf==NULL){
@@ -159,10 +157,10 @@ void read_write_loop(const int sfd, int fd){
                         }
                         break;
                     }
+                    run = run->next;
                 }
             }
         }
-        fprintf(stderr, "after if(buf_structure->size < size_buffer)\n");
 
 
         //try to read the socket
@@ -284,7 +282,6 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
 
-    fprintf(stderr, "Before read_write_loop\n");
     read_write_loop(socket_fd, fd);
 
     //TODO : Envoyer la déconnection
