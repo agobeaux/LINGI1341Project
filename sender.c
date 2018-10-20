@@ -7,7 +7,7 @@
 
 static int size_buffer = 1;
 static int timer = 3; //define a random value for the first time, to be sure receive the first packet
-static int seqNum = 0;
+static uint8_t seqNum = 0;
 
 
 
@@ -55,8 +55,8 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
  */
 void read_write_loop(const int sfd, int fd){
     int err;
-    int seqnum_delete;//sequence number of the payload to delete
-    int seqnum_nack;//sequence number of the payload to resend
+    uint8_t seqnum_delete;//sequence number of the payload to delete
+    uint8_t seqnum_nack;//sequence number of the payload to resend
 
     char buf_ack[12];//buffer for (n)ack
     queue_t *buf_structure = queue_init();//stock all structures to send
@@ -175,19 +175,23 @@ void read_write_loop(const int sfd, int fd){
             pkt_status_code code = pkt_decode(buf_ack, 12, pkt_ack);
             if(code == PKT_OK){
                 fprintf(stderr, "Decoded pkt, OK\n");
+                pkt_print(pkt_ack);
                 //we have an ack
                 if(pkt_ack->type == 2){
+                    fprintf(stderr, "pkt_ack : PTYPE_ACK\n");
                     seqnum_delete = pkt_ack->seqNum - 1;
                     //setting the max buffer size
                     size_buffer = pkt_get_window(pkt_ack);
                     //if there is a packet with 0 seqnum, reset the timer
-                    if(pkt_get_seqnum(pkt_ack) == 0){
+                    fprintf(stderr, "seqnum : %u, get_seqnum : %u\n", pkt_ack->seqNum, pkt_get_seqnum(pkt_ack));
+
+                    if(pkt_ack->seqNum == 0){ //TODO : que pour le premier
 
                         struct timespec *tp = malloc(sizeof(struct timespec));
 
-                        struct node *time_node = queue_find_nack_structure(buf_structure, seqnum_nack);
+                        struct node *time_node = queue_find_nack_structure(buf_structure, pkt_ack->seqNum);
                         if(time_node==NULL){
-                            fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
+                            fprintf(stderr, "there is no structure in buffer with seqnum %d\n", pkt_ack->seqNum);
                         }
 
                         clock_gettime(CLOCK_REALTIME, tp);
@@ -202,6 +206,7 @@ void read_write_loop(const int sfd, int fd){
                 }
                 //we have a nack
                 if(pkt_ack->type == 3){
+                    fprintf(stderr, "pkt_ack : PTYPE_NACK\n");
                     seqnum_nack = pkt_ack->seqNum;
                     if(queue_find_nack_structure(buf_structure, seqnum_nack)==NULL){
                         fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
@@ -209,7 +214,7 @@ void read_write_loop(const int sfd, int fd){
                 }
             }
             else{
-                fprintf(stderr, "Decode pkt not ok, code : %d", code);
+                fprintf(stderr, "Decode pkt not ok, code : %d\n", code);
             }
         }
     }

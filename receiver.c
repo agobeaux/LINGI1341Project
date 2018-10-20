@@ -235,11 +235,7 @@ int main(int argc, char *argv[]){
         close(socket_fd);
         return EXIT_FAILURE;
     }
-
-    char* str = "Pète les couilles";
-    int wr = write(socket_fd, str, 18);
-    fprintf(stderr, "Write : %d, errno : %d\n", wr, errno);
-
+    
     fprintf(stderr, "Before read_write_loop\n");
     read_write_loop(socket_fd, fd);
 
