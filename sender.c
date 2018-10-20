@@ -3,8 +3,7 @@
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
 #include "Q3 INGInious/create_socket.c"
-#include "queue.c"
-#include <time.h>
+#include "queue_sender.c"
 
 static int size_buffer = 1;
 static int timer = 3; //define a random value for the first time, to be sure receive the first packet
@@ -20,11 +19,10 @@ static int seqNum = 0;
  * @return If the payload is succesfully added onto the pkt, returns pkt. If not, the returned value is NULL.
  */
 pkt_t *create_packet(char *payload, pkt_t *pkt){
-    struct timespec tp;
     
     pkt_set_type(pkt, PTYPE_DATA);
     pkt_set_tr(pkt, 0);
-    pkt_set_timestamp(pkt, clock_gettime(CLOCK_REALTIME, &tp));
+    pkt_set_timestamp(pkt, 0);
     if(pkt_set_window(pkt, 1)!=PKT_OK){
         fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
@@ -66,12 +64,6 @@ void read_write_loop(const int sfd, int fd){
         fprintf(stderr,"sender : read_write_loop : buf_structure malloc error \n");
         return;
     }
-    queue_t *buf_nack_structure = queue_init();//stock all structures to resend
-    if(buf_structure == NULL){
-        free(buf_nack_structure);
-        fprintf(stderr,"sender : read_write_loop : buf_nack_structure malloc error \n");
-        return;
-    }
 
 
     struct pollfd pfds[2];
@@ -81,7 +73,7 @@ void read_write_loop(const int sfd, int fd){
     pfds[1].fd = sfd;
     pfds[1].events = POLLIN|POLLOUT;
     pfds[1].revents = 0;
-    //TODO while read from buf_structure or from buf_nack_structure
+    
     while(1){
 
         //creation of poll
@@ -95,35 +87,22 @@ void read_write_loop(const int sfd, int fd){
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
 
-            //fistly check if there some packages to resend
-            if(buf_nack_structure!=NULL){
-                size_t len = 528;
-                char *buf = (char*)malloc(528);
-                
-                if(pkt_encode(buf_nack_structure->head->pkt, buf, &len)!=PKT_OK){
-                    fprintf(stderr, "sender : read_while_loop : error with encode\n");
-                }
-                int wr = write(sfd, (void*)buf, len);
-                if(wr == -1){
-                    fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
-                }
-                queue_pop(buf_nack_structure);
-                //changer timer dans cette structure!!!!!!!!!!!
-            }
-
-            //if there some place in buffer (we compare it with window's size), we full it and we send it
-            else if(buf_structure->size < size_buffer){
+            if(buf_structure->size < size_buffer){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
+                struct timespec *tp = malloc(sizeof(struct timespec));
+                if(tp == NULL){
+                    fprintf(stderr, "sender : read_while_loop : error with malloc!\n");
+                }
 
                 //try to have a new payload
                 err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 if(err == -1){
                     fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
-                if(err == 0){
-                    fprintf(stderr, "There is no more payloads to read!\n");
+                if(err == 0 && queue_isempty(buf_structure)){
+                    fprintf(stderr, "There is no more payloads to read and buffer is empty!\n");
                     break;
                 }
 
@@ -136,8 +115,8 @@ void read_write_loop(const int sfd, int fd){
                 if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                     fprintf(stderr, "sender : read_while_loop : error with encode\n");
                 }
-
-                if(queue_push(buf_structure, pkt)==-1){
+                clock_gettime(CLOCK_REALTIME, tp);
+                if(queue_push(buf_structure, pkt, tp)==-1){
                     fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
 
@@ -147,15 +126,16 @@ void read_write_loop(const int sfd, int fd){
                 }
             }
 
-            //check if there is still element that wasn't sent or their timer is out
+            //check if there is still element that wasn't resent or their timer is out
             else{
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
                     
                     struct timespec *tp = malloc(sizeof(struct timespec));
-                    int time_now = clock_gettime(CLOCK_REALTIME, tp);
+                    clock_gettime(CLOCK_REALTIME, tp);
+                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
                     
-                    if((run->pkt->timestamp - time_now) > timer){
+                    if(((run->tp->tv_sec + (run->tp->tv_nsec)/1000000000 - time_now) > timer) || (run->tp->tv_sec == 0)){
                         size_t len = 528;
                         char *buf = (char*)malloc(528);
                         if(buf==NULL){
@@ -186,29 +166,39 @@ void read_write_loop(const int sfd, int fd){
                 //we have an ack
                 if(pkt_ack->type == 2){
                     seqnum_delete = pkt_ack->seqNum - 1;
-                    
+                    //setting the max buffer size
+                    size_buffer = pkt_get_window(pkt_ack);
                     //if there is a packet with 0 seqnum, reset the timer
                     if(pkt_get_seqnum(pkt_ack) == 0){
+                        
                         struct timespec *tp = malloc(sizeof(struct timespec));
-                        int time_now = clock_gettime(CLOCK_REALTIME, tp);
-                        timer = (time_now - pkt_get_timestamp(pkt_ack))*2;
+                        
+                        struct node *time_node = queue_find_nack_structure(buf_structure, seqnum_nack);
+                        if(time_node==NULL){
+                            fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
+                        }
+                        
+                        clock_gettime(CLOCK_REALTIME, tp);
+                        int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
+                        
+                        timer = 2+(time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec);
                     }
                     //delete the packet
-                    if(delete(buf_structure, seqnum_delete)==NULL){
+                    if(queue_delete(buf_structure, seqnum_delete)==NULL){
                         fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
                     }
                 }
                 //we have a nack
                 if(pkt_ack->type == 3){
                     seqnum_nack = pkt_ack->seqNum;
-                    pkt_t* pkt_nack = find_nack_structure(buf_structure, seqnum_nack);
-                    queue_push(buf_nack_structure, pkt_nack);
+                    if(queue_find_nack_structure(buf_structure, seqnum_nack)==NULL){
+                        fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
+                    }
                 }
             }
         }
     }
     free(buf_structure);
-    free(buf_nack_structure);
     return;
 }
 
@@ -281,9 +271,6 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "sender : main : error in create_socket\n");
         exit(EXIT_FAILURE);
     }
-
-
-    //TODO : Envoyer le premier packet
 
     read_write_loop(socket_fd, fd);
 
