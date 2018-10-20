@@ -4,11 +4,11 @@
 #include "Q3 INGInious/real_address.c"
 #include "Q3 INGInious/create_socket.c"
 #include "queue.c"
+#include <time.h>
 
-
-static int size_buffer = 0;
-static int timer = 5; //change !!!!!!!!!!!!!!!!!!!!!
-static seqNum = 0;
+static int size_buffer = 1;
+static int timer = 3; //define a random value for the first time, to be sure receive the first packet
+static int seqNum = 0;
 
 
 
@@ -20,11 +20,13 @@ static seqNum = 0;
  * @return If the payload is succesfully added onto the pkt, returns pkt. If not, the returned value is NULL.
  */
 pkt_t *create_packet(char *payload, pkt_t *pkt){
+    struct timespec tp;
+    
     pkt_set_type(pkt, PTYPE_DATA);
     pkt_set_tr(pkt, 0);
-    pkt_set_timestamp(pkt, 0);
+    pkt_set_timestamp(pkt, clock_gettime(CLOCK_REALTIME, &tp));
     if(pkt_set_window(pkt, 1)!=PKT_OK){
-        fprintf(stderr, "Problem in create_packet with window\n");
+        fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
     }
     if(seqNum == 255){
@@ -34,11 +36,11 @@ pkt_t *create_packet(char *payload, pkt_t *pkt){
         pkt_set_seqnum(pkt, (seqNum+1));
     }
     if(pkt_set_length(pkt, strlen(payload))!=PKT_OK){
-        fprintf(stderr, "Problem in create_packet with length\n");
+        fprintf(stderr, "sender : create_packet : error with length\n");
         return NULL;
     }
     if(pkt_set_payload(pkt, payload, pkt->length)!=PKT_OK){
-        fprintf(stderr, "Problem in create_packet with payload\n");
+        fprintf(stderr, "sender : create_packet : error with payload\n");
         return NULL;
     }
     return pkt;
@@ -61,13 +63,13 @@ void read_write_loop(const int sfd, int fd){
     char buf_ack[12];//buffer for (n)ack
     queue_t *buf_structure = queue_init();//stock all structures to send
     if(buf_structure == NULL){
-        fprintf("sender : read_write_loop : buf_structure malloc error");
+        fprintf(stderr,"sender : read_write_loop : buf_structure malloc error \n");
         return;
     }
     queue_t *buf_nack_structure = queue_init();//stock all structures to resend
     if(buf_structure == NULL){
         free(buf_nack_structure);
-        fprintf("sender : read_write_loop : buf_nack_structure malloc error");
+        fprintf(stderr,"sender : read_write_loop : buf_nack_structure malloc error \n");
         return;
     }
 
@@ -85,7 +87,7 @@ void read_write_loop(const int sfd, int fd){
         //creation of poll
         int pRet = poll(pfds, 2, 500);
         if(pRet == -1){
-            fprintf(stderr, "Error poll call: %s\n", strerror(errno));
+            fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
 
@@ -97,12 +99,13 @@ void read_write_loop(const int sfd, int fd){
             if(buf_nack_structure!=NULL){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
+                
                 if(pkt_encode(buf_nack_structure->head->pkt, buf, &len)!=PKT_OK){
-                    fprintf(stderr, "Problem to encode structure");
+                    fprintf(stderr, "sender : read_while_loop : error with encode\n");
                 }
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
-                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                    fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
                 queue_pop(buf_nack_structure);
                 //changer timer dans cette structure!!!!!!!!!!!
@@ -117,7 +120,7 @@ void read_write_loop(const int sfd, int fd){
                 //try to have a new payload
                 err = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 if(err == -1){
-                    fprintf(stderr, "Failed to read a new payload!\n");
+                    fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
                 if(err == 0){
                     fprintf(stderr, "There is no more payloads to read!\n");
@@ -128,19 +131,19 @@ void read_write_loop(const int sfd, int fd){
                 pkt_t* pkt = pkt_new();
                 pkt = create_packet(new_payload, pkt);
                 if(pkt == NULL){
-                    fprintf(stderr, "Problem with packet creation! \n");
+                    fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
                 }
                 if(pkt_encode(pkt, buf, &len)!=PKT_OK){
-                    fprintf(stderr, "Problem with encode! \n");
+                    fprintf(stderr, "sender : read_while_loop : error with encode\n");
                 }
 
                 if(queue_push(buf_structure, pkt)==-1){
-                    fprintf(stderr, "Problem in push! \n");
+                    fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
 
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
-                    fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+                    fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
             }
 
@@ -148,14 +151,18 @@ void read_write_loop(const int sfd, int fd){
             else{
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
-                    if((run->pkt->timestamp == 0) || (run->pkt->timestamp < timer)){
+                    
+                    struct timespec *tp = malloc(sizeof(struct timespec));
+                    int time_now = clock_gettime(CLOCK_REALTIME, tp);
+                    
+                    if((run->pkt->timestamp - time_now) > timer){
                         size_t len = 528;
                         char *buf = (char*)malloc(528);
                         if(buf==NULL){
-                            fprintf(stderr, "Problem with mallo in read_write_loop! \n");
+                            fprintf(stderr, "sender : read_while_loop : error with malloc\n");
                         }
                         if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
-                            fprintf(stderr, "Problem with encode in read_write_loop! \n");
+                            fprintf(stderr, "sender : read_while_loop : error with encode\n");
                         }
                         int wr = write(sfd, buf, len);
                         if(wr == -1){
@@ -164,7 +171,6 @@ void read_write_loop(const int sfd, int fd){
                     }
                 }
             }
-
         }
 
         //try to read the socket
@@ -180,6 +186,14 @@ void read_write_loop(const int sfd, int fd){
                 //we have an ack
                 if(pkt_ack->type == 2){
                     seqnum_delete = pkt_ack->seqNum - 1;
+                    
+                    //if there is a packet with 0 seqnum, reset the timer
+                    if(pkt_get_seqnum(pkt_ack) == 0){
+                        struct timespec *tp = malloc(sizeof(struct timespec));
+                        int time_now = clock_gettime(CLOCK_REALTIME, tp);
+                        timer = (time_now - pkt_get_timestamp(pkt_ack))*2;
+                    }
+                    //delete the packet
                     if(delete(buf_structure, seqnum_delete)==NULL){
                         fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
                     }
@@ -193,9 +207,8 @@ void read_write_loop(const int sfd, int fd){
             }
         }
     }
-
-    queue_free(buf_structure->head);
-    queue_free(buf_nack_structure);
+    free(buf_structure);
+    free(buf_nack_structure);
     return;
 }
 
@@ -213,7 +226,7 @@ int main(int argc, char *argv[]){
 
     //check if there is enough arguments to continue
     if (argc<2){
-        fprintf(stderr, "There is not enough arguments!\n");
+        fprintf(stderr, "sender : main : error with arguments : not enough arguments!\n");
         return EXIT_FAILURE;
     }
 
@@ -225,7 +238,7 @@ int main(int argc, char *argv[]){
                 f_option = 1;
                 fd = open(optarg, O_RDONLY);
                 if(fd == -1){
-                    fprintf(stderr, "Can't open the file!\n");
+                    fprintf(stderr, "sender : main : error in open \n");
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -252,20 +265,20 @@ int main(int argc, char *argv[]){
     struct sockaddr_in6 dest_addr;
     const char *check_message = real_address(res_hostname, &dest_addr);
     if(check_message){
-        fprintf(stderr, "Problem in getaddrinfo %s!\n",check_message);
+        fprintf(stderr, "sender : main : error in real_address : %s!\n",check_message);
     }
     //Resolve the resource name to an usable IPv6 address for sender
     struct sockaddr_in6 source_addr;
     check_message = real_address(ser_hostname, &source_addr);
     if(check_message){
-        fprintf(stderr, "Problem in getaddrinfo %s!\n",check_message);
+        fprintf(stderr, "sender : main : error in real_address : %s!\n",check_message);
     }
 
     //Creates a socket and initializes it
 
     socket_fd = create_socket(NULL, -1, &dest_addr, dst_port);
     if(socket_fd == -1){
-        fprintf(stderr, "Failed to create the socket!\n");
+        fprintf(stderr, "sender : main : error in create_socket\n");
         exit(EXIT_FAILURE);
     }
 
