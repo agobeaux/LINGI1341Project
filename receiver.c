@@ -1,24 +1,9 @@
-#include "receiver.h"
-#include "queue_receiver.c"
-#include "Q4 INGInious/packet_interface.h"
-#include "Q3 INGInious/real_address.c" // temporary solution
-#include "Q3 INGInious/create_socket.c"
-#include "Q4 INGInious/packet_implem.c"
+#include "sender.h"
 #include <poll.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "Q4 INGInious/packet_implem.c"
+#include "Q3 INGInious/real_address.c"
+#include "Q3 INGInious/create_socket.c"
+#include "queue_receiver.c"
 
 #define ser_PORT 12345 // to change. Should be an argument
 
