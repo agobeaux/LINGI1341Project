@@ -10,7 +10,7 @@
  * @return : 0 if the pkt if successful, -1 otherwise
  */
 int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
-    
+
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
         return -1;
@@ -20,7 +20,7 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
         fprintf(stderr, "Error with malloc in push, queue. \n");
         return -1;
     }
-    
+
     if(queue->size == 0){
         newnode->pkt = pkt;
         newnode->tp = tp;
@@ -29,7 +29,7 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
         queue->size += 1;
         return 0;
     }
-    
+
     node_t *run = queue->head;
     while(run->next != NULL){
         run = run->next;
@@ -70,17 +70,17 @@ pkt_t *queue_pop(queue_t *queue){
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
 pkt_t *queue_delete(queue_t *queue, int seqNum){
-    
+
     if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
     }
-    
+
     struct node *run = queue->head;
     if(run->pkt->seqNum == seqNum){
         return queue_pop(queue);
     }
-    
+
     while (run->next != NULL)
     {
         if (run->next->pkt->seqNum==seqNum)
@@ -106,8 +106,8 @@ pkt_t *queue_delete(queue_t *queue, int seqNum){
  */
 struct node *queue_find_nack_structure(queue_t *queue, int seqNum){
     struct node *run = queue->head;
-    
-    while (run->next != NULL)
+
+    while (run != NULL)
     {
         if (run->pkt->seqNum==seqNum)
         {
