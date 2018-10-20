@@ -12,6 +12,7 @@
 //demande de déconnexion à faire
 // timestamp ? après 2000ms, assuré que le packet disparaît ou il faut le discard ?
 
+//TODO : déconnexion
 void read_write_loop(const int sfd, const int fd){
     struct pollfd pfds[1];
     pfds[0].fd = sfd;
@@ -32,12 +33,12 @@ void read_write_loop(const int sfd, const int fd){
         return;
     }
     while(1){
-        fprintf(stderr, "In while\n");
-        if(poll(pfds, 3, 5) == -1){
+        if(poll(pfds, 1, 5) == -1){
             fprintf(stderr, "Error poll call : %s\n", strerror(errno));
         }
-        fprintf(stderr, "sfd : pollout : %d, sfd : pollin : %d, fd : pollout : %d\n",pfds[0].revents&POLLOUT,pfds[0].revents&POLLIN,pfds[1].revents&POLLOUT);
+        //fprintf(stderr, "pfds[0].revents&POLLOUT : %d, &POLLIN : %d\n", pfds[0].revents&POLLOUT, pfds[0].revents&POLLIN);
         while(pfds[0].revents&POLLOUT && ackQueue->size > 0){ // write on socket
+            fprintf(stderr, "Writing on the socket\n");
             pkt_t *ack = queue_pop(ackQueue);
             if(ack == NULL){
                 fprintf(stderr, "receiver : read_write_loop, ack == NULL when queue_pop(ackQueue)\n");
@@ -202,8 +203,9 @@ int main(int argc, char *argv[]){
     }
     else{
         fprintf(stderr, "I'm in f option!\n");
-        res_hostname = argv[4];
-        src_port = atoi(argv[5]);
+        res_hostname = argv[3];
+        src_port = atoi(argv[4]);
+        fprintf(stderr, "I'm leaving f option!\n");
     }
 
 
@@ -221,6 +223,7 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
 
+    fprintf(stderr, "Before read_write_loop\n");
     read_write_loop(socket_fd, fd);
 
     close(socket_fd);
