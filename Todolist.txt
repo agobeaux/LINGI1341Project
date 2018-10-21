@@ -1,0 +1,16 @@
+POLL ERR !!!
+define WaitedSeqnum
+
+
+FONCTION : seqNUM à traiter (grâce au print queue)
+window = 31 - queue size
+fd de stdout : on s'en fout
+TERMINER LA CONNEXION : pkt vide de longueur vide
+CHECK SI DANS LA WINDOW !!!
+Créer fichier d'output si n'existe pas
+
+POUR Lily : add en last ? -> queue->tail à définir, O(1)..
+POUR LES DEUX : seqnum 0 -> 1 -> .... -> 255 -> 0 -> 1 -> ...
+mais seqnum++ automatique car uint8_t non ? Yep.
+POUR LES DEUX : définir des constantes : 12 = size header, 2 et 3 sont des TYPE_ACK DATA etc
+MALLOC ET FREE !!!
