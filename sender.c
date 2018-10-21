@@ -230,7 +230,7 @@ void read_write_loop(const int sfd, int fd){
                     }
                     //delete the packet
                     fprintf(stderr, "before delete\n");
-                    if(queue_delete(buf_structure, seqnum_delete)==NULL){
+                    if(queue_delete(buf_structure, seqnum_delete)==0){
                         fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
                     }
                 }

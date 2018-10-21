@@ -3,7 +3,7 @@
 #include "Q4 INGInious/packet_implem.c"
 #include "Q3 INGInious/real_address.c"
 #include "Q3 INGInious/create_socket.c"
-#include "queue.c"
+#include "queue_sender.c"
 #include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,6 +71,8 @@ int main(int argc, char *argv[]){
     pkt_encode(pkt2, buf, &len);
     pkt_encode(pkt3, buf, &len);
     pkt_encode(pkt4, buf, &len);
+    struct timespec *tp = malloc(sizeof(struct timespec));
+    clock_gettime(CLOCK_REALTIME, tp);
 
 
     queue_t *buf_structure = queue_init();
@@ -78,20 +80,27 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "Error : test_queue, main, malloc buf_structure");
     }
     pkt_set_seqnum (pkt1, 1);
-    queue_push(buf_structure, pkt1);
+    queue_push(buf_structure, pkt1, tp);
     pkt_set_seqnum (pkt2, 2);
-    queue_push(buf_structure, pkt2);
+    queue_push(buf_structure, pkt2, tp);
     pkt_set_seqnum (pkt3, 3);
-    queue_push(buf_structure, pkt3);
+    queue_push(buf_structure, pkt3, tp);
     pkt_set_seqnum (pkt4, 4);
-    queue_push(buf_structure, pkt4);
+    queue_push(buf_structure, pkt4, tp);
     fprintf(stderr, "Head of queue has seqNum %d\n", buf_structure->head->pkt->seqNum);
+    fprintf(stderr, "Last of queue has seqNum %d\n", buf_structure->last->pkt->seqNum);
     fprintf(stderr, "2nd of queue has seqNum %d\n", buf_structure->head->next->pkt->seqNum);
     fprintf(stderr, "3d of queue has seqNum %d\n", buf_structure->head->next->next->pkt->seqNum);
-    fprintf(stderr, "Nack's pkt seqNum is %d\n", (find_nack_structure(buf_structure, 3))->seqNum);
     fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
-    fprintf(stderr, "Pkt's seqNum is %d\n", (delete(buf_structure, 1))->seqNum);
+    fprintf(stderr, "number of deleted pkt is %d\n", (queue_delete(buf_structure, 3)));
     fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
-    fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->next->pkt->seqNum);
+    pkt_set_seqnum (pkt1, 5);
+    queue_push(buf_structure, pkt1, tp);
+    pkt_set_seqnum (pkt2, 6);
+    queue_push(buf_structure, pkt2, tp);
+    fprintf(stderr, "Head of queue has seqNum %d\n", buf_structure->head->pkt->seqNum);
+    fprintf(stderr, "Last of queue has seqNum %d\n", buf_structure->last->pkt->seqNum);
+    fprintf(stderr, "number of deleted pkt is %d\n", (queue_delete(buf_structure, 5)));
+    fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
 
 }
