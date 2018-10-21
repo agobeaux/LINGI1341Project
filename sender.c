@@ -120,6 +120,10 @@ void read_write_loop(const int sfd, int fd){
                     if(wr == -1){
                         fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                     }
+                    
+                    free(buf);
+                    free(new_payload);
+                    
                     fprintf(stderr, "Wrote the stop pkt\n");
                     continue;
                 }
@@ -174,6 +178,7 @@ void read_write_loop(const int sfd, int fd){
                         if(wr == -1){
                             fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
                         }
+                        free(buf);
                         break;
                     }
                     run = run->next;
