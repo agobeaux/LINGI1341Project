@@ -45,8 +45,6 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "receiver : read_write_loop, ack == NULL when queue_pop(ackQueue)\n");
                 continue; //TODO : continue or break ? ack shouldn't be null if queue isn't empty
             }
-            int trFlag = ack->trFlag;
-            ack->trFlag = 0;
             char ackBuf[12];
             size_t ackLen = 12;
             if(pkt_encode(ack, ackBuf, &ackLen) != PKT_OK){
@@ -62,9 +60,6 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "Wrote %d bytes\n", wr);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
-                }
-                if(trFlag == 1){
-                    return;
                 }
             }
         }
@@ -105,12 +100,6 @@ void read_write_loop(const int sfd, const int fd){
                 //what do we do ? EOF ?
                 fprintf(stderr, "receiver, read_write_loop, rd == 0\n");
             }
-            else if(rd == 12){
-                fprintf(stderr, "End of transmission packet\n");
-                if(pktQueue->size == 0){
-                    return;
-                }
-            }
             else{
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
@@ -149,25 +138,7 @@ void read_write_loop(const int sfd, const int fd){
                     pkt_del(pkt);
                 }
                 else{
-                    // packet received
-                    if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
-                        //end of transmission packet
-                        fprintf(stderr, "End of transmission packet\n");
-                        pkt_t *ack = pkt_new();
-                        if(!ack){
-                            fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
-                            break;
-                        }
-                        ack->type = PTYPE_ACK;
-                        if(pkt->seqNum == waitedSeqNum){
-                            ack->trFlag = 1; //TODO : I defined this to know which ack should be the last one
-                        }
-                        ack->window = 31 - pktQueue->size; // TODO : test
-                        ack->seqNum = waitedSeqNum;
-                        ack->timestamp = pkt->timestamp;
-                        queue_push(ackQueue, ack);
-                        continue;
-                    }
+                    // packet received, add it to queue
                     if(queue_ordered_push(pktQueue, pkt) == 0){
                         // pkt successfully added on the queue
                         waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum);
@@ -264,7 +235,7 @@ int main(int argc, char *argv[]){
         close(socket_fd);
         return EXIT_FAILURE;
     }
-
+    
     fprintf(stderr, "Before read_write_loop\n");
     read_write_loop(socket_fd, fd);
 

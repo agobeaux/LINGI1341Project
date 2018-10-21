@@ -162,7 +162,7 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
         count++;
         node_t *toDel = runner;
         runner = runner->next;
-        pkt_del(toDel->pkt);
+        pkt_del(runner->pkt);
         free(toDel);
         queue->size -= 1;
     }

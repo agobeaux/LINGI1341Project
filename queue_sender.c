@@ -105,15 +105,10 @@ pkt_t *queue_delete(queue_t *queue, int seqNum){
  * @return return the structure with seqnum
  */
 struct node *queue_find_nack_structure(queue_t *queue, int seqNum){
-    printf("========= seqNum : %d ============\n", seqNum);
     struct node *run = queue->head;
-    if(run == NULL){
-        printf("queue->head = NULL ! queue_find_nack_structure\n");
-    }
+
     while (run != NULL)
     {
-        printf("run->pkt\n");
-        pkt_print(run->pkt);
         if (run->pkt->seqNum==seqNum)
         {
             run->tp->tv_sec = 0;
