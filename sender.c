@@ -211,30 +211,34 @@ void read_write_loop(const int sfd, int fd){
 
                         struct timespec *tp = malloc(sizeof(struct timespec));
 
+<<<<<<< HEAD
                         fprintf(stderr, "before queue_find_nack_structure\n");
                         struct node *time_node = queue_find_nack_structure(buf_structure, pkt_ack->seqNum-1);
                         if(time_node==NULL){
                             fprintf(stderr, "there is no structure in buffer with seqnum %d\n", pkt_ack->seqNum-1);
                             continue; // TODO : verify
+=======
+                        struct node *time_node = queue_find_nack_structure(buf_structure, pkt_ack->seqNum);
+                        if(time_node==NULL){
+                            fprintf(stderr, "there is no structure in buffer with seqnum %d\n", pkt_ack->seqNum);
+>>>>>>> parent of 16e2164... corrected queue_find_nack_structure + another little change
                         }
-                        fprintf(stderr, "after queue_find_nack_structure\n");
 
                         clock_gettime(CLOCK_REALTIME, tp);
-                        fprintf(stderr, "after clock gettime\n");
                         int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
 
-                        fprintf(stderr, "before accessing time_node->tp\n");
                         timer = 2+(time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec);
+<<<<<<< HEAD
                         fprintf(stderr, "after accessing time_node->tp\n");
                         firstAck = 0;
+=======
+>>>>>>> parent of 16e2164... corrected queue_find_nack_structure + another little change
                     }
                     //delete the packet
-                    fprintf(stderr, "before delete\n");
                     if(queue_delete(buf_structure, seqnum_delete)==NULL){
                         fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
                     }
                 }
-                fprintf(stderr, "after type == 2\n");
                 //we have a nack
                 if(pkt_ack->type == 3){
                     fprintf(stderr, "pkt_ack : PTYPE_NACK\n");
