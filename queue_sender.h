@@ -14,6 +14,7 @@ typedef struct node {
 } node_t;
 
 typedef struct queue{
-    struct node* head;
+    struct node *head;
+    struct node *last;
     int size;
 } queue_t;

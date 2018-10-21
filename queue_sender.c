@@ -10,6 +10,8 @@
  * @return : 0 if the pkt if successful, -1 otherwise
  */
 int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
+	fprintf(stderr, "je vais push.c\n");
+	fprintf(stderr, "je push seqNum %d\n", pkt->seqNum);
 
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
@@ -22,25 +24,26 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
     }
 
     if(queue->size == 0){
+		fprintf(stderr, "je vais push in queue with 0 size.c\n");
         newnode->pkt = pkt;
         newnode->tp = tp;
-        newnode->next = NULL;
+        queue->last = newnode;
+        fprintf(stderr, "je vais push last %d\n", newnode->pkt->seqNum);
         queue->head = newnode;
+        newnode->next = NULL;
+        fprintf(stderr, "je vais push head %d\n", newnode->pkt->seqNum);
         queue->size += 1;
         return 0;
     }
 
-    node_t *run = queue->head;
-    while(run->next != NULL){
-        run = run->next;
-    }
     newnode->pkt = pkt;
     newnode->tp = tp;
-    newnode->next = run->next;
-    run->next = newnode;
+    queue->last->next = newnode;
+    queue->last = newnode;
+    queue->last->next = NULL;
     queue->size += 1;
     return 0;
-}
+    }
 
 /**
  * Removes and returns a pkt from the queue.
@@ -50,6 +53,7 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
  * @return the most recently added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *queue){
+	fprintf(stderr, "je vais pop.c\n");
     if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return NULL;
@@ -69,33 +73,39 @@ pkt_t *queue_pop(queue_t *queue){
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-pkt_t *queue_delete(queue_t *queue, int seqNum){
+int queue_delete(queue_t *queue, int seqNum){
+	fprintf(stderr, "je vais delete.c\n");
+	int number = 0;
+	
+	fprintf(stderr, "suis dans delete avec seqNum %d\n", seqNum);
 
     if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
-        return NULL;
+        return number;
     }
-
+    
     struct node *run = queue->head;
-    if(run->pkt->seqNum == seqNum){
-        return queue_pop(queue);
-    }
 
-    while (run->next != NULL)
+    while (run != NULL)
     {
-        if (run->next->pkt->seqNum==seqNum)
-        {
-            pkt_t *pkt = run->next->pkt;
-            node_t *save = run->next;
-            run = run->next->next;
-            free(save);
-            queue->size -= 1;
-            return pkt;
-        }
-        run = run->next;
+		fprintf(stderr, "suis dans delete avec seqNum %d et je run %d\n", seqNum, run->pkt->seqNum);
+		if(run->pkt->seqNum!=seqNum){
+			fprintf(stderr, "je supprime %d et %d\n", seqNum, run->pkt->seqNum);
+			run = run->next;
+            queue_pop(queue);
+            number=number+1;
+            }
+        else if(run->pkt->seqNum==seqNum){
+			fprintf(stderr, "je supprime %d et %d\n", seqNum, run->pkt->seqNum);
+			run = run->next;
+            queue_pop(queue);
+            number=number+1;
+            return number;
+            }
     }
-    return NULL;
+    return number;
 }
+
 
 /**
  * Reset the timer.
@@ -131,6 +141,7 @@ struct node *queue_find_nack_structure(queue_t *queue, int seqNum){
  * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
 queue_t* queue_init(){
+	fprintf(stderr, "i'm in init \n");
     queue_t *newqueue = calloc(1,sizeof(queue_t)); // next and size set to 0
     if(newqueue == NULL){
         fprintf(stderr, "Error : queue_init malloc. \n");
