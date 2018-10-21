@@ -112,6 +112,8 @@ void read_write_loop(const int sfd, const int fd){
                 }
             }
             else{
+                //TODO : put this uint somewhere else
+                uint8_t realWindowSize = 31;
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
                     fprintf(stderr, "Malloc error in receiver, read_write_loop, creating pkt\n");
@@ -148,7 +150,9 @@ void read_write_loop(const int sfd, const int fd){
                     nack->timestamp = pkt->timestamp;
                     pkt_del(pkt);
                 }
-                else{
+                //TODO 31 : windowsize, window size (the real one)
+                //here, check if pkt is included in the window.
+                else if(pkt->seqNum - waitedSeqNum < realWindowSize && (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize){
                     // packet received
                     if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
                         //end of transmission packet
@@ -187,6 +191,22 @@ void read_write_loop(const int sfd, const int fd){
                     ack->timestamp = pkt->timestamp;
                     queue_push(ackQueue, ack);
                 }
+                else{
+                    fprintf(stderr, "Receiver : read_write_loop : received pkt outside of the window\n");
+
+                    pkt_t *ack = pkt_new();
+                    if(!ack){
+                        fprintf(stderr, "Receiver : read_write_loop : creating ack, malloc error\n");
+                        pkt_del(pkt);
+                        break;
+                    }
+                    ack->type = PTYPE_ACK;
+                    ack->window = 31 - pktQueue->size; // TODO : test
+                    ack->seqNum = waitedSeqNum;
+                    ack->timestamp = pkt->timestamp;
+                    pkt_del(pkt);
+                    queue_push(ackQueue, ack);
+                }
             }
         }
     }
@@ -217,7 +237,8 @@ int main(int argc, char *argv[]){
         switch(opt){
             case 'f':
                 f_option = 1;
-                fd = open(optarg, O_RDONLY);
+                //if file doesn't exist : create it, otherwise, reset it
+                fd = open(optarg, O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU);
                 fprintf(stderr, "Find an f option!\n");
                 if(fd == -1){
                     fprintf(stderr, "Can't open the file!\n");
