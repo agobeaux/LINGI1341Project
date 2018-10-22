@@ -5,7 +5,17 @@
 #include <stdint.h> /* uintx_t */
 
 /* Raccourci pour struct pkt */
-typedef struct pkt pkt_t;
+typedef struct pkt{
+	uint8_t window:5;
+	uint8_t trFlag:1;
+	uint8_t type:2;
+	uint8_t seqNum;
+	uint16_t length;
+	uint32_t timestamp;
+	uint32_t crc1;
+	char *payload;
+	uint32_t crc2;
+} pkt_t;
 
 /* Types de paquets */
 typedef enum {
@@ -48,7 +58,7 @@ void pkt_del(pkt_t*);
  * - Le CRC32 du header recu est le mÃªme que celui decode a la fin
  *   du header (en considerant le champ TR a 0)
  * - S'il est present, le CRC32 du payload recu est le meme que celui
- *   decode a la fin du payload 
+ *   decode a la fin du payload
  * - Le type du paquet est valide
  * - La longueur du paquet et le champ TR sont valides et coherents
  *   avec le nombre d'octets recus.
@@ -120,5 +130,7 @@ pkt_status_code pkt_set_payload(pkt_t*,
  * native de la machine!
  */
 pkt_status_code pkt_set_crc2(pkt_t*, const uint32_t crc2);
+
+void pkt_print(pkt_t* pkt);
 
 #endif  /* __PACKET_INTERFACE_H_ */

@@ -8,18 +8,6 @@
 #include <arpa/inet.h> /* ntohs */
 #include <stdio.h>
 
-struct __attribute__((__packed__)) pkt {
-	// Changed order because of the endianness
-	uint8_t window:5;
-	uint8_t trFlag:1;
-	uint8_t type:2;
-	uint8_t seqNum;
-	uint16_t length;
-	uint32_t timestamp;
-	uint32_t crc1;
-	char *payload;
-	uint32_t crc2;
-};
 
 /* Extra code */
 /* Your code will be inserted here */

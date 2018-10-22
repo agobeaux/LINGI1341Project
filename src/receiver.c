@@ -1,10 +1,10 @@
 #include "sender.h"
 #include <poll.h>
-#include "Q4 INGInious/packet_implem.c"
-#include "Q3 INGInious/real_address.c"
-#include "Q3 INGInious/create_socket.c"
-#include "Q3 INGInious/wait_for_client.c"
-#include "queue_receiver.c"
+#include "packet_interface.h"
+#include "real_address.h"
+#include "create_socket.h"
+#include "wait_for_client.h"
+#include "queue_receiver.h"
 
 #define ser_PORT 12345 // to change. Should be an argument
 
@@ -20,7 +20,6 @@ void read_write_loop(const int sfd, const int fd){
     pfds[0].events = POLLIN|POLLOUT;
     pfds[0].revents = 0;
 
-    int finishedTransfer = 0; // to know when to exit
     uint8_t waitedSeqNum = 0; // first packet has seqNum 0. uint8_t so that we won't need %(2^8)
     queue_t *pktQueue = queue_init();
     if(pktQueue == NULL){
@@ -112,6 +111,8 @@ void read_write_loop(const int sfd, const int fd){
                 }
             }
             else{
+                //TODO : put this uint somewhere else
+                uint8_t realWindowSize = 31;
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
                     fprintf(stderr, "Malloc error in receiver, read_write_loop, creating pkt\n");
@@ -148,7 +149,9 @@ void read_write_loop(const int sfd, const int fd){
                     nack->timestamp = pkt->timestamp;
                     pkt_del(pkt);
                 }
-                else{
+                //TODO 31 : windowsize, window size (the real one)
+                //here, check if pkt is included in the window.
+                else if(pkt->seqNum - waitedSeqNum < realWindowSize && (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize){
                     // packet received
                     if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
                         //end of transmission packet
@@ -187,6 +190,22 @@ void read_write_loop(const int sfd, const int fd){
                     ack->timestamp = pkt->timestamp;
                     queue_push(ackQueue, ack);
                 }
+                else{
+                    fprintf(stderr, "Receiver : read_write_loop : received pkt outside of the window\n");
+
+                    pkt_t *ack = pkt_new();
+                    if(!ack){
+                        fprintf(stderr, "Receiver : read_write_loop : creating ack, malloc error\n");
+                        pkt_del(pkt);
+                        break;
+                    }
+                    ack->type = PTYPE_ACK;
+                    ack->window = 31 - pktQueue->size; // TODO : test
+                    ack->seqNum = waitedSeqNum;
+                    ack->timestamp = pkt->timestamp;
+                    pkt_del(pkt);
+                    queue_push(ackQueue, ack);
+                }
             }
         }
     }
@@ -217,7 +236,8 @@ int main(int argc, char *argv[]){
         switch(opt){
             case 'f':
                 f_option = 1;
-                fd = open(optarg, O_RDONLY);
+                //if file doesn't exist : create it, otherwise, reset it
+                fd = open(optarg, O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU);
                 fprintf(stderr, "Find an f option!\n");
                 if(fd == -1){
                     fprintf(stderr, "Can't open the file!\n");

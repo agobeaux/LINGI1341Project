@@ -1,6 +1,7 @@
 #include "queue_sender.h"
-#include "Q4 INGInious/packet_interface.h"
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 /**
  * Adds a pkt to the queue.
  *
@@ -24,20 +25,18 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
     if(queue->size == 0){
         newnode->pkt = pkt;
         newnode->tp = tp;
-        newnode->next = NULL;
+        queue->last = newnode;
         queue->head = newnode;
+        newnode->next = NULL;
         queue->size += 1;
         return 0;
     }
 
-    node_t *run = queue->head;
-    while(run->next != NULL){
-        run = run->next;
-    }
     newnode->pkt = pkt;
     newnode->tp = tp;
-    newnode->next = run->next;
-    run->next = newnode;
+    queue->last->next = newnode;
+    queue->last = newnode;
+    queue->last->next = NULL;
     queue->size += 1;
     return 0;
 }
@@ -69,33 +68,46 @@ pkt_t *queue_pop(queue_t *queue){
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-pkt_t *queue_delete(queue_t *queue, int seqNum){
+int queue_delete(queue_t *queue, int seqNum){
+	int number = 0;
 
     if(queue->size == 0){
         fprintf(stderr, "head NULL, pop in queue.c\n");
-        return NULL;
+        return number;
     }
 
     struct node *run = queue->head;
-    if(run->pkt->seqNum == seqNum){
-        return queue_pop(queue);
-    }
 
-    while (run->next != NULL)
+    while (run != NULL)
     {
-        if (run->next->pkt->seqNum==seqNum)
-        {
-            pkt_t *pkt = run->next->pkt;
-            node_t *save = run->next;
-            run = run->next->next;
-            free(save);
-            queue->size -= 1;
-            return pkt;
-        }
-        run = run->next;
+		if(run->pkt->seqNum!=seqNum){
+			run = run->next;
+            pkt_t *pktDelete = queue_pop(queue);
+            if(pktDelete==NULL){
+				fprintf(stderr, "problem in queue_delete\n");
+			}
+			else{
+				pkt_del(pktDelete);
+			}
+            number=number+1;
+            }
+        else if(run->pkt->seqNum==seqNum){
+			run = run->next;
+            queue_pop(queue);
+            pkt_t *pktDelete = queue_pop(queue);
+            if(pktDelete==NULL){
+				fprintf(stderr, "problem in queue_delete\n");
+			}
+			else{
+				pkt_del(pktDelete);
+			}
+            number=number+1;
+            return number;
+            }
     }
-    return NULL;
+    return number;
 }
+
 
 /**
  * Reset the timer.
