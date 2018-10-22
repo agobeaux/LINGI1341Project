@@ -1,0 +1,687 @@
+commit c79a4506c1b64cdc14208c92d2c7dacf35ad236d
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 22 05:09:10 2018 +0200
+
+    rapport.txt
+    
+    not finished
+
+ LSINF1252___Rapport_Final.pdf => rapport.pdf | Bin 224748 -> 231532 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 6070aaa9f962a6609005d6f8a713a2f722339a13
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 22 05:04:41 2018 +0200
+
+    Rapport
+    
+    rapport : pas complet
+
+ LSINF1252___Rapport_Final.pdf | Bin 0 -> 224748 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 90e4f5c2b578d7043255031cecd6cb8570bc7de4
+Merge: 2c8758d 2c0e5a8
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 22 05:03:47 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+
+commit 2c8758dc9f4420f2e56df08045b28b32f8dcf6c7
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 22 05:03:25 2018 +0200
+
+    merge
+
+ text.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2c0e5a8e641fc6b04a441804ed3dc4a4adfc331a
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Mon Oct 22 04:38:24 2018 +0200
+
+    change place
+
+ TODOLIST.txt |  1 +
+ Todolist.txt | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+
+commit e0288a85ea7bcec42a27f17411cfb2c547f8c7ce
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Mon Oct 22 02:32:42 2018 +0200
+
+    New format. Makefiles made
+
+ Q3 INGInious/Makefile => Makefile        |    16 +-
+ Q1 INGInious/database.c                  |    39 -
+ Q1 INGInious/macros.h                    |    17 -
+ Q1 INGInious/record.c                    |   182 -
+ Q1 INGInious/record.h                    |   124 -
+ Q2 INGInious/calc                        |   Bin 12696 -> 0 bytes
+ Q2 INGInious/calc.c                      |    97 -
+ Q3 INGInious/read_write_loop.c           |    77 -
+ Q3 INGInious/read_write_loop.h           |    11 -
+ Todolist.txt                             |    15 -
+ queue.c                                  |   198 -
+ queue.h                                  |    16 -
+ queue_receiver.h                         |    18 -
+ queue_sender.h                           |    20 -
+ receiver                                 |   Bin 23568 -> 0 bytes
+ sender                                   |   Bin 27824 -> 0 bytes
+ {Q1 INGInious => src}/Makefile           |    17 +-
+ README.md => src/README.md               |     0
+ TODOLIST.txt => src/TODOLIST.txt         |     0
+ src/Todolist.txt                         |    30 +
+ {Q3 INGInious => src}/chat.c             |     0
+ {Q3 INGInious => src}/create_socket.c    |     0
+ {Q3 INGInious => src}/create_socket.h    |     0
+ {Q4 INGInious => src}/packet_implem.c    |    12 -
+ {Q4 INGInious => src}/packet_interface.h |    16 +-
+ queue_receiver.c => src/queue_receiver.c |     6 +-
+ src/queue_receiver.h                     |    73 +
+ queue_sender.c => src/queue_sender.c     |     7 +-
+ src/queue_sender.h                       |    68 +
+ {Q3 INGInious => src}/real_address.c     |     0
+ {Q3 INGInious => src}/real_address.h     |     0
+ receiver.c => src/receiver.c             |    11 +-
+ receiver.h => src/receiver.h             |     0
+ sender.c => src/sender.c                 |    15 +-
+ sender.h => src/sender.h                 |     0
+ test_queue.c => src/test_queue.c         |     6 +-
+ test_queue.h => src/test_queue.h         |     0
+ text1.txt => src/text.txt                |     0
+ src/text1.txt                            | 17280 +++++++++++++++++++++++++++++
+ {Q3 INGInious => src}/wait_for_client.c  |     0
+ {Q3 INGInious => src}/wait_for_client.h  |     0
+ test_queue                               |   Bin 23408 -> 0 bytes
+ 42 files changed, 17506 insertions(+), 865 deletions(-)
+
+commit dd9f72ac9088cc87593361d9500973fbc41185f7
+Merge: e750251 ec96297
+Author: Liliya Semerikova <semerikova@jabba.info.ucl.ac.be>
+Date:   Sun Oct 21 22:20:15 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1340Project
+
+commit e75025185d756bb1d20af47f88e6ea20f29fc960
+Author: Liliya Semerikova <semerikova@jabba.info.ucl.ac.be>
+Date:   Sun Oct 21 22:19:02 2018 +0200
+
+    Check free, not every free
+
+ queue_sender.c | 28 ++++++++++++++--------------
+ sender.c       |  5 +++++
+ 2 files changed, 19 insertions(+), 14 deletions(-)
+
+commit ec96297c904d4fe56d7c8c633543469b7feb2a6c
+Merge: 4c82766 f4d612d
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 18:28:16 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+
+commit 4c82766c63555daad7166c8c7c4cc7a0224965c9
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 18:27:33 2018 +0200
+
+    Fix -f problem on receiver (+create file or make it empty before writing) + fix when pkt outside of window
+
+ receiver.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+commit f4d612dcc6424a0c86a9ae581bb6d6dc29e9e327
+Author: Liliya Semerikova <semerikova@kenobi.info.ucl.ac.be>
+Date:   Sun Oct 21 18:14:13 2018 +0200
+
+    changes in queue.c and sender.c
+
+ Todolist.txt   |    19 +-
+ queue_sender.c |    63 +-
+ queue_sender.h |     3 +-
+ receiver       |   Bin 0 -> 23568 bytes
+ sender         |   Bin 0 -> 27824 bytes
+ sender.c       |     2 +-
+ test_queue     |   Bin 19324 -> 23408 bytes
+ test_queue.c   |    25 +-
+ text.txt       | 17280 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ text1.txt      | 17280 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 10 files changed, 34626 insertions(+), 46 deletions(-)
+
+commit 2ac6c632bf85e000c7ea54003f79fd59a99e9606
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 04:07:07 2018 +0200
+
+    Delete useless files...
+
+ err    | 113610 --------------------------------------------------------------
+ result |    226 -
+ 2 files changed, 113836 deletions(-)
+
+commit 6358b2aaa9921ee6cf482c71bc0d8598205c1b43
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 03:42:51 2018 +0200
+
+    Corrected : sender.c l.110, why -1 ?? huge fixes. + TODOLIST
+
+ Todolist.txt     |  16 ++++
+ queue_receiver.c |   2 +-
+ queue_sender.c   |   7 +-
+ receiver.c       |  33 +++++++-
+ result           | 226 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ sender.c         |  71 +++++++++++------
+ 6 files changed, 327 insertions(+), 28 deletions(-)
+
+commit 143c8b502227085cc9dfdb8913f90abef63f7687
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 03:36:23 2018 +0200
+
+    Revert "sender.c l.110, why -1 ?? huge fixes. + TODOLIST"
+    
+    This reverts commit e469442d3f497dde83c9e8a98d85000e59d04734.
+
+ Todolist.txt     |      16 -
+ err              | 1079480 +++------------------------------------------------
+ err2             |  395646 -------------------
+ out              |       0
+ queue_receiver.c |       2 +-
+ queue_sender.c   |       7 +-
+ receiver.c       |      33 +-
+ result           |     226 -
+ sender.c         |      71 +-
+ 9 files changed, 56834 insertions(+), 1418647 deletions(-)
+
+commit 0a79ddf6bd6e96d01a3ff602ed0742fe034ead76
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 03:35:39 2018 +0200
+
+    Revert "Revert "corrected queue_find_nack_structure + another little change""
+    
+    This reverts commit 720e15ca73580a6f4e37012f51dbcb35ed7b9552.
+
+ queue_sender.c | 17 ++++++-----------
+ sender.c       | 14 +++++---------
+ 2 files changed, 11 insertions(+), 20 deletions(-)
+
+commit 720e15ca73580a6f4e37012f51dbcb35ed7b9552
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 03:32:21 2018 +0200
+
+    Revert "corrected queue_find_nack_structure + another little change"
+    
+    This reverts commit 16e21647432747174fde44818355b277da3ab79c.
+
+ queue_sender.c | 17 +++++++++++------
+ sender.c       | 14 +++++++++-----
+ 2 files changed, 20 insertions(+), 11 deletions(-)
+
+commit e469442d3f497dde83c9e8a98d85000e59d04734
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 03:18:21 2018 +0200
+
+    sender.c l.110, why -1 ?? huge fixes. + TODOLIST
+
+ Todolist.txt     |      16 +
+ err              | 1079480 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ err2             |  395646 +++++++++++++++++++
+ out              |       0
+ queue_receiver.c |       2 +-
+ queue_sender.c   |       7 +-
+ receiver.c       |      33 +-
+ result           |     226 +
+ sender.c         |      71 +-
+ 9 files changed, 1418647 insertions(+), 56834 deletions(-)
+
+commit 16e21647432747174fde44818355b277da3ab79c
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sun Oct 21 00:08:57 2018 +0200
+
+    corrected queue_find_nack_structure + another little change
+
+ err            | 113610 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ queue_sender.c |     16 +-
+ sender.c       |      8 +
+ 3 files changed, 113626 insertions(+), 8 deletions(-)
+
+commit a23252dd5c733395075ec3701a3b4c03c5a1a386
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 23:18:38 2018 +0200
+
+    Little push for Lily
+
+ receiver.c |  6 +-----
+ sender.c   | 19 ++++++++++++-------
+ 2 files changed, 13 insertions(+), 12 deletions(-)
+
+commit b83de8db44efb2c18eb406b0ced68f7c7bf437ed
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 22:18:47 2018 +0200
+
+    Receiver : connect (wait_for_client)
+
+ receiver.c | 21 ++++++++++++++++++++-
+ sender.c   |  9 +++++++--
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+commit 33d004ac8bf3d336c8d70c3053e18135c45deabf
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 20:33:41 2018 +0200
+
+    Corrected the retransmission of packet condition
+
+ sender.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+commit 1f3db10fe268f528401edfffc76ec9287cd43455
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 19:44:06 2018 +0200
+
+    Corrected some mistakes + put some fprintf debug
+
+ receiver.c | 13 ++++++++-----
+ sender.c   | 34 +++++++++++++++++++++-------------
+ 2 files changed, 29 insertions(+), 18 deletions(-)
+
+commit a8ef0aaa50f08ccf6af1e168461bd342dcadb48e
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Sat Oct 20 19:16:51 2018 +0200
+
+    debug receiver.C
+
+ receiver.c | 25 +++++--------------------
+ receiver.h | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+), 20 deletions(-)
+
+commit f8409f01e4f3c450129396995798f565600b60b4
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 18:56:23 2018 +0200
+
+    little correction queue_receiver.c : queue_payload_write
+
+ queue_receiver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1fafe6f0fa17ec26e51c612757ba9f27d86a5dc4
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 18:53:22 2018 +0200
+
+    queue_receiver.c .h, receiver.c. Still a bug
+
+ queue_receiver.c | 171 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ queue_receiver.h |  18 ++++++
+ receiver.c       | 181 ++++++++++++++++++++++++++++---------------------------
+ 3 files changed, 280 insertions(+), 90 deletions(-)
+
+commit 773b6c7f69c862c0ca0005bb367901033dc0e681
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Sat Oct 20 18:28:44 2018 +0200
+
+    little changes in sender.c
+
+ sender.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 7a542dc63e9f96858ee3eacb84cc109b684dc76d
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Sat Oct 20 18:20:10 2018 +0200
+
+    add queue_sender.c && changes in sender.c
+    
+    queue_sender.c : new queue only for sender
+
+ queue_sender.c | 142 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ queue_sender.h |  19 ++++++++
+ sender.c       |  79 ++++++++++++++------------------
+ 3 files changed, 194 insertions(+), 46 deletions(-)
+
+commit f43569aa0b682b7b39d304dac01f5c13ae6eec76
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Sat Oct 20 16:17:52 2018 +0200
+
+    queue_free useless in our case. queue_is_empty adapt + changed some names
+
+ queue.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
+
+commit 4383c78cc46066cd265457b993983a5882b47229
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Sat Oct 20 13:51:10 2018 +0200
+
+    changes in sender.c
+    
+    + timer
+
+ sender.c | 73 ++++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 43 insertions(+), 30 deletions(-)
+
+commit b6298656a89bfb665acf872a0b8ea5e20f012e00
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 21:50:07 2018 +0200
+
+    changes in sender.c
+    
+    check all return values
+
+ sender.c | 47 +++++++++++++++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 18 deletions(-)
+
+commit d055c6998c4d87481ccab684e664b2092c618029
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 21:30:44 2018 +0200
+
+    fix merge problems
+
+ sender.c | 28 +++-------------------------
+ 1 file changed, 3 insertions(+), 25 deletions(-)
+
+commit 7c031658bd5eed37df660a481f40fb2920e0260d
+Merge: c826a7e 4208f6b
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 21:24:37 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+    
+    merge problem
+
+commit c826a7e2165957a774e1d9a5d3a3420114650c70
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 21:22:59 2018 +0200
+
+    changes in sender.c
+
+ sender.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 13 deletions(-)
+
+commit 4208f6b64fb4cade6fe895470ea93f146e621830
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Fri Oct 19 19:10:27 2018 +0200
+
+    Changes in queue : new functions (init+ordered_push)  + list name -> queue. Adapted sender + test_queue
+
+ queue.c      | 146 ++++++++++++++++++++++++++++++++++++++++-------------------
+ queue.h      |   5 ++
+ sender.c     |  56 ++++++++++++++---------
+ sender.h     |   4 --
+ test_queue.c |  11 +++--
+ test_queue.h |   6 +--
+ 6 files changed, 147 insertions(+), 81 deletions(-)
+
+commit 1f3f0e5c08449cfe80cf86e2cce9720d78034c13
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 18:27:24 2018 +0200
+
+    changes in sender.c
+
+ sender.c | 114 ++++++++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 66 insertions(+), 48 deletions(-)
+
+commit a54eb4364435c1af00005026b8415b3151e518f1
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 17:38:46 2018 +0200
+
+    changes in queue.c & test_queue.c
+    
+    queue.c : FIFO
+    test_queue : check new queue.c
+
+ queue.c      |  38 +++++++++++++++++++++++++-------------
+ test_queue   | Bin 19324 -> 19324 bytes
+ test_queue.c |  22 +++++++++++++++++++---
+ 3 files changed, 44 insertions(+), 16 deletions(-)
+
+commit f904466826a265e4e236e5497ce1132843c551c5
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 12:16:17 2018 +0200
+
+    changes in queue.c and stack.c, creation of test_queue
+    
+    queue.c : fix bugs
+    test_queue.c : check the good working of queue.c
+    sender.c : treate nack/ack
+
+ queue.c      |  66 ++++++++++++++++++++++++++++++++++++++++++++------
+ sender.c     |  28 +++++++++++++++------
+ test_queue   | Bin 0 -> 19324 bytes
+ test_queue.c |  78 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ test_queue.h |  17 +++++++++++++
+ 5 files changed, 174 insertions(+), 15 deletions(-)
+
+commit 2f6a711d93f125633a9e2f37735013f544b96a4b
+Merge: 816c221 d4402ae
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 02:24:45 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+
+commit 816c221fcf4e0c1621ec221c6c91d11b0da33eec
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Fri Oct 19 02:24:40 2018 +0200
+
+    changes in queue.c & stack.c
+    
+    queue.c : list of nodes
+    stack.c : update
+
+ queue.c  |  22 ++++-----
+ sender.c | 164 +++++++++++++++++++++++++++++++--------------------------------
+ sender.h |   4 ++
+ 3 files changed, 96 insertions(+), 94 deletions(-)
+
+commit d4402ae0afc13fd40bbb8db85345dcec951a2c71
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Fri Oct 19 01:40:09 2018 +0200
+
+    TODO added on receiver
+
+ receiver.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit a23b2735a31e95b3ffcba0b4c18a6862b6d18c26
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Fri Oct 19 01:33:45 2018 +0200
+
+    Receiver can receive packets and send ack or nack (not finished at all though)
+
+ Q4 INGInious/packet_implem.c |   3 +
+ receiver.c                   | 162 ++++++++++++++++++++++++++++++-------------
+ 2 files changed, 117 insertions(+), 48 deletions(-)
+
+commit e08f4ae2481148ade4618823b1b7b9281bb71ac3
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Thu Oct 18 20:44:16 2018 +0200
+
+    real merge
+
+ queue.c  |  2 +-
+ sender.c | 24 ------------------------
+ 2 files changed, 1 insertion(+), 25 deletions(-)
+
+commit abde6bf3e0f7dc0927c1c29388dba63de87eb874
+Merge: b88918e f02dc3b
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Thu Oct 18 20:39:08 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+
+commit b88918e5d83b7136fb25d2f18bdeefe04ccca62c
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Thu Oct 18 20:37:18 2018 +0200
+
+    changes in sendet.c
+
+ sender.c | 103 +++++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 80 insertions(+), 23 deletions(-)
+
+commit f94a086ee9b18f92ac139a2706001778129d1459
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Thu Oct 18 14:40:42 2018 +0200
+
+    update sender.c
+    
+    Sender can correctly treat, encode and send the information received, but for the moment information cannot exceed one payload (512 bytes).
+
+ sender.c | 87 ++++++++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 66 insertions(+), 21 deletions(-)
+
+commit f02dc3bbe8a16e529a903ccc222de0783e111046
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Wed Oct 17 16:36:29 2018 +0200
+
+    stack -> queue (name) + changed function names + corrected functions + include pkt in queue for pkt_del
+
+ queue.c            | 93 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ stack.h => queue.h | 10 +++---
+ receiver.c         |  2 ++
+ sender.c           | 28 ++++++++--------
+ stack.c            | 94 ------------------------------------------------------
+ 5 files changed, 113 insertions(+), 114 deletions(-)
+
+commit 5f0a9630ea99c39f392ba155368ce189a566ee01
+Merge: e2b35f9 d197c3a
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Wed Oct 17 15:31:32 2018 +0200
+
+    Merge branch 'master' of https://github.com/agobeaux/LINGI1341Project
+
+commit d197c3a1aa8f22598f2a5233a6fb92fc29f0a5ab
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Wed Oct 17 15:31:24 2018 +0200
+
+    Added comments + little change in stack.c
+
+ sender.c | 10 +++++++---
+ stack.c  |  6 +++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+commit e2b35f924f3168ed6c0e24a7a6cd8870e1d1faec
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Wed Oct 17 15:29:52 2018 +0200
+
+    Added commentaries about questions we had
+
+ receiver.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+commit 6ddf82470dab5be0778ff7db4ad0abf594845b3c
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Wed Oct 17 00:15:52 2018 +0200
+
+    Corrected mistake, stdout and not stdin for receiver
+
+ receiver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2604b4a988f3647a60ed68a8452df240d74a9e12
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Wed Oct 17 00:13:54 2018 +0200
+
+    little change real_address + receiver strucutre + comments on what to do next
+
+ Q3 INGInious/real_address.c |  32 ++++-----
+ receiver.c                  | 158 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 164 insertions(+), 26 deletions(-)
+
+commit ef52b6fa7b0d68e653a4f29cf03f342f4646f428
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Tue Oct 16 23:17:58 2018 +0200
+
+    Add stack structure (stack.c), include INGInious in sender
+
+ Q4 INGInious/packet_implem.c |   8 +--
+ sender.c                     | 128 ++++++++-----------------------------------
+ sender.h                     |  42 +++++++++++---
+ stack.c                      |  94 +++++++++++++++++++++++++++++++
+ stack.h                      |  13 +++++
+ 5 files changed, 170 insertions(+), 115 deletions(-)
+
+commit 7183195e6cd14a25ec82330b591a793876cdcfce
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 15 23:22:44 2018 +0200
+
+    Update TODOLIST.txt
+
+ TODOLIST.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit babc0a5022b45b13bdbd91865a8f114dcfa0f82c
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 15 23:19:01 2018 +0200
+
+    Update sender.c
+
+ sender.c | 119 +++++++++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 74 insertions(+), 45 deletions(-)
+
+commit 3265ef009d2eba274d27691beb87776ea23f2a7c
+Author: Liliya Semerikova <liliya.semerikova@student.uclouvain.be>
+Date:   Mon Oct 15 14:54:52 2018 +0200
+
+    sender : beginning + receiver : structure (nothing)
+
+ receiver.c |   8 ++++
+ receiver.h |  13 ++++++
+ sender.c   | 151 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ sender.h   |  13 ++++++
+ 4 files changed, 185 insertions(+)
+
+commit e8bcb3633cd7f2edf75c5efb821f90f36b948295
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Mon Oct 15 01:17:17 2018 +0200
+
+    Q3 and Q4 (+ TODOs for Q4)
+
+ Q3 INGInious/Makefile           |  29 ++++
+ Q3 INGInious/chat.c             |  72 +++++++++
+ Q3 INGInious/create_socket.c    |  65 ++++++++
+ Q3 INGInious/create_socket.h    |  21 +++
+ Q3 INGInious/read_write_loop.c  |  77 +++++++++
+ Q3 INGInious/read_write_loop.h  |  11 ++
+ Q3 INGInious/real_address.c     |  29 ++++
+ Q3 INGInious/real_address.h     |  19 +++
+ Q3 INGInious/wait_for_client.c  |  33 ++++
+ Q3 INGInious/wait_for_client.h  |  13 ++
+ Q4 INGInious/packet_implem.c    | 340 ++++++++++++++++++++++++++++++++++++++++
+ Q4 INGInious/packet_interface.h | 124 +++++++++++++++
+ 12 files changed, 833 insertions(+)
+
+commit 0eeeb09be1d2cd7de90de997b176f30a67b0e947
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Thu Oct 11 14:38:38 2018 +0200
+
+    Q1 + Q2, mistake corrected
+
+ Makefile => Q1 INGInious/Makefile     |   0
+ database.c => Q1 INGInious/database.c |   0
+ macros.h => Q1 INGInious/macros.h     |   0
+ record.c => Q1 INGInious/record.c     |   0
+ record.h => Q1 INGInious/record.h     |   0
+ Q2 INGInious/calc                     | Bin 0 -> 12696 bytes
+ Q2 INGInious/calc.c                   |  97 ++++++++++++++++++++++++++++++++++
+ database                              | Bin 13224 -> 0 bytes
+ database.o                            | Bin 2152 -> 0 bytes
+ record.o                              | Bin 4544 -> 0 bytes
+ 10 files changed, 97 insertions(+)
+
+commit 1dcb9d82c704bceb4fb3c4e347b719c26c63eb38
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Thu Oct 11 14:19:36 2018 +0200
+
+    Question 1+2 INGInious + structure
+
+ Makefile   |  29 ++++++++++
+ database   | Bin 0 -> 13224 bytes
+ database.c |  39 +++++++++++++
+ database.o | Bin 0 -> 2152 bytes
+ macros.h   |  17 ++++++
+ record.c   | 182 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ record.h   | 124 +++++++++++++++++++++++++++++++++++++++++
+ record.o   | Bin 0 -> 4544 bytes
+ 8 files changed, 391 insertions(+)
+
+commit 7f418610638d182b93a382e192e833291ea8c562
+Author: agobeaux <alexandre.gobeaux@student.uclouvain.be>
+Date:   Thu Oct 11 13:51:46 2018 +0200
+
+    Just a README
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)

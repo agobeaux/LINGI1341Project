@@ -215,7 +215,7 @@ void read_write_loop(const int sfd, const int fd){
 // comment la taille de fenêtre varie ? Dépend de nous ? sert à quoi ?
 int main(int argc, char *argv[]){
 
-    int fd; //file from command line
+    int fd = STDOUT_FILENO; //file from command line
     char *res_hostname; //hostname from command line
     //char *ser_hostname = "::1"; //useless ?
     int src_port; //port from command line
@@ -254,7 +254,6 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "I'm in no-f option!\n");
         res_hostname = argv[1];
         src_port = atoi(argv[2]);
-        fd = STDOUT_FILENO;
     }
     else{
         fprintf(stderr, "I'm in f option!\n");

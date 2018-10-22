@@ -262,7 +262,7 @@ void read_write_loop(const int sfd, int fd){
 
 int main(int argc, char *argv[]){
 
-    int fd;//file from command line
+    int fd = STDIN_FILENO;//file from command line
     char *res_hostname;//hostname from command line
     char *ser_hostname = "::1";
     int dst_port;//port from command line
@@ -297,7 +297,6 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "I'm in no-f option!\n");
         res_hostname = argv[1];
         dst_port = atoi(argv[2]);
-        fd = STDIN_FILENO;
     }
     else{
         fprintf(stderr, "I'm in f option!\n");

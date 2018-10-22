@@ -1,4 +1,3 @@
-
 # See gcc/clang manual to understand all flags
 CFLAGS += -std=c99 # Define which version of the C standard to use
 CFLAGS += -Wall # Enable the 'all' set of warnings
@@ -13,24 +12,19 @@ LDFLAGS= -rdynamic
 LDFLAGS += -lz
 
 # Default target
-all: clean srcmake
+all: clean
 
 # If we run `make debug` instead, keep the debug symbols for gdb
 # and define the DEBUG macro.
 debug: CFLAGS += -g -DDEBUG -Wno-unused-parameter -fno-omit-frame-pointer
-debug: clean sender receiver
-
-
-srcmake:
-	cd src && $(MAKE) && mv receiver .. && mv sender ..
+debug: clean
 
 .PHONY: tests
 
 tests:
-	$(MAKE) tests -C tests
+	@rm -f test
 
 .PHONY: clean
 
 clean:
-	@rm -f sender receiver
-	+$(MAKE) clean -C src
+	@rm -f test

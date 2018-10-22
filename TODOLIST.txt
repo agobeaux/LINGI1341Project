@@ -1,1 +1,30 @@
-LILY : sender : former des paquets de max 512 octets, TR à 0, c'est le network qui change, voir spécifications etc\n Alex : receiver, bien gérer les ACK et NACK, attention au seqnum, écrire dans le fichier donné en -f ou sur la sortie standard redirigée, discard les TR1 et renvoyer NACK
+POLL ERR !!! voir l'utilité 
+
+
+FONCTION : seqNUM à traiter (grâce au print queue) 
+window = 31 - queue size
+fd de stdout : définir poll à 1 comme dans le receiver
+
+CHECK SI DANS LA WINDOW !!! receiver si trop, alors renvoyer 
+Créer fichier d'output si n'existe pas CREATE, OTRUNC
+
+POUR LES DEUX : définir des constantes : 12 = size header, 2 et 3 sont des TYPE_ACK DATA etc
+MALLOC ET FREE !!!
+
+Makefile
+
+FONCTION LILY POUR DELETE EN BOUCLE !!! ATTENTION : si fenêtre de 250 à 3, si on veut delete jusque 2, il faut delete 250 251 252 ... 0 1 2
+=> Queue_delete de sender : bof pour le moment car si on reçoit un ack déjà reçu d'avant, il va supprimer toute la queue.. Et aussi, queue_pop free pas
+
+PROBLEME ! Il y a une limite au nombre de paquets à envoyer en 2sec (2sec = temps de vie d'un paquet). Car si on a 2 ack 1 envoyés (réception d'un pkt 0 + ack1 arrivé mais mal formaté => ack 0). Si on a déjà fait une boucle (0->255 envoyés en moins de 2sec), le ack1 va dire qu'on a reçu le paquet alros que pas d'office, il s'agit du mauvais paquet... => 123 (nbre à vérifier) paquets chaque 2 sec max (à envoyer, sender)
+PAS 123
+
+si paquet TR : congestion du réseaux => si on renvoit direct on sature le réseau
+
+
+corriger DELETE
+rapport + suite de tests + makefile
+
+puis link_sim pour tester et débug
+
+FICHIERS .h : mettre les fonctions avec commentaires
