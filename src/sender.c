@@ -1,9 +1,10 @@
 #include "sender.h"
 #include <poll.h>
-#include "Q4 INGInious/packet_implem.c"
-#include "Q3 INGInious/real_address.c"
-#include "Q3 INGInious/create_socket.c"
-#include "queue_sender.c"
+#include "packet_interface.h"
+#include "real_address.h"
+#include "create_socket.h"
+#include "queue_sender.h"
+#include <time.h>
 
 static int size_buffer = 1;
 static int timer = 3; //define a random value for the first time, to be sure receive the first packet
@@ -120,10 +121,10 @@ void read_write_loop(const int sfd, int fd){
                     if(wr == -1){
                         fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                     }
-                    
+
                     free(buf);
                     free(new_payload);
-                    
+
                     fprintf(stderr, "Wrote the stop pkt\n");
                     continue;
                 }
@@ -267,8 +268,6 @@ int main(int argc, char *argv[]){
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
     int f_option = 0;//if there is (not) f_option
-    int err;
-    int window_size=5;//for this moment window is fixe and equal to 5
 
     //check if there is enough arguments to continue
     if (argc<2){

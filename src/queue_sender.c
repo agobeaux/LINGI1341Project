@@ -1,6 +1,7 @@
 #include "queue_sender.h"
-#include "Q4 INGInious/packet_interface.h"
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 /**
  * Adds a pkt to the queue.
  *
@@ -38,7 +39,7 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
     queue->last->next = NULL;
     queue->size += 1;
     return 0;
-    }
+}
 
 /**
  * Removes and returns a pkt from the queue.
@@ -74,7 +75,7 @@ int queue_delete(queue_t *queue, int seqNum){
         fprintf(stderr, "head NULL, pop in queue.c\n");
         return number;
     }
-    
+
     struct node *run = queue->head;
 
     while (run != NULL)

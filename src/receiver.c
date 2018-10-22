@@ -1,10 +1,10 @@
 #include "sender.h"
 #include <poll.h>
-#include "Q4 INGInious/packet_implem.c"
-#include "Q3 INGInious/real_address.c"
-#include "Q3 INGInious/create_socket.c"
-#include "Q3 INGInious/wait_for_client.c"
-#include "queue_receiver.c"
+#include "packet_interface.h"
+#include "real_address.h"
+#include "create_socket.h"
+#include "wait_for_client.h"
+#include "queue_receiver.h"
 
 #define ser_PORT 12345 // to change. Should be an argument
 
@@ -20,7 +20,6 @@ void read_write_loop(const int sfd, const int fd){
     pfds[0].events = POLLIN|POLLOUT;
     pfds[0].revents = 0;
 
-    int finishedTransfer = 0; // to know when to exit
     uint8_t waitedSeqNum = 0; // first packet has seqNum 0. uint8_t so that we won't need %(2^8)
     queue_t *pktQueue = queue_init();
     if(pktQueue == NULL){

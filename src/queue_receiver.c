@@ -1,5 +1,4 @@
 #include "queue_receiver.h"
-#include "Q4 INGInious/packet_interface.h"
 #include <stdlib.h>
 #include <unistd.h>
 /**
@@ -158,7 +157,10 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
     uint8_t count = 0;
     while(runner != NULL && runner->pkt->seqNum == seqNum+count){
         // seqNum+count is of type uint8_t so it will do %(2^8). 254->255->0
-        write(fd, runner->pkt->payload, runner->pkt->length);
+        int wr = write(fd, runner->pkt->payload, runner->pkt->length);
+        if(wr == -1){
+            fprintf(stderr, "queue_receiver : queue_payload_write : write = -1\n");
+        }
         count++;
         node_t *toDel = runner;
         runner = runner->next;
