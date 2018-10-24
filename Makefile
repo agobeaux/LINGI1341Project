@@ -15,12 +15,11 @@ LDFLAGS += -lz
 # Default target
 all: clean srcmake
 
-# If we run `make debug` instead, keep the debug symbols for gdb
-# and define the DEBUG macro.
-debug: CFLAGS += -g -DDEBUG -Wno-unused-parameter -fno-omit-frame-pointer
-debug: clean sender receiver
 srcmake:
 	cd src && $(MAKE) && mv receiver .. && mv sender ..
+
+debug:
+	cd src && $(MAKE) debug && mv receiver .. && mv sender ..
 
 .PHONY: tests
 
