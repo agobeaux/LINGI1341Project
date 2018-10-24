@@ -39,7 +39,7 @@ int create_socket(struct sockaddr_in6 *source_addr,
 						 
 						 // (unsigned short int) host byte order -> network byte order
 						 source_addr->sin6_port = htons(src_port);
-						 
+                         source_addr->sin6_family = AF_INET6;
 						 // source_addr->in_port_t = src_port;
 						 if(bind(sockfd, (struct sockaddr *) source_addr, sizeof(struct sockaddr_in6)) == -1){
 							 fprintf(stderr, "Error for bind call : %s\n", strerror(errno)); // perror(); ?
