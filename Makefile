@@ -19,8 +19,6 @@ all: clean srcmake
 # and define the DEBUG macro.
 debug: CFLAGS += -g -DDEBUG -Wno-unused-parameter -fno-omit-frame-pointer
 debug: clean sender receiver
-
-
 srcmake:
 	cd src && $(MAKE) && mv receiver .. && mv sender ..
 
