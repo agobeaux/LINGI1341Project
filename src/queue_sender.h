@@ -42,7 +42,7 @@ pkt_t *queue_pop(queue_t *queue);
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-int queue_delete(queue_t *queue, int seqNum);
+int queue_delete(queue_t *queue, uint8_t seqNum);
 
 /**
  * Reset the timer.
@@ -51,7 +51,7 @@ int queue_delete(queue_t *queue, int seqNum);
  *
  * @return return the structure with seqnum
  */
-struct node *queue_find_nack_structure(queue_t *queue, int seqNum);
+struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum);
 
 /**
  * Initialises an empty queue

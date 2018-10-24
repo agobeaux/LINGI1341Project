@@ -28,3 +28,9 @@ rapport + suite de tests + makefile
 puis link_sim pour tester et débug
 
 FICHIERS .h : mettre les fonctions avec commentaires
+
+ATTENTION : nombre de paquets à envoyer par sec, maximum à déterminer.
+But : si un ack reste 2 sec dans le réseau, il ne faut pas que le 3 soit dans
+la fenêtre à nouveau.
+
+FREE !!! queues etc

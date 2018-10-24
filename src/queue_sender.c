@@ -64,11 +64,11 @@ pkt_t *queue_pop(queue_t *queue){
 /**
  * Removes and returns a pkt from the queue.
  *
- * @head : the head of the queue
+ * @head : the number of deleted packets
  *
  * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
  */
-int queue_delete(queue_t *queue, int seqNum){
+int queue_delete(queue_t *queue, uint8_t seqNum){
 	int number = 0;
 
     if(queue->size == 0){
@@ -90,8 +90,8 @@ int queue_delete(queue_t *queue, int seqNum){
 				pkt_del(pktDelete);
 			}
             number=number+1;
-            }
-        else if(run->pkt->seqNum==seqNum){
+        }
+        else{ // if(run->pkt->seqNum==seqNum){
 			run = run->next;
             queue_pop(queue);
             pkt_t *pktDelete = queue_pop(queue);
@@ -103,7 +103,7 @@ int queue_delete(queue_t *queue, int seqNum){
 			}
             number=number+1;
             return number;
-            }
+        }
     }
     return number;
 }
@@ -116,8 +116,8 @@ int queue_delete(queue_t *queue, int seqNum){
  *
  * @return return the structure with seqnum
  */
-struct node *queue_find_nack_structure(queue_t *queue, int seqNum){
-    printf("========= seqNum : %d ============\n", seqNum);
+struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
+    printf("========= seqNum : %u ============\n", seqNum);
     struct node *run = queue->head;
     if(run == NULL){
         printf("queue->head = NULL ! queue_find_nack_structure\n");

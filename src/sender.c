@@ -28,7 +28,7 @@ pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
         fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
     }
-    fprintf(stderr, "create_packet : seqNum : %d\n", seqNum);
+    fprintf(stderr, "create_packet : seqNum : %u\n", seqNum);
     pkt_set_seqnum(pkt, seqNum++); // does %(2^8) since type(seqNum) : uint8_t
 
     if(pkt_set_length(pkt, len)!=PKT_OK){
@@ -55,7 +55,7 @@ void read_write_loop(const int sfd, int fd){
     uint8_t seqnum_delete; // sequence number of the payload to delete
     uint8_t seqnum_nack; // sequence number of the payload to resend
     int firstAck = 1; // indicates if first ack so that we can compute the retransmission timer
-    int lastAckNum = -1;
+    int isLastAckNum = 0;
 
     char buf_ack[12];//buffer for (n)ack
     queue_t *buf_structure = queue_init();//stock all structures to send
@@ -83,7 +83,7 @@ void read_write_loop(const int sfd, int fd){
         }
 
         //try to write to the socket
-        if(pfds[1].revents & POLLOUT && lastAckNum == -1){
+        if(pfds[1].revents & POLLOUT && isLastAckNum == 0){
 
             if(buf_structure->size < size_buffer){
                 size_t len = 528;
@@ -107,8 +107,12 @@ void read_write_loop(const int sfd, int fd){
                     if(pkt == NULL){
                         fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
                     }
+                    pkt_set_type(pkt, PTYPE_DATA);
+                    //TODO : if doesn't go well ? should never happen
+                    //TODO : pkt_set_window ? and timestamp ?
                     pkt_set_seqnum(pkt, seqNum++); // does %(2^8) since type(seqNum) : uint8_t
-                    lastAckNum = seqNum-1; //WARNING TODO : why -1 ??
+                    //seqNum ++ because last ack's number will be seqNum+1
+                    isLastAckNum = 1;
                     if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                         fprintf(stderr, "sender : read_while_loop : error with encode\n");
                     }
@@ -147,7 +151,7 @@ void read_write_loop(const int sfd, int fd){
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
-            }
+            } // end if(buf_structure->size < size_buffer)
 
             //check if there is still element that wasn't resent or their timer is out
             else{
@@ -199,10 +203,11 @@ void read_write_loop(const int sfd, int fd){
             }
             pkt_status_code code = pkt_decode(buf_ack, 12, pkt_ack);
             if(code == PKT_OK){
-                if(pkt_ack->seqNum == lastAckNum){
+                if(isLastAckNum == 1 && pkt_ack->seqNum == seqNum){
+                    fprintf(stderr, "pkt_ack seqNum : %u, isLastAckNum : %d, lastAckNum : %u\n", pkt_ack->seqNum, isLastAckNum, seqNum);
                     return;
                 }
-                fprintf(stderr, "pkt_ack->seqNum : %u, lastAckNum : %u\n",pkt_ack->seqNum, lastAckNum);
+                fprintf(stderr, "pkt_ack->seqNum : %u, isLastAckNum : %d, lastAckNum : %u\n",pkt_ack->seqNum, isLastAckNum, seqNum);
                 fprintf(stderr, "Decoded pkt, OK\n");
                 //we have an ack
                 if(pkt_ack->type == 2){
@@ -220,7 +225,7 @@ void read_write_loop(const int sfd, int fd){
                         fprintf(stderr, "before queue_find_nack_structure\n");
                         struct node *time_node = queue_find_nack_structure(buf_structure, pkt_ack->seqNum-1);
                         if(time_node==NULL){
-                            fprintf(stderr, "there is no structure in buffer with seqnum %d\n", pkt_ack->seqNum-1);
+                            fprintf(stderr, "there is no structure in buffer with seqnum %u\n", pkt_ack->seqNum-1);
                             continue; // TODO : verify
                         }
                         fprintf(stderr, "after queue_find_nack_structure\n");
@@ -236,8 +241,13 @@ void read_write_loop(const int sfd, int fd){
                     }
                     //delete the packet
                     fprintf(stderr, "before delete\n");
-                    if(queue_delete(buf_structure, seqnum_delete)==0){
-                        fprintf(stderr, "there is no payload in buffer with seqnum %d\n", seqnum_delete);
+                    if(buf_structure->size != 0 && seqnum_delete - buf_structure->head->pkt->seqNum < size_buffer && (buf_structure->head->pkt->seqNum+size_buffer-1) - seqnum_delete < size_buffer){
+                        if(queue_delete(buf_structure, seqnum_delete)==0){
+                            fprintf(stderr, "there is no payload in buffer with seqnum %u\n", seqnum_delete);
+                        }
+                    }
+                    else{
+                        fprintf(stderr, "empty buffer or pkt not in window\n");
                     }
                 }
                 fprintf(stderr, "after type == 2\n");
@@ -246,7 +256,7 @@ void read_write_loop(const int sfd, int fd){
                     fprintf(stderr, "pkt_ack : PTYPE_NACK\n");
                     seqnum_nack = pkt_ack->seqNum;
                     if(queue_find_nack_structure(buf_structure, seqnum_nack)==NULL){
-                        fprintf(stderr, "there is no structure in buffer with seqnum %d\n", seqnum_nack);
+                        fprintf(stderr, "there is no structure in buffer with seqnum %u\n", seqnum_nack);
                     }
                 }
             }

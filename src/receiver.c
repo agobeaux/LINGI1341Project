@@ -63,6 +63,7 @@ void read_write_loop(const int sfd, const int fd){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
                 if(trFlag == 1){
+                    fprintf(stderr, "trFlag == 1\n");
                     return;
                 }
             }
@@ -104,12 +105,6 @@ void read_write_loop(const int sfd, const int fd){
                 //what do we do ? EOF ?
                 fprintf(stderr, "receiver, read_write_loop, rd == 0\n");
             }
-            else if(rd == 12){
-                fprintf(stderr, "End of transmission packet\n");
-                if(pktQueue->size == 0){
-                    return;
-                }
-            }
             else{
                 //TODO : put this uint somewhere else
                 uint8_t realWindowSize = 31;
@@ -121,6 +116,7 @@ void read_write_loop(const int sfd, const int fd){
                 pkt_status_code code = pkt_decode(buf, rd, pkt);
                 if(code != PKT_OK){
                     fprintf(stderr, "Receiver : read_write_loop : pkt_decode error : code : %d\n",code);
+                    pkt_print(pkt);
 
                     pkt_t *ack = pkt_new();
                     if(!ack){
@@ -152,10 +148,11 @@ void read_write_loop(const int sfd, const int fd){
                 //TODO 31 : windowsize, window size (the real one)
                 //here, check if pkt is included in the window.
                 else if(pkt->seqNum - waitedSeqNum < realWindowSize && (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize){
+                    fprintf(stderr, "packet in window size, receiver.c\n");
                     // packet received
                     if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
                         //end of transmission packet
-                        fprintf(stderr, "End of transmission packet\n");
+                        fprintf(stderr, "End of transmission packet, pkt->length = 0\n");
                         pkt_t *ack = pkt_new();
                         if(!ack){
                             fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
@@ -164,11 +161,13 @@ void read_write_loop(const int sfd, const int fd){
                         ack->type = PTYPE_ACK;
                         if(pkt->seqNum == waitedSeqNum){
                             ack->trFlag = 1; //TODO : I defined this to know which ack should be the last one
+                            waitedSeqNum++;
                         }
                         ack->window = 31 - pktQueue->size; // TODO : test
                         ack->seqNum = waitedSeqNum;
                         ack->timestamp = pkt->timestamp;
                         queue_push(ackQueue, ack);
+                        fprintf(stderr, "before continue\n");
                         continue;
                     }
                     if(queue_ordered_push(pktQueue, pkt) == 0){
@@ -207,8 +206,9 @@ void read_write_loop(const int sfd, const int fd){
                     queue_push(ackQueue, ack);
                 }
             }
-        }
-    }
+        } // end of if(pfds[0].revents&POLLIN)
+    } // end of while(1)
+    fprintf(stderr, "got out of the while\n");
 }
 
 //TODO : ne pas oublier : taille de fenêtre 2^(n-1) au max.
@@ -284,7 +284,7 @@ int main(int argc, char *argv[]){
         return EXIT_FAILURE;
     }
 
-    fprintf(stderr, "Before read_write_loop\n");
+    fprintf(stderr, "Before read_write_loop in main\n");
     read_write_loop(socket_fd, fd);
 
 
