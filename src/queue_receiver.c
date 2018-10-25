@@ -203,7 +203,8 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
     node_t *runner = queue->head;
     uint8_t count = 0;
     fprintf(stderr, "queue_rec, payload write, size of queue in the beginning : %d\n", queue->size);
-    while(runner != NULL && runner->pkt->seqNum == seqNum+count){
+    uint8_t newSeqNum = seqNum;
+    while(runner != NULL && runner->pkt->seqNum == newSeqNum){
         // seqNum+count is of type uint8_t so it will do %(2^8). 254->255->0
         int wr = write(fd, runner->pkt->payload, runner->pkt->length);
         if(wr == -1){
@@ -215,6 +216,7 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
         pkt_del(toDel->pkt);
         free(toDel);
         queue->size -= 1;
+        newSeqNum++;
     }
     queue->head = runner;
     fprintf(stderr, "queue_receiver.c, write payload returns : %u\n",count);

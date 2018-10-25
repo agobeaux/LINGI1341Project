@@ -120,12 +120,12 @@ void read_write_loop(const int sfd, int fd){
                     if(queue_push(buf_structure, pkt, tp)==-1){
                         fprintf(stderr, "sender : read_while_loop : error with push\n");
                     }
-                   
+
                     int wr = write(sfd, (void*)buf, len);
                     if(wr == -1){
                         fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                     }
-                    
+
                     free(buf);
                     free(new_payload);
 
@@ -146,13 +146,13 @@ void read_write_loop(const int sfd, int fd){
                 if(queue_push(buf_structure, pkt, tp)==-1){
                     fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
-                
+
 
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
-                
+
                 free(buf);
                 free(new_payload);
             } // end if(buf_structure->size < size_buffer)
@@ -220,6 +220,7 @@ void read_write_loop(const int sfd, int fd){
                     //setting the max buffer size
                     size_buffer = pkt_get_window(pkt_ack);
                     //if there is a packet with 0 seqnum, reset the timer
+                    queue_print_first_last_seqNum(buf_structure);
                     fprintf(stderr, "ack seqnum : %u, get_seqnum : %u\n", pkt_ack->seqNum, pkt_get_seqnum(pkt_ack));
 
                     if(firstAck){ //TODO : que pour le premier
@@ -245,7 +246,15 @@ void read_write_loop(const int sfd, int fd){
                     }
                     //delete the packet
                     fprintf(stderr, "before delete\n");
-                    if(buf_structure->size != 0 && seqnum_delete - buf_structure->head->pkt->seqNum < size_buffer && (buf_structure->head->pkt->seqNum+size_buffer-1) - seqnum_delete < size_buffer){
+
+                    // Useful variables to know if the pkt's seqNum lies in the window or not
+                    // uint8_t so that 1-2 = 255 for example.
+                    uint8_t distInf = seqnum_delete - buf_structure->head->pkt->seqNum; // distance between the beginning of the window and the seqNum
+                    uint8_t distSup = (buf_structure->head->pkt->seqNum+size_buffer-1) - seqnum_delete; // distance between the end of the window and the seqNum
+
+                    if(buf_structure->size != 0 && distInf < size_buffer && distSup < size_buffer){
+                        fprintf(stderr, "Before queue_delete with seqnum_delete = %u\nLet's print the queue before !", seqnum_delete);
+                        queue_print_seqNum(buf_structure);
                         if(queue_delete(buf_structure, seqnum_delete)==0){
                             fprintf(stderr, "there is no payload in buffer with seqnum %u\n", seqnum_delete);
                         }

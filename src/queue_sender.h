@@ -65,4 +65,9 @@ queue_t* queue_init();
  */
 int queue_isempty(queue_t *queue);
 
+void queue_print_seqNum(queue_t *queue);
+
+// TODO delete ?
+void queue_print_first_last_seqNum(queue_t *queue);
+
 #endif /* queue_sender_h */

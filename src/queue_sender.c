@@ -96,7 +96,6 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
         }
         else{ // if(run->pkt->seqNum==seqNum){
 			run = run->next;
-            queue_pop(queue);
             pkt_t *pktDelete = queue_pop(queue);
             if(pktDelete==NULL){
 				fprintf(stderr, "problem in queue_delete\n");
@@ -105,9 +104,17 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
 				pkt_del(pktDelete);
 			}
             number=number+1;
+            fprintf(stderr, "queue_delete : just before return, number = %d\n", number);
+            if(queue->head == NULL){
+                fprintf(stderr, "queue_delete : queue->head = NULL !!\n");
+            }
+            else{
+                fprintf(stderr, "queue_delete : queue->head->pkt->seqNum : %u\n",((queue->head)->pkt)->seqNum);
+            }
             return number;
         }
     }
+    fprintf(stderr, "queue_delete : run == NULL !!!!\n");
     return number;
 }
 
@@ -159,4 +166,25 @@ queue_t* queue_init(){
  */
 int queue_isempty(queue_t *queue){
     return queue->size = 0;
+}
+
+void queue_print_seqNum(queue_t *queue){
+    node_t *runner = queue->head;
+    fprintf(stderr, "Printing queue seqNums :\n");
+    while(runner != NULL){
+        fprintf(stderr, "%u ",runner->pkt->seqNum);
+        runner = runner->next;
+    }
+    fprintf(stderr, "\n");
+}
+
+//TODO : delete ?
+void queue_print_first_last_seqNum(queue_t *queue){
+    fprintf(stderr, "queue_print_first_last_seqNum : ");
+    if(queue->head){
+        fprintf(stderr, "queue->head->seqNum : %u, queue->last->seqNum : %u\n", ((queue->head)->pkt)->seqNum, ((queue->last)->pkt)->seqNum);
+    }
+    else{
+        fprintf(stderr, "queue doesn't have first/last...\n");
+    }
 }

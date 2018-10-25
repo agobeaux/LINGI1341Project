@@ -63,7 +63,7 @@ void read_write_loop(const int sfd, const int fd){
             else{
                 fprintf(stderr, "I'm really writing\n");
                 int wr = write(sfd, ackBuf, ackLen);
-                fprintf(stderr, "Wrote %d bytes\n", wr);
+                fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
