@@ -19,6 +19,7 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
     node_t *newnode = malloc(sizeof(struct node));
     if (newnode == NULL){
         fprintf(stderr, "Error with malloc in push, queue. \n");
+        pkt_del(pkt);
         return -1;
     }
 
@@ -56,6 +57,8 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
+    free(save->pkt);
+    free(save->tp);
     free(save);
     queue->size -= 1;
     return pkt;

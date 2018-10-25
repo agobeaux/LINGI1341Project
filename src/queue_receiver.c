@@ -161,6 +161,7 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
+    pkt_del(save->pkt);
     free(save);
     queue->size -= 1;
     return pkt;
