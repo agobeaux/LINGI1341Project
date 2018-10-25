@@ -48,7 +48,7 @@ int queue_push(queue_t *queue, pkt_t *pkt){
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
-int queue_ordered_push(queue_t *queue, pkt_t *pkt){
+int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t realWindowSize){
 
     if (pkt == NULL){
         fprintf(stderr, "Error : NULL pkt in queue_ordered_push. \n");
@@ -59,7 +59,6 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt){
         fprintf(stderr, "Error with malloc in queue_ordered_push. \n");
         return -1;
     }
-
     if(queue->size == 0){
         newnode->pkt = pkt;
         newnode->next = NULL;
@@ -69,33 +68,80 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt){
     }
     node_t *before = NULL;
     node_t *runner = queue->head;
-    while((runner->pkt)->seqNum < pkt->seqNum && runner->next != NULL){
-        before = runner;
-        runner = runner->next;
+    if(waitedSeqNum >= 255 - (realWindowSize-1) && pkt->seqNum < realWindowSize-1){
+        // we have something like 245.. 255 0 ... 3.
+        // the pkt to insert has a seqNum that is in [0 ,realWindowSize-1[
+        while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1)){
+            before = runner;
+            runner = runner->next;
+        }
+        if(runner == NULL){
+            // here : no numbers in [0, realWindowSize-1[ in the queue. Just put it next then
+            newnode->next = NULL;
+            newnode->pkt = pkt;
+            before->next = newnode;
+            queue->size += 1;
+            return 0;
+        }
+        // here : now we can loop to know where we have to put the right number node
+        // because now, nodes after runner are contained in [0, realWindowSize-1[
     }
-    newnode->pkt = pkt;
-    if(runner->pkt->seqNum > pkt->seqNum){
-        newnode->next = runner;
-        if(before == NULL){ // queue->size = 1;
-            queue->head = newnode->next;
+    if(waitedSeqNum >= 255 - (realWindowSize-1) && pkt->seqNum >= 255 - (realWindowSize-1)){
+        while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1) && (runner->pkt)->seqNum < pkt->seqNum){
+            before = runner;
+            runner = runner->next;
+        }
+        if(runner == NULL){
+            newnode->pkt = pkt;
+            before->next = newnode;
+            newnode->next = NULL;
         }
         else{
-            before->next = newnode;
+            // 1st case : !((runner->pkt)->seqNum >= 255 - (realWindowSize-1))
+            // node runner is in [0, realWindowSize-1[
+            // 2nd case : !((runner->pkt)->seqNum < pkt->seqNum)
+            // node runner is greater than or equal to newnode (in terms of seqNum)
+            if(before == NULL){
+                queue->head = newnode;
+            }
+            else{
+                before->next = newnode;
+            }
+            newnode->pkt = pkt;
+            newnode->next = runner;
         }
         queue->size += 1;
         return 0;
     }
-    else if(runner->pkt->seqNum == pkt->seqNum){
-        // pkt already in queue
-        free(newnode);
-        return -1;
-    }
     else{
-        // runner->next == NULL, runner->pkt->seqNum > pkt->seqNum
-        runner->next = newnode;
-        newnode->next = NULL;
-        queue->size += 1;
-        return 0;
+        while((runner->pkt)->seqNum < pkt->seqNum && runner->next != NULL){
+            before = runner;
+            runner = runner->next;
+        }
+        newnode->pkt = pkt;
+        if(runner->pkt->seqNum > pkt->seqNum){
+            newnode->next = runner;
+            if(before == NULL){ // queue->size = 1;
+                queue->head = newnode;
+            }
+            else{
+                before->next = newnode;
+            }
+            queue->size += 1;
+            return 0;
+        }
+        else if(runner->pkt->seqNum == pkt->seqNum){
+            // pkt already in queue
+            free(newnode);
+            return -1;
+        }
+        else{
+            // runner->next == NULL, runner->pkt->seqNum > pkt->seqNum
+            runner->next = newnode;
+            newnode->next = NULL;
+            queue->size += 1;
+            return 0;
+        }
     }
 }
 
@@ -155,6 +201,7 @@ int queue_isempty(queue_t *queue){
 uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
     node_t *runner = queue->head;
     uint8_t count = 0;
+    fprintf(stderr, "queue_rec, payload write, size of queue in the beginning : %d\n", queue->size);
     while(runner != NULL && runner->pkt->seqNum == seqNum+count){
         // seqNum+count is of type uint8_t so it will do %(2^8). 254->255->0
         int wr = write(fd, runner->pkt->payload, runner->pkt->length);
@@ -169,5 +216,16 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
         queue->size -= 1;
     }
     queue->head = runner;
+    fprintf(stderr, "queue_receiver.c, write payload returns : %u\n",count);
     return count;
+}
+
+void queue_print_seqNum(queue_t *queue){
+    node_t *runner = queue->head;
+    fprintf(stderr, "Printing queue seqNums :\n");
+    while(runner != NULL){
+        fprintf(stderr, "%u ",runner->pkt->seqNum);
+        runner = runner->next;
+    }
+    fprintf(stderr, "\n");
 }

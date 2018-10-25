@@ -33,7 +33,7 @@ int queue_push(queue_t *queue, pkt_t *pkt);
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
-int queue_ordered_push(queue_t *queue, pkt_t *pkt);
+int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t realWindowSize);
 
 
 /**
@@ -69,5 +69,7 @@ int queue_isempty(queue_t *queue);
  *           waitedSeqNum = lastSeqNum + count; will do %(2^8)
  */
 uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum);
+
+void queue_print_seqNum(queue_t *queue);
 
 #endif /* queue_receiver_h */

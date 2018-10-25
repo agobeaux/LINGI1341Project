@@ -21,6 +21,9 @@ void read_write_loop(const int sfd, const int fd){
     pfds[0].revents = 0;
 
     uint8_t waitedSeqNum = 0; // first packet has seqNum 0. uint8_t so that we won't need %(2^8)
+    uint8_t finalSeqNum = -1;
+    fprintf(stderr, "finalSeqNum = -1 -> %u\n",finalSeqNum);
+    int isFinalSeqNum = 0;
     queue_t *pktQueue = queue_init();
     if(pktQueue == NULL){
         fprintf(stderr, "receiver : read_write_loop : pktQueue : queue_init() error\n");
@@ -36,8 +39,10 @@ void read_write_loop(const int sfd, const int fd){
         if(poll(pfds, 1, 5) == -1){
             fprintf(stderr, "Error poll call : %s\n", strerror(errno));
         }
+
         //fprintf(stderr, "pfds[0].revents&POLLOUT : %d, &POLLIN : %d\n", pfds[0].revents&POLLOUT, pfds[0].revents&POLLIN);
         while(pfds[0].revents&POLLOUT && ackQueue->size > 0){ // write on socket
+            fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
             fprintf(stderr, "Writing on the socket\n");
             pkt_t *ack = queue_pop(ackQueue);
             if(ack == NULL){
@@ -94,6 +99,7 @@ void read_write_loop(const int sfd, const int fd){
 
         if(pfds[0].revents&POLLIN){
             fprintf(stderr,"=============== HERE ==============\n");
+            fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
             // read the max size of a packet cause we'll read one packet at a time
             // we won't read a packet and then a part of another. Source : obo
             char buf[528];
@@ -114,6 +120,10 @@ void read_write_loop(const int sfd, const int fd){
                     break;
                 }
                 pkt_status_code code = pkt_decode(buf, rd, pkt);
+                // Useful variables to know if the pkt's seqNum lies in the window or not
+                // uint8_t so that 1-2 = 255 for example.
+                uint8_t distInf = pkt->seqNum - waitedSeqNum; // distance between the beginning of the window and the seqNum
+                uint8_t distSup = (waitedSeqNum+realWindowSize-1) - pkt->seqNum; // distance between the end of the window and the seqNum
                 if(code != PKT_OK){
                     fprintf(stderr, "Receiver : read_write_loop : pkt_decode error : code : %d\n",code);
                     pkt_print(pkt);
@@ -147,8 +157,8 @@ void read_write_loop(const int sfd, const int fd){
                 }
                 //TODO 31 : windowsize, window size (the real one)
                 //here, check if pkt is included in the window.
-                else if(pkt->seqNum - waitedSeqNum < realWindowSize && (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize){
-                    fprintf(stderr, "packet in window size, receiver.c\n");
+                else if(distInf < realWindowSize && distSup < realWindowSize){
+                    fprintf(stderr, "packet in window size, receiver.c, seqnum = %u, waited : %u\n", pkt->seqNum, waitedSeqNum);
                     // packet received
                     if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
                         //end of transmission packet
@@ -159,6 +169,8 @@ void read_write_loop(const int sfd, const int fd){
                             break;
                         }
                         ack->type = PTYPE_ACK;
+                        isFinalSeqNum = 1;
+                        finalSeqNum = pkt->seqNum;
                         if(pkt->seqNum == waitedSeqNum){
                             ack->trFlag = 1; //TODO : I defined this to know which ack should be the last one
                             waitedSeqNum++;
@@ -170,9 +182,11 @@ void read_write_loop(const int sfd, const int fd){
                         fprintf(stderr, "before continue\n");
                         continue;
                     }
-                    if(queue_ordered_push(pktQueue, pkt) == 0){
+                    if(queue_ordered_push(pktQueue, pkt, waitedSeqNum, realWindowSize) == 0){
                         // pkt successfully added on the queue
+                        queue_print_seqNum(pktQueue);
                         waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum);
+                        queue_print_seqNum(pktQueue);
                     }
                     else{
                         fprintf(stderr, "receiver : read_write_loop : couldn't push pkt on pktQueue\n");
@@ -185,12 +199,23 @@ void read_write_loop(const int sfd, const int fd){
                     }
                     ack->type = PTYPE_ACK;
                     ack->window = 31 - pktQueue->size; // TODO : test
-                    ack->seqNum = waitedSeqNum;
                     ack->timestamp = pkt->timestamp;
+                    if(isFinalSeqNum == 1 && waitedSeqNum == finalSeqNum){
+                        fprintf(stderr, "Gonna end, pushing ack of end of transmission soon\n");
+                        ack->trFlag = 1;
+                        waitedSeqNum++;
+                    }
+                    ack->seqNum = waitedSeqNum;
                     queue_push(ackQueue, ack);
                 }
                 else{
                     fprintf(stderr, "Receiver : read_write_loop : received pkt outside of the window\n");
+                    fprintf(stderr, "pkt->seqNum : %u, waitedSeqNum : %u, realWindowSize : %u\n", pkt->seqNum, waitedSeqNum, realWindowSize);
+                    uint8_t stockValue = (waitedSeqNum+realWindowSize-1) - pkt->seqNum;
+                    fprintf(stderr, "(waitedSeqNum+realWindowSize-1) - pkt->seqNum : %u\n",(waitedSeqNum+realWindowSize-1) - pkt->seqNum);
+                    fprintf(stderr, "stockValue : %u\n", stockValue);
+                    fprintf(stderr, "pkt->seqNum - waitedSeqNum : %u\n", pkt->seqNum - waitedSeqNum);
+                    fprintf(stderr, "pkt->seqNum - waitedSeqNum < realWindowSize : %u ;(waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize : %u\n", pkt->seqNum - waitedSeqNum < realWindowSize, (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize);
 
                     pkt_t *ack = pkt_new();
                     if(!ack){
