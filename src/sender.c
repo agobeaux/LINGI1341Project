@@ -120,12 +120,12 @@ void read_write_loop(const int sfd, int fd){
                     if(queue_push(buf_structure, pkt, tp)==-1){
                         fprintf(stderr, "sender : read_while_loop : error with push\n");
                     }
-
+                   
                     int wr = write(sfd, (void*)buf, len);
                     if(wr == -1){
                         fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                     }
-
+                    
                     free(buf);
                     free(new_payload);
 
@@ -146,11 +146,15 @@ void read_write_loop(const int sfd, int fd){
                 if(queue_push(buf_structure, pkt, tp)==-1){
                     fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
+                
 
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
                 }
+                
+                free(buf);
+                free(new_payload);
             } // end if(buf_structure->size < size_buffer)
 
             //check if there is still element that wasn't resent or their timer is out

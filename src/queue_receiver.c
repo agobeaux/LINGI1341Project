@@ -87,6 +87,7 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt){
     }
     else if(runner->pkt->seqNum == pkt->seqNum){
         // pkt already in queue
+        pkt_del(newnode->pkt);
         free(newnode);
         return -1;
     }
@@ -115,6 +116,7 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
+    pkt_del(save->pkt);
     free(save);
     queue->size -= 1;
     return pkt;
