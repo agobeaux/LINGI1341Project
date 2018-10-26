@@ -19,14 +19,11 @@ pkt_t* pkt_new()
 
 void pkt_del(pkt_t *pkt)
 {
-	fprintf(stderr, "\n\n In pkt_del\n\n");
     if(pkt){
 		if(pkt->payload){
-			fprintf(stderr, "\n\nCOULD FREE PAYLOAD !!!!\n\n");
 			free(pkt->payload);
 		}
 		else{
-			fprintf(stderr, "pkt_del : a pkt had a NULL payload\n");
 		}
 		free(pkt);
 	}

@@ -100,9 +100,7 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
 				fprintf(stderr, "problem in queue_delete\n");
 			}
 			else{
-				free(pktDelete->payload);
-				free(pktDelete);
-				//pkt_del(pktDelete);
+				pkt_del(pktDelete);
 			}
             number=number+1;
             fprintf(stderr, "queue_delete : just before return, number = %d\n", number);
@@ -221,7 +219,7 @@ void queue_free(queue_t *queue){
     if(queue->head != NULL){
 		struct node *run = queue->head;
 		struct node *delete = NULL;
-		while(run!=NULL){
+		while(run != NULL){
 			delete = run;
 			run = run->next;
 			pkt_del(delete->pkt);

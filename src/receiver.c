@@ -31,7 +31,7 @@ void read_write_loop(const int sfd, const int fd){
         return;
     }
     queue_t *ackQueue = queue_init();
-    if(pktQueue == NULL){
+    if(ackQueue == NULL){
         fprintf(stderr, "receiver : read_write_loop : ackQueue : queue_init() error\n");
         free(pktQueue);
         return;
@@ -72,6 +72,11 @@ void read_write_loop(const int sfd, const int fd){
                 }
                 if(trFlag == 1){
                     fprintf(stderr, "trFlag == 1\n");
+                    if(pktQueue->size != 0 || ackQueue->size != 0){
+						fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
+					}
+                    free(pktQueue);
+                    free(ackQueue);
                     return;
                 }
             }
@@ -169,6 +174,7 @@ void read_write_loop(const int sfd, const int fd){
                         pkt_t *ack = pkt_new();
                         if(!ack){
                             fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
+                            pkt_del(pkt);
                             break;
                         }
                         ack->type = PTYPE_ACK;
@@ -183,6 +189,7 @@ void read_write_loop(const int sfd, const int fd){
                         ack->timestamp = pkt->timestamp;
                         queue_push(ackQueue, ack);
                         fprintf(stderr, "before continue\n");
+                        pkt_del(pkt);
                         continue;
                     }
                     if(queue_ordered_push(pktQueue, pkt, waitedSeqNum, realWindowSize) == 0){
@@ -236,7 +243,11 @@ void read_write_loop(const int sfd, const int fd){
             }
         } // end of if(pfds[0].revents&POLLIN)
     } // end of while(1)
-    fprintf(stderr, "got out of the while\n");
+    if(pktQueue->size != 0 || ackQueue->size != 0){
+		fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
+	}
+	free(pktQueue);
+	free(ackQueue);
 }
 
 //TODO : ne pas oublier : taille de fenêtre 2^(n-1) au max.
