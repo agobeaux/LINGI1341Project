@@ -22,6 +22,7 @@ void read_write_loop(const int sfd, const int fd){
 
     uint8_t waitedSeqNum = 0; // first packet has seqNum 0. uint8_t so that we won't need %(2^8)
     uint8_t finalSeqNum = -1;
+    uint32_t lastTimeStamp = 0;
     fprintf(stderr, "finalSeqNum = -1 -> %u\n",finalSeqNum);
     int isFinalSeqNum = 0;
     queue_t *pktQueue = queue_init();
@@ -63,9 +64,9 @@ void read_write_loop(const int sfd, const int fd){
             }
             else{
                 fprintf(stderr, "I'm really writing\n");
-                free(ack);
                 int wr = write(sfd, ackBuf, ackLen);
                 fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
+                free(ack);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
@@ -187,7 +188,7 @@ void read_write_loop(const int sfd, const int fd){
                     if(queue_ordered_push(pktQueue, pkt, waitedSeqNum, realWindowSize) == 0){
                         // pkt successfully added on the queue
                         queue_print_seqNum(pktQueue);
-                        waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum);
+                        waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum, &lastTimeStamp);
                         queue_print_seqNum(pktQueue);
                     }
                     else{
@@ -201,7 +202,7 @@ void read_write_loop(const int sfd, const int fd){
                     }
                     ack->type = PTYPE_ACK;
                     ack->window = 31 - pktQueue->size; // TODO : test
-                    ack->timestamp = pkt->timestamp;
+                    ack->timestamp = lastTimeStamp;
                     if(isFinalSeqNum == 1 && waitedSeqNum == finalSeqNum){
                         fprintf(stderr, "Gonna end, pushing ack of end of transmission soon\n");
                         ack->trFlag = 1;

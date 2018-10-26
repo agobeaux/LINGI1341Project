@@ -204,7 +204,7 @@ int queue_isempty(queue_t *queue){
  * @return : the number of written packets with type uint8_t so that
  *           waitedSeqNum = lastSeqNum + count; will do %(2^8)
  */
-uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
+uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum, uint32_t *lastTimeStamp){
     node_t *runner = queue->head;
     uint8_t count = 0;
     fprintf(stderr, "queue_rec, payload write, size of queue in the beginning : %d\n", queue->size);
@@ -226,6 +226,7 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
 		else{
 			fprintf(stderr, "\n\n Gonna call pkt_del safely\n\n");
 		}
+		*lastTimeStamp = (toDel->pkt)->timestamp;
         pkt_del(toDel->pkt);
         free(toDel);
         queue->size -= 1;

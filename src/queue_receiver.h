@@ -68,7 +68,7 @@ int queue_isempty(queue_t *queue);
  * @return : the number of written packets with type uint8_t so that
  *           waitedSeqNum = lastSeqNum + count; will do %(2^8)
  */
-uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum);
+uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum, uint32_t *lastTimeStamp);
 
 void queue_print_seqNum(queue_t *queue);
 
