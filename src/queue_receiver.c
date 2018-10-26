@@ -218,6 +218,14 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum){
         count++;
         node_t *toDel = runner;
         runner = runner->next;
+        //free(toDel->pkt->payload);
+        //free(toDel->pkt);
+        if(!toDel->pkt){
+			fprintf(stderr, "\n\n Shouldn't free toDel->pkt...\n\n");
+		}
+		else{
+			fprintf(stderr, "\n\n Gonna call pkt_del safely\n\n");
+		}
         pkt_del(toDel->pkt);
         free(toDel);
         queue->size -= 1;

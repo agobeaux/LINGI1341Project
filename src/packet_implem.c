@@ -19,8 +19,10 @@ pkt_t* pkt_new()
 
 void pkt_del(pkt_t *pkt)
 {
-    if(!pkt){
-		if(!pkt->payload){
+	fprintf(stderr, "\n\n In pkt_del\n\n");
+    if(pkt){
+		if(pkt->payload){
+			fprintf(stderr, "\n\nCOULD FREE PAYLOAD !!!!\n\n");
 			free(pkt->payload);
 		}
 		else{
@@ -82,10 +84,23 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 		return E_UNCONSISTENT;
 	}
 	//TODO : if payload NULL malloc, if not, realloc
-	pkt->payload = (char*) malloc(pkt->length);
 	if(!pkt->payload){
-		free(pkt);
-		return E_NOMEM;
+		fprintf(stderr, "packet_implem.c : decode : pkt->payload already malloced !!!!\n");
+		char* newPayload = realloc(pkt->payload, pkt->length);
+		if(!newPayload){
+			fprintf(stderr, "packet_implem.c : decode : couldn't realloc. Freed pkt->payload\n");
+			free(pkt->payload);
+			free(pkt);
+			return E_NOMEM;
+		}
+		pkt->payload = newPayload;
+	}
+	else{
+		pkt->payload = (char*) malloc(pkt->length);
+		if(!pkt->payload){
+			free(pkt);
+			return E_NOMEM;
+		}
 	}
 	memcpy(pkt->payload, data+12, pkt->length); //payload + crc2
 	memcpy(&pkt->crc2, data+12+pkt->length, 4);

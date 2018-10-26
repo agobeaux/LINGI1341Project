@@ -58,10 +58,12 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "encode error in receiver, read_write_loop, encode != PKT_OK\n");
             }
             else if(ackLen != 12){
+				free(ack);
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
             else{
                 fprintf(stderr, "I'm really writing\n");
+                free(ack);
                 int wr = write(sfd, ackBuf, ackLen);
                 fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
                 if(wr == -1){

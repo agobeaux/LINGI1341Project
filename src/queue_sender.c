@@ -57,7 +57,6 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
-    //free(save->pkt);
     free(save->tp);
     free(save);
     queue->size -= 1;
@@ -101,7 +100,9 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
 				fprintf(stderr, "problem in queue_delete\n");
 			}
 			else{
-				pkt_del(pktDelete);
+				free(pktDelete->payload);
+				free(pktDelete);
+				//pkt_del(pktDelete);
 			}
             number=number+1;
             fprintf(stderr, "queue_delete : just before return, number = %d\n", number);
