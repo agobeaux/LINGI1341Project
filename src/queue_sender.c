@@ -57,7 +57,7 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
-    free(save->pkt);
+    //free(save->pkt);
     free(save->tp);
     free(save);
     queue->size -= 1;
@@ -210,4 +210,23 @@ void queue_print_first_last_seqNum(queue_t *queue){
     else{
         fprintf(stderr, "queue doesn't have first/last...\n");
     }
+}
+
+
+/**
+ * free queue
+ */
+void queue_free(queue_t *queue){
+    if(queue->head != NULL){
+		struct node *run = queue->head;
+		struct node *delete = NULL;
+		while(run!=NULL){
+			delete = run;
+			run = run->next;
+			pkt_del(delete->pkt);
+			free(delete->tp);
+			free(delete);
+		}
+	}
+	free(queue);
 }

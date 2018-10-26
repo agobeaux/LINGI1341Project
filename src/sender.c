@@ -119,7 +119,6 @@ void read_write_loop(const int sfd, int fd){
                     if(queue_push(buf_structure, pkt, tp)==-1){
                         fprintf(stderr, "sender : read_while_loop : error with push\n");
                     }
-
                     int wr = write(sfd, (void*)buf, len);
                     if(wr == -1){
                         fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
@@ -163,13 +162,14 @@ void read_write_loop(const int sfd, int fd){
 
                     struct timespec *tp = malloc(sizeof(struct timespec));
                     clock_gettime(CLOCK_REALTIME, tp);
-                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000; /*
+                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
+                    free(tp);
+                     /*
                     fprintf(stderr, "time_now : %d, run->tp->tv_sec : %ld, run->tp->tv->nsec/10^9 : %ld, timer : %d\n", time_now, run->tp->tv_sec, run->tp->tv_nsec/1000000000, timer);
                     fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
                     */
                     if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
-                        free(tp);
-                        fprintf(stderr, "\n\n\n\n\n\n oifhesoihgioezfozefiohzfeiohgiohe \n\n\n\n\n\n");
+                        fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
                         // condition run1540534356->tp->tv_sec == 0 will happen when we receive a NACK
                         // because we set tv_sec to 0 when we receive a NACK.
                         // it won't be true otherwise because 0 sec is on the 1st of January 1970
@@ -244,7 +244,7 @@ void read_write_loop(const int sfd, int fd){
 
                         fprintf(stderr, "before accessing time_node->tp\n");
                         fprintf(stderr, "TIMER : %d\n",timer);
-                        timer = 2+(time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
+                        timer = 2+(time_now - time_node->tp->tv_sec - time_node->tp->tv_nsec/1000000000);
                         fprintf(stderr, "time_now : %d, time_node->tp->tv_sec : %ld, time_node->tp->tv_nsec/1000000000 : %ld\n, dif : %ld", time_now, time_node->tp->tv_sec, time_node->tp->tv_nsec, time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
                         fprintf(stderr, "TIMER : %d\n",timer);
                         fprintf(stderr, "after accessing time_node->tp\n");
@@ -284,7 +284,7 @@ void read_write_loop(const int sfd, int fd){
             }
         }
     }
-    free(buf_structure);
+    queue_free(buf_structure);
     return;
 }
 

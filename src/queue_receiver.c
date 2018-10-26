@@ -71,6 +71,7 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t
     if(waitedSeqNum >= 255 - (realWindowSize-1) && pkt->seqNum < realWindowSize-1){
         // we have something like 245.. 255 0 ... 3.
         // the pkt to insert has a seqNum that is in [0 ,realWindowSize-1[
+        
         while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1)){
             before = runner;
             runner = runner->next;
@@ -87,31 +88,36 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t
         // because now, nodes after runner are contained in [0, realWindowSize-1[
     }
     if(waitedSeqNum >= 255 - (realWindowSize-1) && pkt->seqNum >= 255 - (realWindowSize-1)){
-        while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1) && (runner->pkt)->seqNum < pkt->seqNum){
-            before = runner;
-            runner = runner->next;
-        }
-        if(runner == NULL){
-            newnode->pkt = pkt;
-            before->next = newnode;
-            newnode->next = NULL;
-        }
-        else{
-            // 1st case : !((runner->pkt)->seqNum >= 255 - (realWindowSize-1))
-            // node runner is in [0, realWindowSize-1[
-            // 2nd case : !((runner->pkt)->seqNum < pkt->seqNum)
-            // node runner is greater than or equal to newnode (in terms of seqNum)
-            if(before == NULL){
-                queue->head = newnode;
-            }
-            else{
-                before->next = newnode;
-            }
-            newnode->pkt = pkt;
-            newnode->next = runner;
-        }
-        queue->size += 1;
-        return 0;
+		while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1) && (runner->pkt)->seqNum < pkt->seqNum){
+			before = runner;
+			runner = runner->next;
+		}
+		if(runner == NULL){
+			newnode->pkt = pkt;
+			before->next = newnode;
+			newnode->next = NULL;
+		}
+		else{
+			// 1st case : !((runner->pkt)->seqNum >= 255 - (realWindowSize-1))
+			// node runner is in [0, realWindowSize-1[
+			// 2nd case : !((runner->pkt)->seqNum < pkt->seqNum)
+			// node runner is greater than or equal to newnode (in terms of seqNum)
+			if(pkt->seqNum == runner->pkt->seqNum){
+				fprintf(stderr, "we have a double pkt with seqNum %d", pkt->seqNum);
+				free(newnode);
+				return -1;
+			}
+			if(before == NULL){
+				queue->head = newnode;
+			}
+			else{
+				before->next = newnode;
+			}
+			newnode->pkt = pkt;
+			newnode->next = runner;
+		}
+		queue->size += 1;
+		return 0;
     }
     else{
         while((runner->pkt)->seqNum < pkt->seqNum && runner->next != NULL){
@@ -161,7 +167,6 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
-    pkt_del(save->pkt);
     free(save);
     queue->size -= 1;
     return pkt;

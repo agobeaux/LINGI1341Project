@@ -34,3 +34,10 @@ But : si un ack reste 2 sec dans le réseau, il ne faut pas que le 3 soit dans
 la fenêtre à nouveau.
 
 FREE !!! queues etc
+
+
+FREEEEE PUTAIN
+Retransmission timer
+Nombre de paquets max à envoyer !
+DECONNEXION STYLE DECO APRES 5s
+gdb, cppcheck

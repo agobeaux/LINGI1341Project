@@ -100,7 +100,12 @@ int main(int argc, char *argv[]){
     queue_push(buf_structure, pkt2, tp);
     fprintf(stderr, "Head of queue has seqNum %d\n", buf_structure->head->pkt->seqNum);
     fprintf(stderr, "Last of queue has seqNum %d\n", buf_structure->last->pkt->seqNum);
-    fprintf(stderr, "number of deleted pkt is %d\n", (queue_delete(buf_structure, 5)));
+    //fprintf(stderr, "number of deleted pkt is %d\n", (queue_delete(buf_structure, 5)));
     fprintf(stderr, "Head's seqNum is  %d\n", buf_structure->head->pkt->seqNum);
+    
+    pkt_del(pkt1);
+    pkt_del(pkt2);
+    pkt_del(pkt3);
+    pkt_del(pkt4);
 
 }
