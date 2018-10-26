@@ -11,7 +11,7 @@
  * @return : 0 if the pkt if successful, -1 otherwise
  */
 int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
-
+    fprintf(stderr, "QUEUE SENDER PUSH : tp->tv_sec : %ld, tp->tv_nsec/1000000000 : %ld\n", tp->tv_sec, tp->tv_nsec/1000000000);
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
         return -1;
@@ -140,6 +140,29 @@ struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
         {
             run->tp->tv_sec = 0;
             run->tp->tv_nsec = 0;
+            return run;
+        }
+        run = run->next;
+    }
+    return NULL;
+}
+
+/**
+ *
+ * @queue : the queue
+ *
+ * @return return the structure with seqnum
+ */
+struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
+    printf("========= seqNum : %u ============\n", seqNum);
+    struct node *run = queue->head;
+    if(run == NULL){
+        printf("queue->head = NULL ! queue_find_ack_structure\n");
+    }
+    while (run != NULL){
+        printf("run->pkt\n");
+        pkt_print(run->pkt);
+        if (run->pkt->seqNum==seqNum){
             return run;
         }
         run = run->next;

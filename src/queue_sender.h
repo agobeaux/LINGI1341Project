@@ -44,6 +44,8 @@ pkt_t *queue_pop(queue_t *queue);
  */
 int queue_delete(queue_t *queue, uint8_t seqNum);
 
+struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum);
+
 /**
  * Reset the timer.
  *

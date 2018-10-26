@@ -84,7 +84,6 @@ void read_write_loop(const int sfd, int fd){
 
         //try to write to the socket
         if(pfds[1].revents & POLLOUT && isLastAckNum == 0){
-
             if(buf_structure->size < size_buffer){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
@@ -164,9 +163,14 @@ void read_write_loop(const int sfd, int fd){
 
                     struct timespec *tp = malloc(sizeof(struct timespec));
                     clock_gettime(CLOCK_REALTIME, tp);
-                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
-                    if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000)  > timer) || (run->tp->tv_sec == 0)){
-                        // condition run->tp->tv_sec == 0 will happen when we receive a NACK
+                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000; /*
+                    fprintf(stderr, "time_now : %d, run->tp->tv_sec : %ld, run->tp->tv->nsec/10^9 : %ld, timer : %d\n", time_now, run->tp->tv_sec, run->tp->tv_nsec/1000000000, timer);
+                    fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
+                    */
+                    if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
+                        free(tp);
+                        fprintf(stderr, "\n\n\n\n\n\n oifhesoihgioezfozefiohzfeiohgiohe \n\n\n\n\n\n");
+                        // condition run1540534356->tp->tv_sec == 0 will happen when we receive a NACK
                         // because we set tv_sec to 0 when we receive a NACK.
                         // it won't be true otherwise because 0 sec is on the 1st of January 1970
 
@@ -177,8 +181,7 @@ void read_write_loop(const int sfd, int fd){
                             fprintf(stderr, "sender : read_while_loop : error with malloc\n");
                         }
 
-                        clock_gettime(CLOCK_REALTIME, tp);
-                        run->tp = tp;
+                        clock_gettime(CLOCK_REALTIME, run->tp);
 
                         if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
                             fprintf(stderr, "sender : read_while_loop : error with encode\n");
@@ -227,20 +230,23 @@ void read_write_loop(const int sfd, int fd){
 
                         struct timespec *tp = malloc(sizeof(struct timespec));
 
-                        fprintf(stderr, "before queue_find_nack_structure\n");
-                        struct node *time_node = queue_find_nack_structure(buf_structure, pkt_ack->seqNum-1);
+                        fprintf(stderr, "before queue_find_ack_structure\n");
+                        struct node *time_node = queue_find_ack_structure(buf_structure, pkt_ack->seqNum-1);
                         if(time_node==NULL){
                             fprintf(stderr, "there is no structure in buffer with seqnum %u\n", pkt_ack->seqNum-1);
                             continue; // TODO : verify
                         }
-                        fprintf(stderr, "after queue_find_nack_structure\n");
+                        fprintf(stderr, "after queue_find_ack_structure\n");
 
                         clock_gettime(CLOCK_REALTIME, tp);
                         fprintf(stderr, "after clock gettime\n");
                         int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
 
                         fprintf(stderr, "before accessing time_node->tp\n");
-                        timer = 2+(time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec);
+                        fprintf(stderr, "TIMER : %d\n",timer);
+                        timer = 2+(time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
+                        fprintf(stderr, "time_now : %d, time_node->tp->tv_sec : %ld, time_node->tp->tv_nsec/1000000000 : %ld\n, dif : %ld", time_now, time_node->tp->tv_sec, time_node->tp->tv_nsec, time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
+                        fprintf(stderr, "TIMER : %d\n",timer);
                         fprintf(stderr, "after accessing time_node->tp\n");
                         firstAck = 0;
                     }
