@@ -81,10 +81,10 @@ void read_write_loop(const int sfd, int fd){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
-		
+
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
-            if(buf_structure->size < size_buffer){
+            if(buf_structure->size < size_buffer && isLastAckNum == 0){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
@@ -291,7 +291,7 @@ void read_write_loop(const int sfd, int fd){
                 fprintf(stderr, "Decode pkt not ok, code : %d\n", code);
             }
         }
-        
+
     }
     queue_free(buf_structure);
     return;
