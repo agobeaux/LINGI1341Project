@@ -81,14 +81,10 @@ void read_write_loop(const int sfd, int fd){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
-		fprintf(stderr, "\n\n\n\n\n\n je cherche à écrire ou à lire \n\n\n\n\n\n");
-		fprintf(stderr, "mon isLastAckNum %d",   isLastAckNum);
-		fprintf(stderr, "mon poll revents %d",  pfds[1].revents);
+		
         //try to write to the socket
         if(pfds[1].revents & POLLOUT){
-			fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch \n\n\n\n\n\n");
             if(buf_structure->size < size_buffer){
-				fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch de nouveau \n\n\n\n\n\n");
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
@@ -133,8 +129,8 @@ void read_write_loop(const int sfd, int fd){
                     free(buf);
                     free(new_payload);
 
-                    fprintf(stderr, "Wrote the stop pkt\n");
-                    break;
+                    fprintf(stderr, "\n\n\n\n Just after sending the 0 payload \n\n\n\n");
+                    continue;
                 }
 
                 //encode a new structure
@@ -163,7 +159,7 @@ void read_write_loop(const int sfd, int fd){
 
             //check if there is still element that wasn't resent or their timer is out
             /*else{*/
-				fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch de vieux \n\n\n\n\n\n");
+            /*else{*/
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
 
@@ -180,8 +176,6 @@ void read_write_loop(const int sfd, int fd){
                         // condition run1540534356->tp->tv_sec == 0 will happen when we receive a NACK
                         // because we set tv_sec to 0 when we receive a NACK.
                         // it won't be true otherwise because 0 sec is on the 1st of January 1970
-
-                        fprintf(stderr, "\n\n\nI'm in the if run->tp...\n\n\n");
                         size_t len = 528;
                         char *buf = (char*)malloc(528);
                         if(buf==NULL){
@@ -291,13 +285,11 @@ void read_write_loop(const int sfd, int fd){
                         fprintf(stderr, "there is no structure in buffer with seqnum %u\n", seqnum_nack);
                     }
                 }
-                fprintf(stderr, "je contourne else\n");
             }
             else{
 				pkt_del(pkt_ack);
                 fprintf(stderr, "Decode pkt not ok, code : %d\n", code);
             }
-            fprintf(stderr, "je sors de la lecture\n");
         }
         
     }
