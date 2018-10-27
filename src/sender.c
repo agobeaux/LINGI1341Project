@@ -81,10 +81,14 @@ void read_write_loop(const int sfd, int fd){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
-
+		fprintf(stderr, "\n\n\n\n\n\n je cherche à écrire ou à lire \n\n\n\n\n\n");
+		fprintf(stderr, "mon isLastAckNum %d",   isLastAckNum);
+		fprintf(stderr, "mon poll revents %d",  pfds[1].revents);
         //try to write to the socket
-        if(pfds[1].revents & POLLOUT && isLastAckNum == 0){
+        if(pfds[1].revents & POLLOUT){
+			fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch \n\n\n\n\n\n");
             if(buf_structure->size < size_buffer){
+				fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch de nouveau \n\n\n\n\n\n");
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
@@ -130,7 +134,7 @@ void read_write_loop(const int sfd, int fd){
                     free(new_payload);
 
                     fprintf(stderr, "Wrote the stop pkt\n");
-                    continue;
+                    break;
                 }
 
                 //encode a new structure
@@ -158,7 +162,8 @@ void read_write_loop(const int sfd, int fd){
             } // end if(buf_structure->size < size_buffer)
 
             //check if there is still element that wasn't resent or their timer is out
-            else{
+            /*else{*/
+				fprintf(stderr, "\n\n\n\n\n\n je vais essayer écrire qqch de vieux \n\n\n\n\n\n");
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
 
@@ -197,7 +202,7 @@ void read_write_loop(const int sfd, int fd){
                     }
                     run = run->next;
                 }
-            }
+            /*}*/
         }
 
 
@@ -275,7 +280,8 @@ void read_write_loop(const int sfd, int fd){
                     else{
                         fprintf(stderr, "empty buffer or pkt not in window\n");
                     }
-                } //end of if(pkt_ack->type == 2)
+                }
+                 //end of if(pkt_ack->type == 2)
                 // we have a nack
                 else if(pkt_ack->type == 3){
 					pkt_del(pkt_ack);
@@ -285,12 +291,15 @@ void read_write_loop(const int sfd, int fd){
                         fprintf(stderr, "there is no structure in buffer with seqnum %u\n", seqnum_nack);
                     }
                 }
+                fprintf(stderr, "je contourne else\n");
             }
             else{
 				pkt_del(pkt_ack);
                 fprintf(stderr, "Decode pkt not ok, code : %d\n", code);
             }
+            fprintf(stderr, "je sors de la lecture\n");
         }
+        
     }
     queue_free(buf_structure);
     return;
@@ -365,7 +374,6 @@ int main(int argc, char *argv[]){
 
     read_write_loop(socket_fd, fd);
 
-    //TODO : Envoyer la déconnection
 
     close(socket_fd);
     close(fd);
