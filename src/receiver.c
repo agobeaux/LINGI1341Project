@@ -55,7 +55,6 @@ void read_write_loop(const int sfd, const int fd){
             char ackBuf[12];
             size_t ackLen = 12;
             if(pkt_encode(ack, ackBuf, &ackLen) != PKT_OK){
-                free(ack);
                 fprintf(stderr, "encode error in receiver, read_write_loop, encode != PKT_OK\n");
             }
             else if(ackLen != 12){
@@ -133,20 +132,16 @@ void read_write_loop(const int sfd, const int fd){
                 uint8_t distInf = pkt->seqNum - waitedSeqNum; // distance between the beginning of the window and the seqNum
                 uint8_t distSup = (waitedSeqNum+realWindowSize-1) - pkt->seqNum; // distance between the end of the window and the seqNum
                 if(code != PKT_OK){
-                    fprintf(stderr, "Receiver : read_write_loop : pkt_decode error : code : %d\n",code);
-                    pkt_print(pkt);
 
                     pkt_t *ack = pkt_new();
                     if(!ack){
                         fprintf(stderr, "Receiver : read_write_loop : creating ack, malloc error\n");
-                        pkt_del(pkt);
                         break;
                     }
                     ack->type = PTYPE_ACK;
                     ack->window = 31 - pktQueue->size; // TODO : test
                     ack->seqNum = waitedSeqNum;
                     ack->timestamp = pkt->timestamp;
-                    pkt_del(pkt);
                     queue_push(ackQueue, ack);
                 }
                 else if(pkt->trFlag == 1){

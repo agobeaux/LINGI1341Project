@@ -32,19 +32,22 @@ void pkt_del(pkt_t *pkt)
 pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 {
 	if(len < 12){
+		pkt_del(pkt);
 		return E_NOHEADER;
 	}
+	
+	
 	memcpy(pkt, data, sizeof(uint8_t)); // window trFlag type
 	if(pkt->type < 1 || pkt->type > 3){
-		free(pkt);
+		pkt_del(pkt);
 		return E_TYPE;
 	}
 	if(pkt->trFlag == 1 && pkt->type != PTYPE_DATA){
-		free(pkt);
+		pkt_del(pkt);
 		return E_TR;
 	}
 	if(pkt->trFlag == 1 && len != 12){
-		free(pkt);
+		pkt_del(pkt);
 		return E_TR;
 	}
 	// no if for the window
@@ -53,7 +56,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 	memcpy((void*)pkt+2, data+2, sizeof(uint16_t)); // length
 	uint16_t sLength = ntohs(pkt->length);
 	if(sLength > MAX_PAYLOAD_SIZE){
-		free(pkt);
+		pkt_del(pkt);
 		return E_LENGTH;
 	}
 	memcpy((void*)pkt+4, data+4, sizeof(uint32_t)); // pkt_get_timestamp
@@ -62,7 +65,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 	uint8_t trTmp = pkt->trFlag;
 	pkt->trFlag = 0; // to calculate crc1
 	if(crc32(0, (const Bytef*)pkt, 8) != pkt->crc1){ // 8 bytes -> 64 bits
-		free(pkt);
+		pkt_del(pkt);
 		return E_CRC;
 	}
 	pkt->trFlag = trTmp;
@@ -72,12 +75,12 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 		return PKT_OK;
 	}
 	if(len != (uint16_t)(12+pkt->length+4)){
-		free(pkt);
+		pkt_del(pkt);
 		return E_UNCONSISTENT; // or E_LENGTH ??
 	}
 	if(pkt->length == 0){
 		// here, we're sure there is a crc2, no sense if no payload
-		free(pkt);
+		pkt_del(pkt);
 		return E_UNCONSISTENT;
 	}
 	//TODO : if payload NULL malloc, if not, realloc
@@ -86,8 +89,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 		char* newPayload = realloc(pkt->payload, pkt->length);
 		if(!newPayload){
 			fprintf(stderr, "packet_implem.c : decode : couldn't realloc. Freed pkt->payload\n");
-			free(pkt->payload);
-			free(pkt);
+			pkt_del(pkt);
 			return E_NOMEM;
 		}
 		pkt->payload = newPayload;
@@ -95,7 +97,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 	else{
 		pkt->payload = (char*) malloc(pkt->length);
 		if(!pkt->payload){
-			free(pkt);
+			pkt_del(pkt);
 			return E_NOMEM;
 		}
 	}
@@ -103,8 +105,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 	memcpy(&pkt->crc2, data+12+pkt->length, 4);
 	pkt->crc2 = ntohl(pkt->crc2);
 	if(crc32(0, (const Bytef*)pkt->payload, pkt->length) != pkt->crc2){ // 8 bytes -> 64 bits
-		free(pkt->payload);
-		free(pkt);
+		pkt_del(pkt);
 		return E_CRC;
 	}
 	return PKT_OK;
