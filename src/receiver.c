@@ -5,8 +5,10 @@
 #include "create_socket.h"
 #include "wait_for_client.h"
 #include "queue_receiver.h"
+#include <time.h>
 
 #define ser_PORT 12345 // to change. Should be an argument
+struct timespec *tpGlobal;
 
 //TODO : numseq à garder en mémoire, window : nombre élts restants, queue + vérification écriture
 //écrire sur le fichier (stdout etc)
@@ -37,6 +39,16 @@ void read_write_loop(const int sfd, const int fd){
         return;
     }
     while(1){
+		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
+		struct timespec *tpNow = malloc(sizeof(struct timespec));
+		clock_gettime(CLOCK_REALTIME, tpNow);
+		int difftime = tpGlobal - tpNow;
+		if(difftime>10){
+			return;
+		}
+		
+		free(tpNow);
+		
         if(poll(pfds, 1, 5) == -1){
             fprintf(stderr, "Error poll call : %s\n", strerror(errno));
         }
@@ -55,17 +67,18 @@ void read_write_loop(const int sfd, const int fd){
             char ackBuf[12];
             size_t ackLen = 12;
             if(pkt_encode(ack, ackBuf, &ackLen) != PKT_OK){
+                pkt_del(ack);
                 fprintf(stderr, "encode error in receiver, read_write_loop, encode != PKT_OK\n");
             }
             else if(ackLen != 12){
-				free(ack);
+				pkt_del(ack);
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
             else{
                 fprintf(stderr, "I'm really writing\n");
                 int wr = write(sfd, ackBuf, ackLen);
                 fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
-                free(ack);
+                pkt_del(ack);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
@@ -105,6 +118,10 @@ void read_write_loop(const int sfd, const int fd){
         //            ATTENTION : READ on met la longueur max d'un paquet.
 
         if(pfds[0].revents&POLLIN){
+			
+			//reset the transmission timer because there is still something to read
+			clock_gettime(CLOCK_REALTIME, tpGlobal);
+			
             fprintf(stderr,"=============== HERE ==============\n");
             fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
             // read the max size of a packet cause we'll read one packet at a time
@@ -254,6 +271,9 @@ int main(int argc, char *argv[]){
     //char *ser_hostname = "::1"; //useless ?
     int src_port; //port from command line
     int socket_fd; //socket file descriptor
+    
+    tpGlobal = malloc(sizeof(struct timespec));
+    clock_gettime(CLOCK_REALTIME, tpGlobal);
 
 
 
