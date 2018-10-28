@@ -9,7 +9,7 @@
 static int size_buffer = 1;
 static int timer = 3; //define a random value for the first time, to be sure receive the first packet
 static uint8_t seqNum = 0;
-
+struct timespec *tpGlobal;
 
 
 /**
@@ -74,6 +74,17 @@ void read_write_loop(const int sfd, int fd){
     pfds[1].revents = 0;
 
     while(1){
+		
+		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
+		struct timespec *tpNow = malloc(sizeof(struct timespec));
+		clock_gettime(CLOCK_REALTIME, tpNow);
+		int difftime = tpGlobal - tpNow;
+		if(difftime>10){
+			return;
+		}
+		
+		free(tpNow);
+
 
         //creation of poll
         int pRet = poll(pfds, 2, 500);
@@ -202,6 +213,10 @@ void read_write_loop(const int sfd, int fd){
 
         //try to read the socket
         if(pfds[1].revents & POLLIN){
+			//reset the transmission timer because there is still something to read
+			clock_gettime(CLOCK_REALTIME, tpGlobal);
+			
+			
             fprintf(stderr, "I'm in\n");
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
@@ -306,6 +321,8 @@ int main(int argc, char *argv[]){
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
     int f_option = 0;//if there is (not) f_option
+    tpGlobal = malloc(sizeof(struct timespec));
+    clock_gettime(CLOCK_REALTIME, tpGlobal);
 
     //check if there is enough arguments to continue
     if (argc<2){
@@ -366,7 +383,7 @@ int main(int argc, char *argv[]){
 
     read_write_loop(socket_fd, fd);
 
-
+	free(tpGlobal);
     close(socket_fd);
     close(fd);
     return 0;

@@ -1,0 +1,7379 @@
+==351389== Memcheck, a memory error detector
+==351389== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==351389== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==351389== Command: ./sender -f Louistext.txt ::1 12345
+==351389== 
+--351389-- Valgrind options:
+--351389--    --leak-check=full
+--351389--    --show-leak-kinds=all
+--351389--    --track-origins=yes
+--351389--    -v
+--351389-- Contents of /proc/version:
+--351389--   Linux version 3.10.0-862.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-28) (GCC) ) #1 SMP Fri Apr 20 16:44:24 UTC 2018
+--351389-- 
+--351389-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-avx-avx2-bmi
+--351389-- Page sizes: currently 4096, max supported 4096
+--351389-- Valgrind library directory: /usr/lib64/valgrind
+--351389-- Reading syms from /etinfo/users/2018/semerikova/Desktop/LINGI1341Project/sender
+--351389-- Reading syms from /usr/lib64/ld-2.17.so
+--351389-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--351389--    object doesn't have a symbol table
+--351389--    object doesn't have a dynamic symbol table
+--351389-- Scheduler: using generic scheduler lock implementation.
+--351389-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==351389== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-351389-by-semerikova-on-vader
+==351389== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-351389-by-semerikova-on-vader
+==351389== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-351389-by-semerikova-on-vader
+==351389== 
+==351389== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==351389== don't want to do, unless you know exactly what you're doing,
+==351389== or are doing some strange experiment):
+==351389==   /usr/lib64/valgrind/../../bin/vgdb --pid=351389 ...command...
+==351389== 
+==351389== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==351389==   /path/to/gdb ./sender
+==351389== and then give GDB the following command
+==351389==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=351389
+==351389== --pid is optional if only one valgrind process is running
+==351389== 
+--351389-- REDIR: 0x4019f70 (ld-linux-x86-64.so.2:strlen) redirected to 0x58059d91 (???)
+--351389-- REDIR: 0x4019d40 (ld-linux-x86-64.so.2:index) redirected to 0x58059dab (???)
+--351389-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--351389-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+==351389== WARNING: new redirection conflicts with existing -- ignoring it
+--351389--     old: 0x04019f70 (strlen              ) R-> (0000.0) 0x58059d91 ???
+--351389--     new: 0x04019f70 (strlen              ) R-> (2007.0) 0x04c2cad0 strlen
+--351389-- REDIR: 0x4019ef0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c2dc20 (strcmp)
+--351389-- REDIR: 0x401aae0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c30ca0 (mempcpy)
+--351389-- Reading syms from /usr/lib64/libz.so.1.2.7
+--351389--    object doesn't have a symbol table
+--351389-- Reading syms from /usr/lib64/libc-2.17.so
+--351389-- REDIR: 0x50dbe40 (libc.so.6:strcasecmp) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x50d8bc0 (libc.so.6:strnlen) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x50de110 (libc.so.6:strncasecmp) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x50db620 (libc.so.6:memset) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x50db5d0 (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x50da5b0 (libc.so.6:__GI_strrchr) redirected to 0x4c2c490 (__GI_strrchr)
+--351389-- REDIR: 0x50d8ae0 (libc.so.6:__GI_strlen) redirected to 0x4c2ca30 (__GI_strlen)
+--351389-- REDIR: 0x50d6fc0 (libc.so.6:__GI_strchr) redirected to 0x4c2c5c0 (__GI_strchr)
+--351389-- REDIR: 0x50e20d0 (libc.so.6:strchrnul) redirected to 0x4c307c0 (strchrnul)
+--351389-- REDIR: 0x50d1c20 (libc.so.6:free) redirected to 0x4c2ac96 (free)
+I'm in f option!
+--351389-- REDIR: 0x50db440 (libc.so.6:__GI_memmove) redirected to 0x4c30210 (__GI_memmove)
+--351389-- REDIR: 0x50db680 (libc.so.6:__GI_memset) redirected to 0x4c2fec0 (memset)
+--351389-- REDIR: 0x50d1800 (libc.so.6:malloc) redirected to 0x4c29b9c (malloc)
+--351389-- REDIR: 0x50e07e0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x5198480 (libc.so.6:__memcpy_ssse3) redirected to 0x4c2dfe0 (memcpy@@GLIBC_2.14)
+--351389-- REDIR: 0x50f1630 (libc.so.6:__GI_strstr) redirected to 0x4c30f30 (__strstr_sse2)
+--351389-- REDIR: 0x50dacb0 (libc.so.6:memchr) redirected to 0x4c2dcc0 (memchr)
+--351389-- REDIR: 0x50e0850 (libc.so.6:__GI_memcpy) redirected to 0x4c2e5c0 (__GI_memcpy)
+--351389-- REDIR: 0x50db7f0 (libc.so.6:__GI_mempcpy) redirected to 0x4c309d0 (__GI_mempcpy)
+--351389-- REDIR: 0x5194100 (libc.so.6:__strncasecmp_avx) redirected to 0x4c2d490 (strncasecmp)
+--351389-- REDIR: 0x50d7080 (libc.so.6:__GI_strcmp) redirected to 0x4c2db30 (__GI_strcmp)
+--351389-- REDIR: 0x50dbce0 (libc.so.6:__GI_stpcpy) redirected to 0x4c2f910 (__GI_stpcpy)
+--351389-- REDIR: 0x50d2210 (libc.so.6:calloc) redirected to 0x4c2b91f (calloc)
+--351389-- Reading syms from /usr/lib64/libnss_files-2.17.so
+--351389-- REDIR: 0x50d8510 (libc.so.6:__GI_strcpy) redirected to 0x4c2cbd0 (__GI_strcpy)
+--351389-- REDIR: 0x50e1e90 (libc.so.6:rawmemchr) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x5191050 (libc.so.6:__rawmemchr_sse42) redirected to 0x4c30800 (rawmemchr)
+--351389-- REDIR: 0x50d7040 (libc.so.6:strcmp) redirected to 0x4a247b0 (_vgnU_ifunc_wrapper)
+--351389-- REDIR: 0x518a6f0 (libc.so.6:__strcmp_sse42) redirected to 0x4c2dbd0 (__strcmp_sse42)
+before read
+after read
+create_packet : seqNum : 0
+QUEUE SENDER PUSH : tp->tv_sec : 1540569577, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 1, isLastAckNum : 0, lastAckNum : 1
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 0, queue->last->seqNum : 0
+ack seqnum : 1, get_seqnum : 1
+before queue_find_ack_structure
+--351389-- REDIR: 0x50d8bf0 (libc.so.6:__GI_strnlen) redirected to 0x4c2c9e0 (__GI_strnlen)
+after queue_find_ack_structure
+after clock gettime
+before accessing time_node->tp
+TIMER : 3
+time_now : 1540569577, time_node->tp->tv_sec : 1540569577, time_node->tp->tv_nsec/1000000000 : 967861434
+, dif : 0TIMER : 2
+after accessing time_node->tp
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 0
+Let's print the queue before !Printing queue seqNums :
+0 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head = NULL !!
+before read
+after read
+create_packet : seqNum : 1
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+before read
+after read
+create_packet : seqNum : 2
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+before read
+after read
+create_packet : seqNum : 3
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+before read
+after read
+create_packet : seqNum : 4
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+before read
+after read
+create_packet : seqNum : 5
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+before read
+after read
+create_packet : seqNum : 6
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 2, isLastAckNum : 0, lastAckNum : 7
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 1, queue->last->seqNum : 6
+ack seqnum : 2, get_seqnum : 2
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 1
+Let's print the queue before !Printing queue seqNums :
+1 2 3 4 5 6 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 2
+before read
+after read
+create_packet : seqNum : 7
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 3, isLastAckNum : 0, lastAckNum : 8
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 2, queue->last->seqNum : 7
+ack seqnum : 3, get_seqnum : 3
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 2
+Let's print the queue before !Printing queue seqNums :
+2 3 4 5 6 7 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 3
+before read
+after read
+create_packet : seqNum : 8
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 4, isLastAckNum : 0, lastAckNum : 9
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 3, queue->last->seqNum : 8
+ack seqnum : 4, get_seqnum : 4
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 3
+Let's print the queue before !Printing queue seqNums :
+3 4 5 6 7 8 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 4
+before read
+after read
+create_packet : seqNum : 9
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 5, isLastAckNum : 0, lastAckNum : 10
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 4, queue->last->seqNum : 9
+ack seqnum : 5, get_seqnum : 5
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 4
+Let's print the queue before !Printing queue seqNums :
+4 5 6 7 8 9 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 5
+before read
+after read
+create_packet : seqNum : 10
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 6, isLastAckNum : 0, lastAckNum : 11
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 5, queue->last->seqNum : 10
+ack seqnum : 6, get_seqnum : 6
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 5
+Let's print the queue before !Printing queue seqNums :
+5 6 7 8 9 10 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 6
+before read
+after read
+create_packet : seqNum : 11
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 7, isLastAckNum : 0, lastAckNum : 12
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 6, queue->last->seqNum : 11
+ack seqnum : 7, get_seqnum : 7
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 6
+Let's print the queue before !Printing queue seqNums :
+6 7 8 9 10 11 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 7
+before read
+after read
+create_packet : seqNum : 12
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 8, isLastAckNum : 0, lastAckNum : 13
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 7, queue->last->seqNum : 12
+ack seqnum : 8, get_seqnum : 8
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 7
+Let's print the queue before !Printing queue seqNums :
+7 8 9 10 11 12 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 8
+before read
+after read
+create_packet : seqNum : 13
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 9, isLastAckNum : 0, lastAckNum : 14
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 8, queue->last->seqNum : 13
+ack seqnum : 9, get_seqnum : 9
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 8
+Let's print the queue before !Printing queue seqNums :
+8 9 10 11 12 13 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 9
+before read
+after read
+create_packet : seqNum : 14
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 10, isLastAckNum : 0, lastAckNum : 15
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 9, queue->last->seqNum : 14
+ack seqnum : 10, get_seqnum : 10
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 9
+Let's print the queue before !Printing queue seqNums :
+9 10 11 12 13 14 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 10
+before read
+after read
+create_packet : seqNum : 15
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 11, isLastAckNum : 0, lastAckNum : 16
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 10, queue->last->seqNum : 15
+ack seqnum : 11, get_seqnum : 11
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 10
+Let's print the queue before !Printing queue seqNums :
+10 11 12 13 14 15 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 11
+before read
+after read
+create_packet : seqNum : 16
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 12, isLastAckNum : 0, lastAckNum : 17
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 11, queue->last->seqNum : 16
+ack seqnum : 12, get_seqnum : 12
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 11
+Let's print the queue before !Printing queue seqNums :
+11 12 13 14 15 16 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 12
+before read
+after read
+create_packet : seqNum : 17
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 13, isLastAckNum : 0, lastAckNum : 18
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 12, queue->last->seqNum : 17
+ack seqnum : 13, get_seqnum : 13
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 12
+Let's print the queue before !Printing queue seqNums :
+12 13 14 15 16 17 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 13
+before read
+after read
+create_packet : seqNum : 18
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 14, isLastAckNum : 0, lastAckNum : 19
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 13, queue->last->seqNum : 18
+ack seqnum : 14, get_seqnum : 14
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 13
+Let's print the queue before !Printing queue seqNums :
+13 14 15 16 17 18 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 14
+before read
+after read
+create_packet : seqNum : 19
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 15, isLastAckNum : 0, lastAckNum : 20
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 14, queue->last->seqNum : 19
+ack seqnum : 15, get_seqnum : 15
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 14
+Let's print the queue before !Printing queue seqNums :
+14 15 16 17 18 19 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 15
+before read
+after read
+create_packet : seqNum : 20
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 16, isLastAckNum : 0, lastAckNum : 21
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 15, queue->last->seqNum : 20
+ack seqnum : 16, get_seqnum : 16
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 15
+Let's print the queue before !Printing queue seqNums :
+15 16 17 18 19 20 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 16
+before read
+after read
+create_packet : seqNum : 21
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 17, isLastAckNum : 0, lastAckNum : 22
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 16, queue->last->seqNum : 21
+ack seqnum : 17, get_seqnum : 17
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 16
+Let's print the queue before !Printing queue seqNums :
+16 17 18 19 20 21 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 17
+before read
+after read
+create_packet : seqNum : 22
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 18, isLastAckNum : 0, lastAckNum : 23
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 17, queue->last->seqNum : 22
+ack seqnum : 18, get_seqnum : 18
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 17
+Let's print the queue before !Printing queue seqNums :
+17 18 19 20 21 22 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 18
+before read
+after read
+create_packet : seqNum : 23
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 19, isLastAckNum : 0, lastAckNum : 24
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 18, queue->last->seqNum : 23
+ack seqnum : 19, get_seqnum : 19
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 18
+Let's print the queue before !Printing queue seqNums :
+18 19 20 21 22 23 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 19
+before read
+after read
+create_packet : seqNum : 24
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 20, isLastAckNum : 0, lastAckNum : 25
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 19, queue->last->seqNum : 24
+ack seqnum : 20, get_seqnum : 20
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 19
+Let's print the queue before !Printing queue seqNums :
+19 20 21 22 23 24 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 20
+before read
+after read
+create_packet : seqNum : 25
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 21, isLastAckNum : 0, lastAckNum : 26
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 20, queue->last->seqNum : 25
+ack seqnum : 21, get_seqnum : 21
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 20
+Let's print the queue before !Printing queue seqNums :
+20 21 22 23 24 25 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 21
+before read
+after read
+create_packet : seqNum : 26
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 22, isLastAckNum : 0, lastAckNum : 27
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 21, queue->last->seqNum : 26
+ack seqnum : 22, get_seqnum : 22
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 21
+Let's print the queue before !Printing queue seqNums :
+21 22 23 24 25 26 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 22
+before read
+after read
+create_packet : seqNum : 27
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 23, isLastAckNum : 0, lastAckNum : 28
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 22, queue->last->seqNum : 27
+ack seqnum : 23, get_seqnum : 23
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 22
+Let's print the queue before !Printing queue seqNums :
+22 23 24 25 26 27 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 23
+before read
+after read
+create_packet : seqNum : 28
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 24, isLastAckNum : 0, lastAckNum : 29
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 23, queue->last->seqNum : 28
+ack seqnum : 24, get_seqnum : 24
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 23
+Let's print the queue before !Printing queue seqNums :
+23 24 25 26 27 28 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 24
+before read
+after read
+create_packet : seqNum : 29
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 25, isLastAckNum : 0, lastAckNum : 30
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 24, queue->last->seqNum : 29
+ack seqnum : 25, get_seqnum : 25
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 24
+Let's print the queue before !Printing queue seqNums :
+24 25 26 27 28 29 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 25
+before read
+after read
+create_packet : seqNum : 30
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 26, isLastAckNum : 0, lastAckNum : 31
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 25, queue->last->seqNum : 30
+ack seqnum : 26, get_seqnum : 26
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 25
+Let's print the queue before !Printing queue seqNums :
+25 26 27 28 29 30 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 26
+before read
+after read
+create_packet : seqNum : 31
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 27, isLastAckNum : 0, lastAckNum : 32
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 26, queue->last->seqNum : 31
+ack seqnum : 27, get_seqnum : 27
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 26
+Let's print the queue before !Printing queue seqNums :
+26 27 28 29 30 31 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 27
+before read
+after read
+create_packet : seqNum : 32
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 28, isLastAckNum : 0, lastAckNum : 33
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 27, queue->last->seqNum : 32
+ack seqnum : 28, get_seqnum : 28
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 27
+Let's print the queue before !Printing queue seqNums :
+27 28 29 30 31 32 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 28
+before read
+after read
+create_packet : seqNum : 33
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 29, isLastAckNum : 0, lastAckNum : 34
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 28, queue->last->seqNum : 33
+ack seqnum : 29, get_seqnum : 29
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 28
+Let's print the queue before !Printing queue seqNums :
+28 29 30 31 32 33 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 29
+before read
+after read
+create_packet : seqNum : 34
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 30, isLastAckNum : 0, lastAckNum : 35
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 29, queue->last->seqNum : 34
+ack seqnum : 30, get_seqnum : 30
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 29
+Let's print the queue before !Printing queue seqNums :
+29 30 31 32 33 34 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 30
+before read
+after read
+create_packet : seqNum : 35
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 31, isLastAckNum : 0, lastAckNum : 36
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 30, queue->last->seqNum : 35
+ack seqnum : 31, get_seqnum : 31
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 30
+Let's print the queue before !Printing queue seqNums :
+30 31 32 33 34 35 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 31
+before read
+after read
+create_packet : seqNum : 36
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 32, isLastAckNum : 0, lastAckNum : 37
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 31, queue->last->seqNum : 36
+ack seqnum : 32, get_seqnum : 32
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 31
+Let's print the queue before !Printing queue seqNums :
+31 32 33 34 35 36 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 32
+before read
+after read
+create_packet : seqNum : 37
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 33, isLastAckNum : 0, lastAckNum : 38
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 32, queue->last->seqNum : 37
+ack seqnum : 33, get_seqnum : 33
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 32
+Let's print the queue before !Printing queue seqNums :
+32 33 34 35 36 37 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 33
+before read
+after read
+create_packet : seqNum : 38
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 34, isLastAckNum : 0, lastAckNum : 39
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 33, queue->last->seqNum : 38
+ack seqnum : 34, get_seqnum : 34
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 33
+Let's print the queue before !Printing queue seqNums :
+33 34 35 36 37 38 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 34
+before read
+after read
+create_packet : seqNum : 39
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 35, isLastAckNum : 0, lastAckNum : 40
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 34, queue->last->seqNum : 39
+ack seqnum : 35, get_seqnum : 35
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 34
+Let's print the queue before !Printing queue seqNums :
+34 35 36 37 38 39 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 35
+before read
+after read
+create_packet : seqNum : 40
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 36, isLastAckNum : 0, lastAckNum : 41
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 35, queue->last->seqNum : 40
+ack seqnum : 36, get_seqnum : 36
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 35
+Let's print the queue before !Printing queue seqNums :
+35 36 37 38 39 40 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 36
+before read
+after read
+create_packet : seqNum : 41
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 37, isLastAckNum : 0, lastAckNum : 42
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 36, queue->last->seqNum : 41
+ack seqnum : 37, get_seqnum : 37
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 36
+Let's print the queue before !Printing queue seqNums :
+36 37 38 39 40 41 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 37
+before read
+after read
+create_packet : seqNum : 42
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 38, isLastAckNum : 0, lastAckNum : 43
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 37, queue->last->seqNum : 42
+ack seqnum : 38, get_seqnum : 38
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 37
+Let's print the queue before !Printing queue seqNums :
+37 38 39 40 41 42 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 38
+before read
+after read
+create_packet : seqNum : 43
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 39, isLastAckNum : 0, lastAckNum : 44
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 38, queue->last->seqNum : 43
+ack seqnum : 39, get_seqnum : 39
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 38
+Let's print the queue before !Printing queue seqNums :
+38 39 40 41 42 43 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 39
+before read
+after read
+create_packet : seqNum : 44
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 40, isLastAckNum : 0, lastAckNum : 45
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 39, queue->last->seqNum : 44
+ack seqnum : 40, get_seqnum : 40
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 39
+Let's print the queue before !Printing queue seqNums :
+39 40 41 42 43 44 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 40
+before read
+after read
+create_packet : seqNum : 45
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 41, isLastAckNum : 0, lastAckNum : 46
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 40, queue->last->seqNum : 45
+ack seqnum : 41, get_seqnum : 41
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 40
+Let's print the queue before !Printing queue seqNums :
+40 41 42 43 44 45 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 41
+before read
+after read
+create_packet : seqNum : 46
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 42, isLastAckNum : 0, lastAckNum : 47
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 41, queue->last->seqNum : 46
+ack seqnum : 42, get_seqnum : 42
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 41
+Let's print the queue before !Printing queue seqNums :
+41 42 43 44 45 46 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 42
+before read
+after read
+create_packet : seqNum : 47
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 43, isLastAckNum : 0, lastAckNum : 48
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 42, queue->last->seqNum : 47
+ack seqnum : 43, get_seqnum : 43
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 42
+Let's print the queue before !Printing queue seqNums :
+42 43 44 45 46 47 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 43
+before read
+after read
+create_packet : seqNum : 48
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 44, isLastAckNum : 0, lastAckNum : 49
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 43, queue->last->seqNum : 48
+ack seqnum : 44, get_seqnum : 44
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 43
+Let's print the queue before !Printing queue seqNums :
+43 44 45 46 47 48 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 44
+before read
+after read
+create_packet : seqNum : 49
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 45, isLastAckNum : 0, lastAckNum : 50
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 44, queue->last->seqNum : 49
+ack seqnum : 45, get_seqnum : 45
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 44
+Let's print the queue before !Printing queue seqNums :
+44 45 46 47 48 49 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 45
+before read
+after read
+create_packet : seqNum : 50
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 46, isLastAckNum : 0, lastAckNum : 51
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 45, queue->last->seqNum : 50
+ack seqnum : 46, get_seqnum : 46
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 45
+Let's print the queue before !Printing queue seqNums :
+45 46 47 48 49 50 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 46
+before read
+after read
+create_packet : seqNum : 51
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 47, isLastAckNum : 0, lastAckNum : 52
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 46, queue->last->seqNum : 51
+ack seqnum : 47, get_seqnum : 47
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 46
+Let's print the queue before !Printing queue seqNums :
+46 47 48 49 50 51 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 47
+before read
+after read
+create_packet : seqNum : 52
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 48, isLastAckNum : 0, lastAckNum : 53
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 47, queue->last->seqNum : 52
+ack seqnum : 48, get_seqnum : 48
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 47
+Let's print the queue before !Printing queue seqNums :
+47 48 49 50 51 52 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 48
+before read
+after read
+create_packet : seqNum : 53
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 49, isLastAckNum : 0, lastAckNum : 54
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 48, queue->last->seqNum : 53
+ack seqnum : 49, get_seqnum : 49
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 48
+Let's print the queue before !Printing queue seqNums :
+48 49 50 51 52 53 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 49
+before read
+after read
+create_packet : seqNum : 54
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 50, isLastAckNum : 0, lastAckNum : 55
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 49, queue->last->seqNum : 54
+ack seqnum : 50, get_seqnum : 50
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 49
+Let's print the queue before !Printing queue seqNums :
+49 50 51 52 53 54 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 50
+before read
+after read
+create_packet : seqNum : 55
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 51, isLastAckNum : 0, lastAckNum : 56
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 50, queue->last->seqNum : 55
+ack seqnum : 51, get_seqnum : 51
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 50
+Let's print the queue before !Printing queue seqNums :
+50 51 52 53 54 55 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 51
+before read
+after read
+create_packet : seqNum : 56
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 52, isLastAckNum : 0, lastAckNum : 57
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 51, queue->last->seqNum : 56
+ack seqnum : 52, get_seqnum : 52
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 51
+Let's print the queue before !Printing queue seqNums :
+51 52 53 54 55 56 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 52
+before read
+after read
+create_packet : seqNum : 57
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 53, isLastAckNum : 0, lastAckNum : 58
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 52, queue->last->seqNum : 57
+ack seqnum : 53, get_seqnum : 53
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 52
+Let's print the queue before !Printing queue seqNums :
+52 53 54 55 56 57 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 53
+before read
+after read
+create_packet : seqNum : 58
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 54, isLastAckNum : 0, lastAckNum : 59
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 53, queue->last->seqNum : 58
+ack seqnum : 54, get_seqnum : 54
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 53
+Let's print the queue before !Printing queue seqNums :
+53 54 55 56 57 58 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 54
+before read
+after read
+create_packet : seqNum : 59
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 55, isLastAckNum : 0, lastAckNum : 60
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 54, queue->last->seqNum : 59
+ack seqnum : 55, get_seqnum : 55
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 54
+Let's print the queue before !Printing queue seqNums :
+54 55 56 57 58 59 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 55
+before read
+after read
+create_packet : seqNum : 60
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 56, isLastAckNum : 0, lastAckNum : 61
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 55, queue->last->seqNum : 60
+ack seqnum : 56, get_seqnum : 56
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 55
+Let's print the queue before !Printing queue seqNums :
+55 56 57 58 59 60 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 56
+before read
+after read
+create_packet : seqNum : 61
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 57, isLastAckNum : 0, lastAckNum : 62
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 56, queue->last->seqNum : 61
+ack seqnum : 57, get_seqnum : 57
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 56
+Let's print the queue before !Printing queue seqNums :
+56 57 58 59 60 61 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 57
+before read
+after read
+create_packet : seqNum : 62
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 58, isLastAckNum : 0, lastAckNum : 63
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 57, queue->last->seqNum : 62
+ack seqnum : 58, get_seqnum : 58
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 57
+Let's print the queue before !Printing queue seqNums :
+57 58 59 60 61 62 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 58
+before read
+after read
+create_packet : seqNum : 63
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 59, isLastAckNum : 0, lastAckNum : 64
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 58, queue->last->seqNum : 63
+ack seqnum : 59, get_seqnum : 59
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 58
+Let's print the queue before !Printing queue seqNums :
+58 59 60 61 62 63 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 59
+before read
+after read
+create_packet : seqNum : 64
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 60, isLastAckNum : 0, lastAckNum : 65
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 59, queue->last->seqNum : 64
+ack seqnum : 60, get_seqnum : 60
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 59
+Let's print the queue before !Printing queue seqNums :
+59 60 61 62 63 64 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 60
+before read
+after read
+create_packet : seqNum : 65
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 61, isLastAckNum : 0, lastAckNum : 66
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 60, queue->last->seqNum : 65
+ack seqnum : 61, get_seqnum : 61
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 60
+Let's print the queue before !Printing queue seqNums :
+60 61 62 63 64 65 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 61
+before read
+after read
+create_packet : seqNum : 66
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 62, isLastAckNum : 0, lastAckNum : 67
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 61, queue->last->seqNum : 66
+ack seqnum : 62, get_seqnum : 62
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 61
+Let's print the queue before !Printing queue seqNums :
+61 62 63 64 65 66 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 62
+before read
+after read
+create_packet : seqNum : 67
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 63, isLastAckNum : 0, lastAckNum : 68
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 62, queue->last->seqNum : 67
+ack seqnum : 63, get_seqnum : 63
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 62
+Let's print the queue before !Printing queue seqNums :
+62 63 64 65 66 67 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 63
+before read
+after read
+create_packet : seqNum : 68
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 64, isLastAckNum : 0, lastAckNum : 69
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 63, queue->last->seqNum : 68
+ack seqnum : 64, get_seqnum : 64
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 63
+Let's print the queue before !Printing queue seqNums :
+63 64 65 66 67 68 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 64
+before read
+after read
+create_packet : seqNum : 69
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 65, isLastAckNum : 0, lastAckNum : 70
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 64, queue->last->seqNum : 69
+ack seqnum : 65, get_seqnum : 65
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 64
+Let's print the queue before !Printing queue seqNums :
+64 65 66 67 68 69 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 65
+before read
+after read
+create_packet : seqNum : 70
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 66, isLastAckNum : 0, lastAckNum : 71
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 65, queue->last->seqNum : 70
+ack seqnum : 66, get_seqnum : 66
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 65
+Let's print the queue before !Printing queue seqNums :
+65 66 67 68 69 70 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 66
+before read
+after read
+create_packet : seqNum : 71
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 67, isLastAckNum : 0, lastAckNum : 72
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 66, queue->last->seqNum : 71
+ack seqnum : 67, get_seqnum : 67
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 66
+Let's print the queue before !Printing queue seqNums :
+66 67 68 69 70 71 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 67
+before read
+after read
+create_packet : seqNum : 72
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 68, isLastAckNum : 0, lastAckNum : 73
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 67, queue->last->seqNum : 72
+ack seqnum : 68, get_seqnum : 68
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 67
+Let's print the queue before !Printing queue seqNums :
+67 68 69 70 71 72 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 68
+before read
+after read
+create_packet : seqNum : 73
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 69, isLastAckNum : 0, lastAckNum : 74
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 68, queue->last->seqNum : 73
+ack seqnum : 69, get_seqnum : 69
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 68
+Let's print the queue before !Printing queue seqNums :
+68 69 70 71 72 73 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 69
+before read
+after read
+create_packet : seqNum : 74
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 70, isLastAckNum : 0, lastAckNum : 75
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 69, queue->last->seqNum : 74
+ack seqnum : 70, get_seqnum : 70
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 69
+Let's print the queue before !Printing queue seqNums :
+69 70 71 72 73 74 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 70
+before read
+after read
+create_packet : seqNum : 75
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 71, isLastAckNum : 0, lastAckNum : 76
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 70, queue->last->seqNum : 75
+ack seqnum : 71, get_seqnum : 71
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 70
+Let's print the queue before !Printing queue seqNums :
+70 71 72 73 74 75 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 71
+before read
+after read
+create_packet : seqNum : 76
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 72, isLastAckNum : 0, lastAckNum : 77
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 71, queue->last->seqNum : 76
+ack seqnum : 72, get_seqnum : 72
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 71
+Let's print the queue before !Printing queue seqNums :
+71 72 73 74 75 76 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 72
+before read
+after read
+create_packet : seqNum : 77
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 73, isLastAckNum : 0, lastAckNum : 78
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 72, queue->last->seqNum : 77
+ack seqnum : 73, get_seqnum : 73
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 72
+Let's print the queue before !Printing queue seqNums :
+72 73 74 75 76 77 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 73
+before read
+after read
+create_packet : seqNum : 78
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 74, isLastAckNum : 0, lastAckNum : 79
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 73, queue->last->seqNum : 78
+ack seqnum : 74, get_seqnum : 74
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 73
+Let's print the queue before !Printing queue seqNums :
+73 74 75 76 77 78 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 74
+before read
+after read
+create_packet : seqNum : 79
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 75, isLastAckNum : 0, lastAckNum : 80
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 74, queue->last->seqNum : 79
+ack seqnum : 75, get_seqnum : 75
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 74
+Let's print the queue before !Printing queue seqNums :
+74 75 76 77 78 79 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 75
+before read
+after read
+create_packet : seqNum : 80
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 76, isLastAckNum : 0, lastAckNum : 81
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 75, queue->last->seqNum : 80
+ack seqnum : 76, get_seqnum : 76
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 75
+Let's print the queue before !Printing queue seqNums :
+75 76 77 78 79 80 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 76
+before read
+after read
+create_packet : seqNum : 81
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 77, isLastAckNum : 0, lastAckNum : 82
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 76, queue->last->seqNum : 81
+ack seqnum : 77, get_seqnum : 77
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 76
+Let's print the queue before !Printing queue seqNums :
+76 77 78 79 80 81 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 77
+before read
+after read
+create_packet : seqNum : 82
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 78, isLastAckNum : 0, lastAckNum : 83
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 77, queue->last->seqNum : 82
+ack seqnum : 78, get_seqnum : 78
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 77
+Let's print the queue before !Printing queue seqNums :
+77 78 79 80 81 82 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 78
+before read
+after read
+create_packet : seqNum : 83
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 79, isLastAckNum : 0, lastAckNum : 84
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 78, queue->last->seqNum : 83
+ack seqnum : 79, get_seqnum : 79
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 78
+Let's print the queue before !Printing queue seqNums :
+78 79 80 81 82 83 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 79
+before read
+after read
+create_packet : seqNum : 84
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 80, isLastAckNum : 0, lastAckNum : 85
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 79, queue->last->seqNum : 84
+ack seqnum : 80, get_seqnum : 80
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 79
+Let's print the queue before !Printing queue seqNums :
+79 80 81 82 83 84 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 80
+before read
+after read
+create_packet : seqNum : 85
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 81, isLastAckNum : 0, lastAckNum : 86
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 80, queue->last->seqNum : 85
+ack seqnum : 81, get_seqnum : 81
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 80
+Let's print the queue before !Printing queue seqNums :
+80 81 82 83 84 85 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 81
+before read
+after read
+create_packet : seqNum : 86
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 82, isLastAckNum : 0, lastAckNum : 87
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 81, queue->last->seqNum : 86
+ack seqnum : 82, get_seqnum : 82
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 81
+Let's print the queue before !Printing queue seqNums :
+81 82 83 84 85 86 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 82
+before read
+after read
+create_packet : seqNum : 87
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 83, isLastAckNum : 0, lastAckNum : 88
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 82, queue->last->seqNum : 87
+ack seqnum : 83, get_seqnum : 83
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 82
+Let's print the queue before !Printing queue seqNums :
+82 83 84 85 86 87 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 83
+before read
+after read
+create_packet : seqNum : 88
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 84, isLastAckNum : 0, lastAckNum : 89
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 83, queue->last->seqNum : 88
+ack seqnum : 84, get_seqnum : 84
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 83
+Let's print the queue before !Printing queue seqNums :
+83 84 85 86 87 88 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 84
+before read
+after read
+create_packet : seqNum : 89
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 85, isLastAckNum : 0, lastAckNum : 90
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 84, queue->last->seqNum : 89
+ack seqnum : 85, get_seqnum : 85
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 84
+Let's print the queue before !Printing queue seqNums :
+84 85 86 87 88 89 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 85
+before read
+after read
+create_packet : seqNum : 90
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 86, isLastAckNum : 0, lastAckNum : 91
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 85, queue->last->seqNum : 90
+ack seqnum : 86, get_seqnum : 86
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 85
+Let's print the queue before !Printing queue seqNums :
+85 86 87 88 89 90 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 86
+before read
+after read
+create_packet : seqNum : 91
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 87, isLastAckNum : 0, lastAckNum : 92
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 86, queue->last->seqNum : 91
+ack seqnum : 87, get_seqnum : 87
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 86
+Let's print the queue before !Printing queue seqNums :
+86 87 88 89 90 91 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 87
+before read
+after read
+create_packet : seqNum : 92
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 88, isLastAckNum : 0, lastAckNum : 93
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 87, queue->last->seqNum : 92
+ack seqnum : 88, get_seqnum : 88
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 87
+Let's print the queue before !Printing queue seqNums :
+87 88 89 90 91 92 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 88
+before read
+after read
+create_packet : seqNum : 93
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 89, isLastAckNum : 0, lastAckNum : 94
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 88, queue->last->seqNum : 93
+ack seqnum : 89, get_seqnum : 89
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 88
+Let's print the queue before !Printing queue seqNums :
+88 89 90 91 92 93 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 89
+before read
+after read
+create_packet : seqNum : 94
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 90, isLastAckNum : 0, lastAckNum : 95
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 89, queue->last->seqNum : 94
+ack seqnum : 90, get_seqnum : 90
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 89
+Let's print the queue before !Printing queue seqNums :
+89 90 91 92 93 94 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 90
+before read
+after read
+create_packet : seqNum : 95
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 91, isLastAckNum : 0, lastAckNum : 96
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 90, queue->last->seqNum : 95
+ack seqnum : 91, get_seqnum : 91
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 90
+Let's print the queue before !Printing queue seqNums :
+90 91 92 93 94 95 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 91
+before read
+after read
+create_packet : seqNum : 96
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 92, isLastAckNum : 0, lastAckNum : 97
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 91, queue->last->seqNum : 96
+ack seqnum : 92, get_seqnum : 92
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 91
+Let's print the queue before !Printing queue seqNums :
+91 92 93 94 95 96 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 92
+before read
+after read
+create_packet : seqNum : 97
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 93, isLastAckNum : 0, lastAckNum : 98
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 92, queue->last->seqNum : 97
+ack seqnum : 93, get_seqnum : 93
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 92
+Let's print the queue before !Printing queue seqNums :
+92 93 94 95 96 97 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 93
+before read
+after read
+create_packet : seqNum : 98
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 94, isLastAckNum : 0, lastAckNum : 99
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 93, queue->last->seqNum : 98
+ack seqnum : 94, get_seqnum : 94
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 93
+Let's print the queue before !Printing queue seqNums :
+93 94 95 96 97 98 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 94
+before read
+after read
+create_packet : seqNum : 99
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 95, isLastAckNum : 0, lastAckNum : 100
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 94, queue->last->seqNum : 99
+ack seqnum : 95, get_seqnum : 95
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 94
+Let's print the queue before !Printing queue seqNums :
+94 95 96 97 98 99 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 95
+before read
+after read
+create_packet : seqNum : 100
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 96, isLastAckNum : 0, lastAckNum : 101
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 95, queue->last->seqNum : 100
+ack seqnum : 96, get_seqnum : 96
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 95
+Let's print the queue before !Printing queue seqNums :
+95 96 97 98 99 100 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 96
+before read
+after read
+create_packet : seqNum : 101
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 97, isLastAckNum : 0, lastAckNum : 102
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 96, queue->last->seqNum : 101
+ack seqnum : 97, get_seqnum : 97
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 96
+Let's print the queue before !Printing queue seqNums :
+96 97 98 99 100 101 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 97
+before read
+after read
+create_packet : seqNum : 102
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 98, isLastAckNum : 0, lastAckNum : 103
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 97, queue->last->seqNum : 102
+ack seqnum : 98, get_seqnum : 98
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 97
+Let's print the queue before !Printing queue seqNums :
+97 98 99 100 101 102 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 98
+before read
+after read
+create_packet : seqNum : 103
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 99, isLastAckNum : 0, lastAckNum : 104
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 98, queue->last->seqNum : 103
+ack seqnum : 99, get_seqnum : 99
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 98
+Let's print the queue before !Printing queue seqNums :
+98 99 100 101 102 103 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 99
+before read
+after read
+create_packet : seqNum : 104
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 100, isLastAckNum : 0, lastAckNum : 105
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 99, queue->last->seqNum : 104
+ack seqnum : 100, get_seqnum : 100
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 99
+Let's print the queue before !Printing queue seqNums :
+99 100 101 102 103 104 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 100
+before read
+after read
+create_packet : seqNum : 105
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 101, isLastAckNum : 0, lastAckNum : 106
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 100, queue->last->seqNum : 105
+ack seqnum : 101, get_seqnum : 101
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 100
+Let's print the queue before !Printing queue seqNums :
+100 101 102 103 104 105 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 101
+before read
+after read
+create_packet : seqNum : 106
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 102, isLastAckNum : 0, lastAckNum : 107
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 101, queue->last->seqNum : 106
+ack seqnum : 102, get_seqnum : 102
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 101
+Let's print the queue before !Printing queue seqNums :
+101 102 103 104 105 106 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 102
+before read
+after read
+create_packet : seqNum : 107
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 103, isLastAckNum : 0, lastAckNum : 108
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 102, queue->last->seqNum : 107
+ack seqnum : 103, get_seqnum : 103
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 102
+Let's print the queue before !Printing queue seqNums :
+102 103 104 105 106 107 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 103
+before read
+after read
+create_packet : seqNum : 108
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 104, isLastAckNum : 0, lastAckNum : 109
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 103, queue->last->seqNum : 108
+ack seqnum : 104, get_seqnum : 104
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 103
+Let's print the queue before !Printing queue seqNums :
+103 104 105 106 107 108 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 104
+before read
+after read
+create_packet : seqNum : 109
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 105, isLastAckNum : 0, lastAckNum : 110
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 104, queue->last->seqNum : 109
+ack seqnum : 105, get_seqnum : 105
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 104
+Let's print the queue before !Printing queue seqNums :
+104 105 106 107 108 109 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 105
+before read
+after read
+create_packet : seqNum : 110
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 106, isLastAckNum : 0, lastAckNum : 111
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 105, queue->last->seqNum : 110
+ack seqnum : 106, get_seqnum : 106
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 105
+Let's print the queue before !Printing queue seqNums :
+105 106 107 108 109 110 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 106
+before read
+after read
+create_packet : seqNum : 111
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 107, isLastAckNum : 0, lastAckNum : 112
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 106, queue->last->seqNum : 111
+ack seqnum : 107, get_seqnum : 107
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 106
+Let's print the queue before !Printing queue seqNums :
+106 107 108 109 110 111 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 107
+before read
+after read
+create_packet : seqNum : 112
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 108, isLastAckNum : 0, lastAckNum : 113
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 107, queue->last->seqNum : 112
+ack seqnum : 108, get_seqnum : 108
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 107
+Let's print the queue before !Printing queue seqNums :
+107 108 109 110 111 112 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 108
+before read
+after read
+create_packet : seqNum : 113
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 109, isLastAckNum : 0, lastAckNum : 114
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 108, queue->last->seqNum : 113
+ack seqnum : 109, get_seqnum : 109
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 108
+Let's print the queue before !Printing queue seqNums :
+108 109 110 111 112 113 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 109
+before read
+after read
+create_packet : seqNum : 114
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 110, isLastAckNum : 0, lastAckNum : 115
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 109, queue->last->seqNum : 114
+ack seqnum : 110, get_seqnum : 110
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 109
+Let's print the queue before !Printing queue seqNums :
+109 110 111 112 113 114 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 110
+before read
+after read
+create_packet : seqNum : 115
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 111, isLastAckNum : 0, lastAckNum : 116
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 110, queue->last->seqNum : 115
+ack seqnum : 111, get_seqnum : 111
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 110
+Let's print the queue before !Printing queue seqNums :
+110 111 112 113 114 115 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 111
+before read
+after read
+create_packet : seqNum : 116
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 112, isLastAckNum : 0, lastAckNum : 117
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 111, queue->last->seqNum : 116
+ack seqnum : 112, get_seqnum : 112
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 111
+Let's print the queue before !Printing queue seqNums :
+111 112 113 114 115 116 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 112
+before read
+after read
+create_packet : seqNum : 117
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 113, isLastAckNum : 0, lastAckNum : 118
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 112, queue->last->seqNum : 117
+ack seqnum : 113, get_seqnum : 113
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 112
+Let's print the queue before !Printing queue seqNums :
+112 113 114 115 116 117 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 113
+before read
+after read
+create_packet : seqNum : 118
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 114, isLastAckNum : 0, lastAckNum : 119
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 113, queue->last->seqNum : 118
+ack seqnum : 114, get_seqnum : 114
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 113
+Let's print the queue before !Printing queue seqNums :
+113 114 115 116 117 118 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 114
+before read
+after read
+create_packet : seqNum : 119
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 115, isLastAckNum : 0, lastAckNum : 120
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 114, queue->last->seqNum : 119
+ack seqnum : 115, get_seqnum : 115
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 114
+Let's print the queue before !Printing queue seqNums :
+114 115 116 117 118 119 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 115
+before read
+after read
+create_packet : seqNum : 120
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 116, isLastAckNum : 0, lastAckNum : 121
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 115, queue->last->seqNum : 120
+ack seqnum : 116, get_seqnum : 116
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 115
+Let's print the queue before !Printing queue seqNums :
+115 116 117 118 119 120 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 116
+before read
+after read
+create_packet : seqNum : 121
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 117, isLastAckNum : 0, lastAckNum : 122
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 116, queue->last->seqNum : 121
+ack seqnum : 117, get_seqnum : 117
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 116
+Let's print the queue before !Printing queue seqNums :
+116 117 118 119 120 121 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 117
+before read
+after read
+create_packet : seqNum : 122
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 118, isLastAckNum : 0, lastAckNum : 123
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 117, queue->last->seqNum : 122
+ack seqnum : 118, get_seqnum : 118
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 117
+Let's print the queue before !Printing queue seqNums :
+117 118 119 120 121 122 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 118
+before read
+after read
+create_packet : seqNum : 123
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 119, isLastAckNum : 0, lastAckNum : 124
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 118, queue->last->seqNum : 123
+ack seqnum : 119, get_seqnum : 119
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 118
+Let's print the queue before !Printing queue seqNums :
+118 119 120 121 122 123 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 119
+before read
+after read
+create_packet : seqNum : 124
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 120, isLastAckNum : 0, lastAckNum : 125
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 119, queue->last->seqNum : 124
+ack seqnum : 120, get_seqnum : 120
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 119
+Let's print the queue before !Printing queue seqNums :
+119 120 121 122 123 124 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 120
+before read
+after read
+create_packet : seqNum : 125
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 121, isLastAckNum : 0, lastAckNum : 126
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 120, queue->last->seqNum : 125
+ack seqnum : 121, get_seqnum : 121
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 120
+Let's print the queue before !Printing queue seqNums :
+120 121 122 123 124 125 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 121
+before read
+after read
+create_packet : seqNum : 126
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 122, isLastAckNum : 0, lastAckNum : 127
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 121, queue->last->seqNum : 126
+ack seqnum : 122, get_seqnum : 122
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 121
+Let's print the queue before !Printing queue seqNums :
+121 122 123 124 125 126 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 122
+before read
+after read
+create_packet : seqNum : 127
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 123, isLastAckNum : 0, lastAckNum : 128
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 122, queue->last->seqNum : 127
+ack seqnum : 123, get_seqnum : 123
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 122
+Let's print the queue before !Printing queue seqNums :
+122 123 124 125 126 127 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 123
+before read
+after read
+create_packet : seqNum : 128
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 124, isLastAckNum : 0, lastAckNum : 129
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 123, queue->last->seqNum : 128
+ack seqnum : 124, get_seqnum : 124
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 123
+Let's print the queue before !Printing queue seqNums :
+123 124 125 126 127 128 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 124
+before read
+after read
+create_packet : seqNum : 129
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 125, isLastAckNum : 0, lastAckNum : 130
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 124, queue->last->seqNum : 129
+ack seqnum : 125, get_seqnum : 125
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 124
+Let's print the queue before !Printing queue seqNums :
+124 125 126 127 128 129 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 125
+before read
+after read
+create_packet : seqNum : 130
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 126, isLastAckNum : 0, lastAckNum : 131
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 125, queue->last->seqNum : 130
+ack seqnum : 126, get_seqnum : 126
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 125
+Let's print the queue before !Printing queue seqNums :
+125 126 127 128 129 130 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 126
+before read
+after read
+create_packet : seqNum : 131
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 127, isLastAckNum : 0, lastAckNum : 132
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 126, queue->last->seqNum : 131
+ack seqnum : 127, get_seqnum : 127
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 126
+Let's print the queue before !Printing queue seqNums :
+126 127 128 129 130 131 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 127
+before read
+after read
+create_packet : seqNum : 132
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 128, isLastAckNum : 0, lastAckNum : 133
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 127, queue->last->seqNum : 132
+ack seqnum : 128, get_seqnum : 128
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 127
+Let's print the queue before !Printing queue seqNums :
+127 128 129 130 131 132 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 128
+before read
+after read
+create_packet : seqNum : 133
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 129, isLastAckNum : 0, lastAckNum : 134
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 128, queue->last->seqNum : 133
+ack seqnum : 129, get_seqnum : 129
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 128
+Let's print the queue before !Printing queue seqNums :
+128 129 130 131 132 133 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 129
+before read
+after read
+create_packet : seqNum : 134
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 130, isLastAckNum : 0, lastAckNum : 135
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 129, queue->last->seqNum : 134
+ack seqnum : 130, get_seqnum : 130
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 129
+Let's print the queue before !Printing queue seqNums :
+129 130 131 132 133 134 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 130
+before read
+after read
+create_packet : seqNum : 135
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 131, isLastAckNum : 0, lastAckNum : 136
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 130, queue->last->seqNum : 135
+ack seqnum : 131, get_seqnum : 131
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 130
+Let's print the queue before !Printing queue seqNums :
+130 131 132 133 134 135 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 131
+before read
+after read
+create_packet : seqNum : 136
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 132, isLastAckNum : 0, lastAckNum : 137
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 131, queue->last->seqNum : 136
+ack seqnum : 132, get_seqnum : 132
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 131
+Let's print the queue before !Printing queue seqNums :
+131 132 133 134 135 136 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 132
+before read
+after read
+create_packet : seqNum : 137
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 133, isLastAckNum : 0, lastAckNum : 138
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 132, queue->last->seqNum : 137
+ack seqnum : 133, get_seqnum : 133
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 132
+Let's print the queue before !Printing queue seqNums :
+132 133 134 135 136 137 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 133
+before read
+after read
+create_packet : seqNum : 138
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 134, isLastAckNum : 0, lastAckNum : 139
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 133, queue->last->seqNum : 138
+ack seqnum : 134, get_seqnum : 134
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 133
+Let's print the queue before !Printing queue seqNums :
+133 134 135 136 137 138 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 134
+before read
+after read
+create_packet : seqNum : 139
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 135, isLastAckNum : 0, lastAckNum : 140
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 134, queue->last->seqNum : 139
+ack seqnum : 135, get_seqnum : 135
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 134
+Let's print the queue before !Printing queue seqNums :
+134 135 136 137 138 139 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 135
+before read
+after read
+create_packet : seqNum : 140
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 136, isLastAckNum : 0, lastAckNum : 141
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 135, queue->last->seqNum : 140
+ack seqnum : 136, get_seqnum : 136
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 135
+Let's print the queue before !Printing queue seqNums :
+135 136 137 138 139 140 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 136
+before read
+after read
+create_packet : seqNum : 141
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 137, isLastAckNum : 0, lastAckNum : 142
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 136, queue->last->seqNum : 141
+ack seqnum : 137, get_seqnum : 137
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 136
+Let's print the queue before !Printing queue seqNums :
+136 137 138 139 140 141 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 137
+before read
+after read
+create_packet : seqNum : 142
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 138, isLastAckNum : 0, lastAckNum : 143
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 137, queue->last->seqNum : 142
+ack seqnum : 138, get_seqnum : 138
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 137
+Let's print the queue before !Printing queue seqNums :
+137 138 139 140 141 142 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 138
+before read
+after read
+create_packet : seqNum : 143
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 139, isLastAckNum : 0, lastAckNum : 144
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 138, queue->last->seqNum : 143
+ack seqnum : 139, get_seqnum : 139
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 138
+Let's print the queue before !Printing queue seqNums :
+138 139 140 141 142 143 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 139
+before read
+after read
+create_packet : seqNum : 144
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 140, isLastAckNum : 0, lastAckNum : 145
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 139, queue->last->seqNum : 144
+ack seqnum : 140, get_seqnum : 140
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 139
+Let's print the queue before !Printing queue seqNums :
+139 140 141 142 143 144 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 140
+before read
+after read
+create_packet : seqNum : 145
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 141, isLastAckNum : 0, lastAckNum : 146
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 140, queue->last->seqNum : 145
+ack seqnum : 141, get_seqnum : 141
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 140
+Let's print the queue before !Printing queue seqNums :
+140 141 142 143 144 145 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 141
+before read
+after read
+create_packet : seqNum : 146
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 142, isLastAckNum : 0, lastAckNum : 147
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 141, queue->last->seqNum : 146
+ack seqnum : 142, get_seqnum : 142
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 141
+Let's print the queue before !Printing queue seqNums :
+141 142 143 144 145 146 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 142
+before read
+after read
+create_packet : seqNum : 147
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 143, isLastAckNum : 0, lastAckNum : 148
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 142, queue->last->seqNum : 147
+ack seqnum : 143, get_seqnum : 143
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 142
+Let's print the queue before !Printing queue seqNums :
+142 143 144 145 146 147 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 143
+before read
+after read
+create_packet : seqNum : 148
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 144, isLastAckNum : 0, lastAckNum : 149
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 143, queue->last->seqNum : 148
+ack seqnum : 144, get_seqnum : 144
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 143
+Let's print the queue before !Printing queue seqNums :
+143 144 145 146 147 148 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 144
+before read
+after read
+create_packet : seqNum : 149
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 145, isLastAckNum : 0, lastAckNum : 150
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 144, queue->last->seqNum : 149
+ack seqnum : 145, get_seqnum : 145
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 144
+Let's print the queue before !Printing queue seqNums :
+144 145 146 147 148 149 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 145
+before read
+after read
+create_packet : seqNum : 150
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 146, isLastAckNum : 0, lastAckNum : 151
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 145, queue->last->seqNum : 150
+ack seqnum : 146, get_seqnum : 146
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 145
+Let's print the queue before !Printing queue seqNums :
+145 146 147 148 149 150 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 146
+before read
+after read
+create_packet : seqNum : 151
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 147, isLastAckNum : 0, lastAckNum : 152
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 146, queue->last->seqNum : 151
+ack seqnum : 147, get_seqnum : 147
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 146
+Let's print the queue before !Printing queue seqNums :
+146 147 148 149 150 151 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 147
+before read
+after read
+create_packet : seqNum : 152
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 148, isLastAckNum : 0, lastAckNum : 153
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 147, queue->last->seqNum : 152
+ack seqnum : 148, get_seqnum : 148
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 147
+Let's print the queue before !Printing queue seqNums :
+147 148 149 150 151 152 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 148
+before read
+after read
+create_packet : seqNum : 153
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 149, isLastAckNum : 0, lastAckNum : 154
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 148, queue->last->seqNum : 153
+ack seqnum : 149, get_seqnum : 149
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 148
+Let's print the queue before !Printing queue seqNums :
+148 149 150 151 152 153 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 149
+before read
+after read
+create_packet : seqNum : 154
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 150, isLastAckNum : 0, lastAckNum : 155
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 149, queue->last->seqNum : 154
+ack seqnum : 150, get_seqnum : 150
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 149
+Let's print the queue before !Printing queue seqNums :
+149 150 151 152 153 154 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 150
+before read
+after read
+create_packet : seqNum : 155
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 151, isLastAckNum : 0, lastAckNum : 156
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 150, queue->last->seqNum : 155
+ack seqnum : 151, get_seqnum : 151
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 150
+Let's print the queue before !Printing queue seqNums :
+150 151 152 153 154 155 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 151
+before read
+after read
+create_packet : seqNum : 156
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 152, isLastAckNum : 0, lastAckNum : 157
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 151, queue->last->seqNum : 156
+ack seqnum : 152, get_seqnum : 152
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 151
+Let's print the queue before !Printing queue seqNums :
+151 152 153 154 155 156 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 152
+before read
+after read
+create_packet : seqNum : 157
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 153, isLastAckNum : 0, lastAckNum : 158
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 152, queue->last->seqNum : 157
+ack seqnum : 153, get_seqnum : 153
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 152
+Let's print the queue before !Printing queue seqNums :
+152 153 154 155 156 157 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 153
+before read
+after read
+create_packet : seqNum : 158
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 154, isLastAckNum : 0, lastAckNum : 159
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 153, queue->last->seqNum : 158
+ack seqnum : 154, get_seqnum : 154
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 153
+Let's print the queue before !Printing queue seqNums :
+153 154 155 156 157 158 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 154
+before read
+after read
+create_packet : seqNum : 159
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 155, isLastAckNum : 0, lastAckNum : 160
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 154, queue->last->seqNum : 159
+ack seqnum : 155, get_seqnum : 155
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 154
+Let's print the queue before !Printing queue seqNums :
+154 155 156 157 158 159 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 155
+before read
+after read
+create_packet : seqNum : 160
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 156, isLastAckNum : 0, lastAckNum : 161
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 155, queue->last->seqNum : 160
+ack seqnum : 156, get_seqnum : 156
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 155
+Let's print the queue before !Printing queue seqNums :
+155 156 157 158 159 160 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 156
+before read
+after read
+create_packet : seqNum : 161
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 157, isLastAckNum : 0, lastAckNum : 162
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 156, queue->last->seqNum : 161
+ack seqnum : 157, get_seqnum : 157
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 156
+Let's print the queue before !Printing queue seqNums :
+156 157 158 159 160 161 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 157
+before read
+after read
+create_packet : seqNum : 162
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 158, isLastAckNum : 0, lastAckNum : 163
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 157, queue->last->seqNum : 162
+ack seqnum : 158, get_seqnum : 158
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 157
+Let's print the queue before !Printing queue seqNums :
+157 158 159 160 161 162 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 158
+before read
+after read
+create_packet : seqNum : 163
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 159, isLastAckNum : 0, lastAckNum : 164
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 158, queue->last->seqNum : 163
+ack seqnum : 159, get_seqnum : 159
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 158
+Let's print the queue before !Printing queue seqNums :
+158 159 160 161 162 163 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 159
+before read
+after read
+create_packet : seqNum : 164
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 160, isLastAckNum : 0, lastAckNum : 165
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 159, queue->last->seqNum : 164
+ack seqnum : 160, get_seqnum : 160
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 159
+Let's print the queue before !Printing queue seqNums :
+159 160 161 162 163 164 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 160
+before read
+after read
+create_packet : seqNum : 165
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 161, isLastAckNum : 0, lastAckNum : 166
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 160, queue->last->seqNum : 165
+ack seqnum : 161, get_seqnum : 161
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 160
+Let's print the queue before !Printing queue seqNums :
+160 161 162 163 164 165 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 161
+before read
+after read
+create_packet : seqNum : 166
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 162, isLastAckNum : 0, lastAckNum : 167
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 161, queue->last->seqNum : 166
+ack seqnum : 162, get_seqnum : 162
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 161
+Let's print the queue before !Printing queue seqNums :
+161 162 163 164 165 166 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 162
+before read
+after read
+create_packet : seqNum : 167
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 163, isLastAckNum : 0, lastAckNum : 168
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 162, queue->last->seqNum : 167
+ack seqnum : 163, get_seqnum : 163
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 162
+Let's print the queue before !Printing queue seqNums :
+162 163 164 165 166 167 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 163
+before read
+after read
+create_packet : seqNum : 168
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 164, isLastAckNum : 0, lastAckNum : 169
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 163, queue->last->seqNum : 168
+ack seqnum : 164, get_seqnum : 164
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 163
+Let's print the queue before !Printing queue seqNums :
+163 164 165 166 167 168 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 164
+before read
+after read
+create_packet : seqNum : 169
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 165, isLastAckNum : 0, lastAckNum : 170
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 164, queue->last->seqNum : 169
+ack seqnum : 165, get_seqnum : 165
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 164
+Let's print the queue before !Printing queue seqNums :
+164 165 166 167 168 169 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 165
+before read
+after read
+create_packet : seqNum : 170
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 166, isLastAckNum : 0, lastAckNum : 171
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 165, queue->last->seqNum : 170
+ack seqnum : 166, get_seqnum : 166
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 165
+Let's print the queue before !Printing queue seqNums :
+165 166 167 168 169 170 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 166
+before read
+after read
+create_packet : seqNum : 171
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 167, isLastAckNum : 0, lastAckNum : 172
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 166, queue->last->seqNum : 171
+ack seqnum : 167, get_seqnum : 167
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 166
+Let's print the queue before !Printing queue seqNums :
+166 167 168 169 170 171 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 167
+before read
+after read
+create_packet : seqNum : 172
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 168, isLastAckNum : 0, lastAckNum : 173
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 167, queue->last->seqNum : 172
+ack seqnum : 168, get_seqnum : 168
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 167
+Let's print the queue before !Printing queue seqNums :
+167 168 169 170 171 172 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 168
+before read
+after read
+create_packet : seqNum : 173
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 169, isLastAckNum : 0, lastAckNum : 174
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 168, queue->last->seqNum : 173
+ack seqnum : 169, get_seqnum : 169
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 168
+Let's print the queue before !Printing queue seqNums :
+168 169 170 171 172 173 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 169
+before read
+after read
+create_packet : seqNum : 174
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 170, isLastAckNum : 0, lastAckNum : 175
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 169, queue->last->seqNum : 174
+ack seqnum : 170, get_seqnum : 170
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 169
+Let's print the queue before !Printing queue seqNums :
+169 170 171 172 173 174 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 170
+before read
+after read
+create_packet : seqNum : 175
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 171, isLastAckNum : 0, lastAckNum : 176
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 170, queue->last->seqNum : 175
+ack seqnum : 171, get_seqnum : 171
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 170
+Let's print the queue before !Printing queue seqNums :
+170 171 172 173 174 175 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 171
+before read
+after read
+create_packet : seqNum : 176
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 172, isLastAckNum : 0, lastAckNum : 177
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 171, queue->last->seqNum : 176
+ack seqnum : 172, get_seqnum : 172
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 171
+Let's print the queue before !Printing queue seqNums :
+171 172 173 174 175 176 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 172
+before read
+after read
+create_packet : seqNum : 177
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 173, isLastAckNum : 0, lastAckNum : 178
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 172, queue->last->seqNum : 177
+ack seqnum : 173, get_seqnum : 173
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 172
+Let's print the queue before !Printing queue seqNums :
+172 173 174 175 176 177 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 173
+before read
+after read
+create_packet : seqNum : 178
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 174, isLastAckNum : 0, lastAckNum : 179
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 173, queue->last->seqNum : 178
+ack seqnum : 174, get_seqnum : 174
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 173
+Let's print the queue before !Printing queue seqNums :
+173 174 175 176 177 178 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 174
+before read
+after read
+create_packet : seqNum : 179
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 175, isLastAckNum : 0, lastAckNum : 180
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 174, queue->last->seqNum : 179
+ack seqnum : 175, get_seqnum : 175
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 174
+Let's print the queue before !Printing queue seqNums :
+174 175 176 177 178 179 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 175
+before read
+after read
+create_packet : seqNum : 180
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 176, isLastAckNum : 0, lastAckNum : 181
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 175, queue->last->seqNum : 180
+ack seqnum : 176, get_seqnum : 176
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 175
+Let's print the queue before !Printing queue seqNums :
+175 176 177 178 179 180 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 176
+before read
+after read
+create_packet : seqNum : 181
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 177, isLastAckNum : 0, lastAckNum : 182
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 176, queue->last->seqNum : 181
+ack seqnum : 177, get_seqnum : 177
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 176
+Let's print the queue before !Printing queue seqNums :
+176 177 178 179 180 181 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 177
+before read
+after read
+create_packet : seqNum : 182
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 178, isLastAckNum : 0, lastAckNum : 183
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 177, queue->last->seqNum : 182
+ack seqnum : 178, get_seqnum : 178
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 177
+Let's print the queue before !Printing queue seqNums :
+177 178 179 180 181 182 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 178
+before read
+after read
+create_packet : seqNum : 183
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 179, isLastAckNum : 0, lastAckNum : 184
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 178, queue->last->seqNum : 183
+ack seqnum : 179, get_seqnum : 179
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 178
+Let's print the queue before !Printing queue seqNums :
+178 179 180 181 182 183 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 179
+before read
+after read
+create_packet : seqNum : 184
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 180, isLastAckNum : 0, lastAckNum : 185
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 179, queue->last->seqNum : 184
+ack seqnum : 180, get_seqnum : 180
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 179
+Let's print the queue before !Printing queue seqNums :
+179 180 181 182 183 184 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 180
+before read
+after read
+create_packet : seqNum : 185
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 181, isLastAckNum : 0, lastAckNum : 186
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 180, queue->last->seqNum : 185
+ack seqnum : 181, get_seqnum : 181
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 180
+Let's print the queue before !Printing queue seqNums :
+180 181 182 183 184 185 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 181
+before read
+after read
+create_packet : seqNum : 186
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 182, isLastAckNum : 0, lastAckNum : 187
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 181, queue->last->seqNum : 186
+ack seqnum : 182, get_seqnum : 182
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 181
+Let's print the queue before !Printing queue seqNums :
+181 182 183 184 185 186 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 182
+before read
+after read
+create_packet : seqNum : 187
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 183, isLastAckNum : 0, lastAckNum : 188
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 182, queue->last->seqNum : 187
+ack seqnum : 183, get_seqnum : 183
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 182
+Let's print the queue before !Printing queue seqNums :
+182 183 184 185 186 187 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 183
+before read
+after read
+create_packet : seqNum : 188
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 184, isLastAckNum : 0, lastAckNum : 189
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 183, queue->last->seqNum : 188
+ack seqnum : 184, get_seqnum : 184
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 183
+Let's print the queue before !Printing queue seqNums :
+183 184 185 186 187 188 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 184
+before read
+after read
+create_packet : seqNum : 189
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 185, isLastAckNum : 0, lastAckNum : 190
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 184, queue->last->seqNum : 189
+ack seqnum : 185, get_seqnum : 185
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 184
+Let's print the queue before !Printing queue seqNums :
+184 185 186 187 188 189 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 185
+before read
+after read
+create_packet : seqNum : 190
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 186, isLastAckNum : 0, lastAckNum : 191
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 185, queue->last->seqNum : 190
+ack seqnum : 186, get_seqnum : 186
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 185
+Let's print the queue before !Printing queue seqNums :
+185 186 187 188 189 190 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 186
+before read
+after read
+create_packet : seqNum : 191
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 187, isLastAckNum : 0, lastAckNum : 192
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 186, queue->last->seqNum : 191
+ack seqnum : 187, get_seqnum : 187
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 186
+Let's print the queue before !Printing queue seqNums :
+186 187 188 189 190 191 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 187
+before read
+after read
+create_packet : seqNum : 192
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 188, isLastAckNum : 0, lastAckNum : 193
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 187, queue->last->seqNum : 192
+ack seqnum : 188, get_seqnum : 188
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 187
+Let's print the queue before !Printing queue seqNums :
+187 188 189 190 191 192 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 188
+before read
+after read
+create_packet : seqNum : 193
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 189, isLastAckNum : 0, lastAckNum : 194
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 188, queue->last->seqNum : 193
+ack seqnum : 189, get_seqnum : 189
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 188
+Let's print the queue before !Printing queue seqNums :
+188 189 190 191 192 193 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 189
+before read
+after read
+create_packet : seqNum : 194
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 190, isLastAckNum : 0, lastAckNum : 195
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 189, queue->last->seqNum : 194
+ack seqnum : 190, get_seqnum : 190
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 189
+Let's print the queue before !Printing queue seqNums :
+189 190 191 192 193 194 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 190
+before read
+after read
+create_packet : seqNum : 195
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 191, isLastAckNum : 0, lastAckNum : 196
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 190, queue->last->seqNum : 195
+ack seqnum : 191, get_seqnum : 191
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 190
+Let's print the queue before !Printing queue seqNums :
+190 191 192 193 194 195 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 191
+before read
+after read
+create_packet : seqNum : 196
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 192, isLastAckNum : 0, lastAckNum : 197
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 191, queue->last->seqNum : 196
+ack seqnum : 192, get_seqnum : 192
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 191
+Let's print the queue before !Printing queue seqNums :
+191 192 193 194 195 196 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 192
+before read
+after read
+create_packet : seqNum : 197
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 193, isLastAckNum : 0, lastAckNum : 198
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 192, queue->last->seqNum : 197
+ack seqnum : 193, get_seqnum : 193
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 192
+Let's print the queue before !Printing queue seqNums :
+192 193 194 195 196 197 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 193
+before read
+after read
+create_packet : seqNum : 198
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 194, isLastAckNum : 0, lastAckNum : 199
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 193, queue->last->seqNum : 198
+ack seqnum : 194, get_seqnum : 194
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 193
+Let's print the queue before !Printing queue seqNums :
+193 194 195 196 197 198 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 194
+before read
+after read
+create_packet : seqNum : 199
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 195, isLastAckNum : 0, lastAckNum : 200
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 194, queue->last->seqNum : 199
+ack seqnum : 195, get_seqnum : 195
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 194
+Let's print the queue before !Printing queue seqNums :
+194 195 196 197 198 199 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 195
+before read
+after read
+create_packet : seqNum : 200
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 196, isLastAckNum : 0, lastAckNum : 201
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 195, queue->last->seqNum : 200
+ack seqnum : 196, get_seqnum : 196
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 195
+Let's print the queue before !Printing queue seqNums :
+195 196 197 198 199 200 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 196
+before read
+after read
+create_packet : seqNum : 201
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 197, isLastAckNum : 0, lastAckNum : 202
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 196, queue->last->seqNum : 201
+ack seqnum : 197, get_seqnum : 197
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 196
+Let's print the queue before !Printing queue seqNums :
+196 197 198 199 200 201 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 197
+before read
+after read
+create_packet : seqNum : 202
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 198, isLastAckNum : 0, lastAckNum : 203
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 197, queue->last->seqNum : 202
+ack seqnum : 198, get_seqnum : 198
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 197
+Let's print the queue before !Printing queue seqNums :
+197 198 199 200 201 202 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 198
+before read
+after read
+create_packet : seqNum : 203
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 199, isLastAckNum : 0, lastAckNum : 204
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 198, queue->last->seqNum : 203
+ack seqnum : 199, get_seqnum : 199
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 198
+Let's print the queue before !Printing queue seqNums :
+198 199 200 201 202 203 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 199
+before read
+after read
+create_packet : seqNum : 204
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 200, isLastAckNum : 0, lastAckNum : 205
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 199, queue->last->seqNum : 204
+ack seqnum : 200, get_seqnum : 200
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 199
+Let's print the queue before !Printing queue seqNums :
+199 200 201 202 203 204 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 200
+before read
+after read
+create_packet : seqNum : 205
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 201, isLastAckNum : 0, lastAckNum : 206
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 200, queue->last->seqNum : 205
+ack seqnum : 201, get_seqnum : 201
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 200
+Let's print the queue before !Printing queue seqNums :
+200 201 202 203 204 205 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 201
+before read
+after read
+create_packet : seqNum : 206
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 202, isLastAckNum : 0, lastAckNum : 207
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 201, queue->last->seqNum : 206
+ack seqnum : 202, get_seqnum : 202
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 201
+Let's print the queue before !Printing queue seqNums :
+201 202 203 204 205 206 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 202
+before read
+after read
+create_packet : seqNum : 207
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 203, isLastAckNum : 0, lastAckNum : 208
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 202, queue->last->seqNum : 207
+ack seqnum : 203, get_seqnum : 203
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 202
+Let's print the queue before !Printing queue seqNums :
+202 203 204 205 206 207 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 203
+before read
+after read
+create_packet : seqNum : 208
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 204, isLastAckNum : 0, lastAckNum : 209
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 203, queue->last->seqNum : 208
+ack seqnum : 204, get_seqnum : 204
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 203
+Let's print the queue before !Printing queue seqNums :
+203 204 205 206 207 208 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 204
+before read
+after read
+create_packet : seqNum : 209
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 205, isLastAckNum : 0, lastAckNum : 210
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 204, queue->last->seqNum : 209
+ack seqnum : 205, get_seqnum : 205
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 204
+Let's print the queue before !Printing queue seqNums :
+204 205 206 207 208 209 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 205
+before read
+after read
+create_packet : seqNum : 210
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 206, isLastAckNum : 0, lastAckNum : 211
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 205, queue->last->seqNum : 210
+ack seqnum : 206, get_seqnum : 206
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 205
+Let's print the queue before !Printing queue seqNums :
+205 206 207 208 209 210 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 206
+before read
+after read
+create_packet : seqNum : 211
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 207, isLastAckNum : 0, lastAckNum : 212
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 206, queue->last->seqNum : 211
+ack seqnum : 207, get_seqnum : 207
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 206
+Let's print the queue before !Printing queue seqNums :
+206 207 208 209 210 211 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 207
+before read
+after read
+create_packet : seqNum : 212
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 208, isLastAckNum : 0, lastAckNum : 213
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 207, queue->last->seqNum : 212
+ack seqnum : 208, get_seqnum : 208
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 207
+Let's print the queue before !Printing queue seqNums :
+207 208 209 210 211 212 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 208
+before read
+after read
+create_packet : seqNum : 213
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 209, isLastAckNum : 0, lastAckNum : 214
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 208, queue->last->seqNum : 213
+ack seqnum : 209, get_seqnum : 209
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 208
+Let's print the queue before !Printing queue seqNums :
+208 209 210 211 212 213 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 209
+before read
+after read
+create_packet : seqNum : 214
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 210, isLastAckNum : 0, lastAckNum : 215
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 209, queue->last->seqNum : 214
+ack seqnum : 210, get_seqnum : 210
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 209
+Let's print the queue before !Printing queue seqNums :
+209 210 211 212 213 214 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 210
+before read
+after read
+create_packet : seqNum : 215
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 211, isLastAckNum : 0, lastAckNum : 216
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 210, queue->last->seqNum : 215
+ack seqnum : 211, get_seqnum : 211
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 210
+Let's print the queue before !Printing queue seqNums :
+210 211 212 213 214 215 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 211
+before read
+after read
+create_packet : seqNum : 216
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 212, isLastAckNum : 0, lastAckNum : 217
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 211, queue->last->seqNum : 216
+ack seqnum : 212, get_seqnum : 212
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 211
+Let's print the queue before !Printing queue seqNums :
+211 212 213 214 215 216 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 212
+before read
+after read
+create_packet : seqNum : 217
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 213, isLastAckNum : 0, lastAckNum : 218
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 212, queue->last->seqNum : 217
+ack seqnum : 213, get_seqnum : 213
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 212
+Let's print the queue before !Printing queue seqNums :
+212 213 214 215 216 217 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 213
+before read
+after read
+create_packet : seqNum : 218
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 214, isLastAckNum : 0, lastAckNum : 219
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 213, queue->last->seqNum : 218
+ack seqnum : 214, get_seqnum : 214
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 213
+Let's print the queue before !Printing queue seqNums :
+213 214 215 216 217 218 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 214
+before read
+after read
+create_packet : seqNum : 219
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 215, isLastAckNum : 0, lastAckNum : 220
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 214, queue->last->seqNum : 219
+ack seqnum : 215, get_seqnum : 215
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 214
+Let's print the queue before !Printing queue seqNums :
+214 215 216 217 218 219 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 215
+before read
+after read
+create_packet : seqNum : 220
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 216, isLastAckNum : 0, lastAckNum : 221
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 215, queue->last->seqNum : 220
+ack seqnum : 216, get_seqnum : 216
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 215
+Let's print the queue before !Printing queue seqNums :
+215 216 217 218 219 220 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 216
+before read
+after read
+create_packet : seqNum : 221
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 217, isLastAckNum : 0, lastAckNum : 222
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 216, queue->last->seqNum : 221
+ack seqnum : 217, get_seqnum : 217
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 216
+Let's print the queue before !Printing queue seqNums :
+216 217 218 219 220 221 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 217
+before read
+after read
+create_packet : seqNum : 222
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 218, isLastAckNum : 0, lastAckNum : 223
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 217, queue->last->seqNum : 222
+ack seqnum : 218, get_seqnum : 218
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 217
+Let's print the queue before !Printing queue seqNums :
+217 218 219 220 221 222 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 218
+before read
+after read
+create_packet : seqNum : 223
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 219, isLastAckNum : 0, lastAckNum : 224
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 218, queue->last->seqNum : 223
+ack seqnum : 219, get_seqnum : 219
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 218
+Let's print the queue before !Printing queue seqNums :
+218 219 220 221 222 223 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 219
+before read
+after read
+create_packet : seqNum : 224
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 220, isLastAckNum : 0, lastAckNum : 225
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 219, queue->last->seqNum : 224
+ack seqnum : 220, get_seqnum : 220
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 219
+Let's print the queue before !Printing queue seqNums :
+219 220 221 222 223 224 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 220
+before read
+after read
+create_packet : seqNum : 225
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 221, isLastAckNum : 0, lastAckNum : 226
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 220, queue->last->seqNum : 225
+ack seqnum : 221, get_seqnum : 221
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 220
+Let's print the queue before !Printing queue seqNums :
+220 221 222 223 224 225 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 221
+before read
+after read
+create_packet : seqNum : 226
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 222, isLastAckNum : 0, lastAckNum : 227
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 221, queue->last->seqNum : 226
+ack seqnum : 222, get_seqnum : 222
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 221
+Let's print the queue before !Printing queue seqNums :
+221 222 223 224 225 226 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 222
+before read
+after read
+create_packet : seqNum : 227
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 223, isLastAckNum : 0, lastAckNum : 228
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 222, queue->last->seqNum : 227
+ack seqnum : 223, get_seqnum : 223
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 222
+Let's print the queue before !Printing queue seqNums :
+222 223 224 225 226 227 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 223
+before read
+after read
+create_packet : seqNum : 228
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 224, isLastAckNum : 0, lastAckNum : 229
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 223, queue->last->seqNum : 228
+ack seqnum : 224, get_seqnum : 224
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 223
+Let's print the queue before !Printing queue seqNums :
+223 224 225 226 227 228 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 224
+before read
+after read
+create_packet : seqNum : 229
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 225, isLastAckNum : 0, lastAckNum : 230
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 224, queue->last->seqNum : 229
+ack seqnum : 225, get_seqnum : 225
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 224
+Let's print the queue before !Printing queue seqNums :
+224 225 226 227 228 229 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 225
+before read
+after read
+create_packet : seqNum : 230
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 226, isLastAckNum : 0, lastAckNum : 231
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 225, queue->last->seqNum : 230
+ack seqnum : 226, get_seqnum : 226
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 225
+Let's print the queue before !Printing queue seqNums :
+225 226 227 228 229 230 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 226
+before read
+after read
+create_packet : seqNum : 231
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 227, isLastAckNum : 0, lastAckNum : 232
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 226, queue->last->seqNum : 231
+ack seqnum : 227, get_seqnum : 227
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 226
+Let's print the queue before !Printing queue seqNums :
+226 227 228 229 230 231 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 227
+before read
+after read
+create_packet : seqNum : 232
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 228, isLastAckNum : 0, lastAckNum : 233
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 227, queue->last->seqNum : 232
+ack seqnum : 228, get_seqnum : 228
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 227
+Let's print the queue before !Printing queue seqNums :
+227 228 229 230 231 232 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 228
+before read
+after read
+create_packet : seqNum : 233
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 229, isLastAckNum : 0, lastAckNum : 234
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 228, queue->last->seqNum : 233
+ack seqnum : 229, get_seqnum : 229
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 228
+Let's print the queue before !Printing queue seqNums :
+228 229 230 231 232 233 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 229
+before read
+after read
+create_packet : seqNum : 234
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 230, isLastAckNum : 0, lastAckNum : 235
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 229, queue->last->seqNum : 234
+ack seqnum : 230, get_seqnum : 230
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 229
+Let's print the queue before !Printing queue seqNums :
+229 230 231 232 233 234 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 230
+before read
+after read
+create_packet : seqNum : 235
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 231, isLastAckNum : 0, lastAckNum : 236
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 230, queue->last->seqNum : 235
+ack seqnum : 231, get_seqnum : 231
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 230
+Let's print the queue before !Printing queue seqNums :
+230 231 232 233 234 235 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 231
+before read
+after read
+create_packet : seqNum : 236
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 232, isLastAckNum : 0, lastAckNum : 237
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 231, queue->last->seqNum : 236
+ack seqnum : 232, get_seqnum : 232
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 231
+Let's print the queue before !Printing queue seqNums :
+231 232 233 234 235 236 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 232
+before read
+after read
+create_packet : seqNum : 237
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 233, isLastAckNum : 0, lastAckNum : 238
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 232, queue->last->seqNum : 237
+ack seqnum : 233, get_seqnum : 233
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 232
+Let's print the queue before !Printing queue seqNums :
+232 233 234 235 236 237 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 233
+before read
+after read
+create_packet : seqNum : 238
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 234, isLastAckNum : 0, lastAckNum : 239
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 233, queue->last->seqNum : 238
+ack seqnum : 234, get_seqnum : 234
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 233
+Let's print the queue before !Printing queue seqNums :
+233 234 235 236 237 238 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 234
+before read
+after read
+create_packet : seqNum : 239
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 235, isLastAckNum : 0, lastAckNum : 240
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 234, queue->last->seqNum : 239
+ack seqnum : 235, get_seqnum : 235
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 234
+Let's print the queue before !Printing queue seqNums :
+234 235 236 237 238 239 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 235
+before read
+after read
+create_packet : seqNum : 240
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 236, isLastAckNum : 0, lastAckNum : 241
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 235, queue->last->seqNum : 240
+ack seqnum : 236, get_seqnum : 236
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 235
+Let's print the queue before !Printing queue seqNums :
+235 236 237 238 239 240 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 236
+before read
+after read
+create_packet : seqNum : 241
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 237, isLastAckNum : 0, lastAckNum : 242
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 236, queue->last->seqNum : 241
+ack seqnum : 237, get_seqnum : 237
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 236
+Let's print the queue before !Printing queue seqNums :
+236 237 238 239 240 241 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 237
+before read
+after read
+create_packet : seqNum : 242
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 238, isLastAckNum : 0, lastAckNum : 243
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 237, queue->last->seqNum : 242
+ack seqnum : 238, get_seqnum : 238
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 237
+Let's print the queue before !Printing queue seqNums :
+237 238 239 240 241 242 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 238
+before read
+after read
+create_packet : seqNum : 243
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 239, isLastAckNum : 0, lastAckNum : 244
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 238, queue->last->seqNum : 243
+ack seqnum : 239, get_seqnum : 239
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 238
+Let's print the queue before !Printing queue seqNums :
+238 239 240 241 242 243 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 239
+before read
+after read
+create_packet : seqNum : 244
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 240, isLastAckNum : 0, lastAckNum : 245
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 239, queue->last->seqNum : 244
+ack seqnum : 240, get_seqnum : 240
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 239
+Let's print the queue before !Printing queue seqNums :
+239 240 241 242 243 244 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 240
+before read
+after read
+create_packet : seqNum : 245
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 241, isLastAckNum : 0, lastAckNum : 246
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 240, queue->last->seqNum : 245
+ack seqnum : 241, get_seqnum : 241
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 240
+Let's print the queue before !Printing queue seqNums :
+240 241 242 243 244 245 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 241
+before read
+after read
+create_packet : seqNum : 246
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 242, isLastAckNum : 0, lastAckNum : 247
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 241, queue->last->seqNum : 246
+ack seqnum : 242, get_seqnum : 242
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 241
+Let's print the queue before !Printing queue seqNums :
+241 242 243 244 245 246 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 242
+before read
+after read
+create_packet : seqNum : 247
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 243, isLastAckNum : 0, lastAckNum : 248
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 242, queue->last->seqNum : 247
+ack seqnum : 243, get_seqnum : 243
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 242
+Let's print the queue before !Printing queue seqNums :
+242 243 244 245 246 247 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 243
+before read
+after read
+create_packet : seqNum : 248
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 244, isLastAckNum : 0, lastAckNum : 249
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 243, queue->last->seqNum : 248
+ack seqnum : 244, get_seqnum : 244
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 243
+Let's print the queue before !Printing queue seqNums :
+243 244 245 246 247 248 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 244
+before read
+after read
+create_packet : seqNum : 249
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+I'm in
+pkt_ack->seqNum : 245, isLastAckNum : 0, lastAckNum : 250
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 244, queue->last->seqNum : 249
+ack seqnum : 245, get_seqnum : 245
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 244
+Let's print the queue before !Printing queue seqNums :
+244 245 246 247 248 249 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 245
+before read
+after read
+There is no more payloads to read!
+QUEUE SENDER PUSH : tp->tv_sec : 1540569578, tp->tv_nsec/1000000000 : 0
+Wrote the stop pkt
+I'm in
+pkt_ack->seqNum : 246, isLastAckNum : 1, lastAckNum : 251
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 245, queue->last->seqNum : 250
+ack seqnum : 246, get_seqnum : 246
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 245
+Let's print the queue before !Printing queue seqNums :
+245 246 247 248 249 250 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 246
+I'm in
+pkt_ack->seqNum : 247, isLastAckNum : 1, lastAckNum : 251
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 246, queue->last->seqNum : 250
+ack seqnum : 247, get_seqnum : 247
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 246
+Let's print the queue before !Printing queue seqNums :
+246 247 248 249 250 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 247
+I'm in
+pkt_ack->seqNum : 248, isLastAckNum : 1, lastAckNum : 251
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 247, queue->last->seqNum : 250
+ack seqnum : 248, get_seqnum : 248
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 247
+Let's print the queue before !Printing queue seqNums :
+247 248 249 250 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 248
+I'm in
+pkt_ack->seqNum : 249, isLastAckNum : 1, lastAckNum : 251
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 248, queue->last->seqNum : 250
+ack seqnum : 249, get_seqnum : 249
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 248
+Let's print the queue before !Printing queue seqNums :
+248 249 250 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 249
+I'm in
+pkt_ack->seqNum : 250, isLastAckNum : 1, lastAckNum : 251
+Decoded pkt, OK
+pkt_ack : PTYPE_ACK
+queue_print_first_last_seqNum : queue->head->seqNum : 249, queue->last->seqNum : 250
+ack seqnum : 250, get_seqnum : 250
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+before delete
+Before queue_delete with seqnum_delete = 249
+Let's print the queue before !Printing queue seqNums :
+249 250 
+
+
+ In pkt_del
+
+
+
+COULD FREE PAYLOAD !!!!
+
+queue_delete : just before return, number = 1
+queue_delete : queue->head->pkt->seqNum : 250
+I'm in
+pkt_ack seqNum : 251, isLastAckNum : 1, lastAckNum : 251
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+
+
+ In pkt_del
+
+pkt_del : a pkt had a NULL payload
+--351389-- Discarding syms at 0x581b1d0-0x5822521 in /usr/lib64/libnss_files-2.17.so due to munmap()
+==351389== 
+==351389== HEAP SUMMARY:
+==351389==     in use at exit: 16 bytes in 1 blocks
+==351389==   total heap usage: 4,632 allocs, 4,631 frees, 465,521 bytes allocated
+==351389== 
+==351389== Searching for pointers to 1 not-freed blocks
+==351389== Checked 74,208 bytes
+==351389== 
+==351389== 16 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==351389==    at 0x4C29C23: malloc (vg_replace_malloc.c:299)
+==351389==    by 0x401FE7: read_write_loop (sender.c:235)
+==351389==    by 0x401762: main (sender.c:365)
+==351389== 
+==351389== LEAK SUMMARY:
+==351389==    definitely lost: 16 bytes in 1 blocks
+==351389==    indirectly lost: 0 bytes in 0 blocks
+==351389==      possibly lost: 0 bytes in 0 blocks
+==351389==    still reachable: 0 bytes in 0 blocks
+==351389==         suppressed: 0 bytes in 0 blocks
+==351389== 
+==351389== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==351389== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
