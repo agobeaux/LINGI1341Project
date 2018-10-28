@@ -55,17 +55,18 @@ void read_write_loop(const int sfd, const int fd){
             char ackBuf[12];
             size_t ackLen = 12;
             if(pkt_encode(ack, ackBuf, &ackLen) != PKT_OK){
+                pkt_del(ack);
                 fprintf(stderr, "encode error in receiver, read_write_loop, encode != PKT_OK\n");
             }
             else if(ackLen != 12){
-				free(ack);
+				pkt_del(ack);
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
             else{
                 fprintf(stderr, "I'm really writing\n");
                 int wr = write(sfd, ackBuf, ackLen);
                 fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
-                free(ack);
+                pkt_del(ack);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
