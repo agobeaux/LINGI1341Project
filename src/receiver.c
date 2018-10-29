@@ -42,8 +42,8 @@ void read_write_loop(const int sfd, const int fd){
 		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
-		int difftime = tpGlobal - tpNow;
-		if(difftime>10){
+		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
+		if(difftime>5){
 			return;
 		}
 

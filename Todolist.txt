@@ -1,49 +1,32 @@
 POLL ERR !!! voir l'utilité
 
 
-FONCTION : seqNUM à traiter (grâce au print queue)
-window = 31 - queue size
-fd de stdout : définir poll à 1 comme dans le receiver
-
-CHECK SI DANS LA WINDOW !!! receiver si trop, alors renvoyer
-Créer fichier d'output si n'existe pas CREATE, OTRUNC
-
 POUR LES DEUX : définir des constantes : 12 = size header, 2 et 3 sont des TYPE_ACK DATA etc
-MALLOC ET FREE !!!
 
-Makefile
-
-FONCTION LILY POUR DELETE EN BOUCLE !!! ATTENTION : si fenêtre de 250 à 3, si on veut delete jusque 2, il faut delete 250 251 252 ... 0 1 2
-=> Queue_delete de sender : bof pour le moment car si on reçoit un ack déjà reçu d'avant, il va supprimer toute la queue.. Et aussi, queue_pop free pas
 
 PROBLEME ! Il y a une limite au nombre de paquets à envoyer en 2sec (2sec = temps de vie d'un paquet). Car si on a 2 ack 1 envoyés (réception d'un pkt 0 + ack1 arrivé mais mal formaté => ack 0). Si on a déjà fait une boucle (0->255 envoyés en moins de 2sec), le ack1 va dire qu'on a reçu le paquet alros que pas d'office, il s'agit du mauvais paquet... => 123 (nbre à vérifier) paquets chaque 2 sec max (à envoyer, sender)
 PAS 123
 
 si paquet TR : congestion du réseaux => si on renvoit direct on sature le réseau
 
-
-corriger DELETE
 rapport + suite de tests + makefile
-
-puis link_sim pour tester et débug
 
 FICHIERS .h : mettre les fonctions avec commentaires
 
-ATTENTION : nombre de paquets à envoyer par sec, maximum à déterminer.
-But : si un ack reste 2 sec dans le réseau, il ne faut pas que le 3 soit dans
-la fenêtre à nouveau.
-
-FREE !!! queues etc
-
-
-FREEEEE PUTAIN
-Retransmission timer
-Nombre de paquets max à envoyer !
-DECONNEXION STYLE DECO APRES 5s
+Retransmission timer : pas 2 sec mais plutôt 1.5x ou 2x le RTT (mais condition pour le nbre de pkt / 2 sec à régler)
 gdb, cppcheck
+
+REDEFINIR WINDOW !!!
+vérifier comment on send les pkt si la window change (devient plus petite surtout)
 
 IDEE : timestamp for roundtrip time
 => Utiliser une moyenne pondérée plutôt qu'une moyenne simple ?
 On donne un gros poids aux derniers ! Utiliser une queue pour garder les
 RTT reçus ? Comme ça on pop le premier et rajouter le dernier pour calculer le temps ?
 ça peut être intéressant.
+
+queue_payload_write : il faut refaire un check de poll pour voir si on peut écrire à chaque fois.
+
+sender : renvoi des fichiers après timeout : poll pour vérifier à chaque fois !!!
+
+problème : si receiver ne reçoit rien dès le début, il ne se connecte pas et donc le timer ne peut pas le timeout. Mettre dans rapport ou corriger ?

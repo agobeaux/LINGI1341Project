@@ -65,21 +65,19 @@ void read_write_loop(const int sfd, int fd){
     }
 
 
-    struct pollfd pfds[2];
-    pfds[0].fd = STDIN_FILENO;
-    pfds[0].events = POLLIN;
+    struct pollfd pfds[1];
+    pfds[0].fd = sfd;
+    pfds[0].events = POLLIN|POLLOUT;
     pfds[0].revents = 0;
-    pfds[1].fd = sfd;
-    pfds[1].events = POLLIN|POLLOUT;
-    pfds[1].revents = 0;
 
     while(1){
 
 		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
-		int difftime = tpGlobal - tpNow;
-		if(difftime>10){
+		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
+		fprintf(stderr, "diff time : %d\n", difftime);
+		if(difftime>5){
 			return;
 		}
 
@@ -87,14 +85,14 @@ void read_write_loop(const int sfd, int fd){
 
 
         //creation of poll
-        int pRet = poll(pfds, 2, 500);
+        int pRet = poll(pfds, 1, 500);
         if(pRet == -1){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
             return;
         }
 
         //try to write to the socket
-        if(pfds[1].revents & POLLOUT){
+        if(pfds[0].revents & POLLOUT){
             if(buf_structure->size < size_buffer && isLastAckNum == 0){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
@@ -212,7 +210,7 @@ void read_write_loop(const int sfd, int fd){
 
 
         //try to read the socket
-        if(pfds[1].revents & POLLIN){
+        if(pfds[0].revents & POLLIN){
 			//reset the transmission timer because there is still something to read
 			clock_gettime(CLOCK_REALTIME, tpGlobal);
 
@@ -302,7 +300,6 @@ void read_write_loop(const int sfd, int fd){
                 }
             }
             else{
-				pkt_del(pkt_ack);
                 fprintf(stderr, "Decode pkt not ok, code : %d\n", code);
             }
         }
