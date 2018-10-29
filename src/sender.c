@@ -74,7 +74,7 @@ void read_write_loop(const int sfd, int fd){
     pfds[1].revents = 0;
 
     while(1){
-		
+
 		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
@@ -82,7 +82,7 @@ void read_write_loop(const int sfd, int fd){
 		if(difftime>10){
 			return;
 		}
-		
+
 		free(tpNow);
 
 
@@ -215,8 +215,8 @@ void read_write_loop(const int sfd, int fd){
         if(pfds[1].revents & POLLIN){
 			//reset the transmission timer because there is still something to read
 			clock_gettime(CLOCK_REALTIME, tpGlobal);
-			
-			
+
+
             fprintf(stderr, "I'm in\n");
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
@@ -293,12 +293,12 @@ void read_write_loop(const int sfd, int fd){
                  //end of if(pkt_ack->type == 2)
                 // we have a nack
                 else if(pkt_ack->type == 3){
-					pkt_del(pkt_ack);
                     fprintf(stderr, "pkt_ack : PTYPE_NACK\n");
                     seqnum_nack = pkt_ack->seqNum;
                     if(queue_find_nack_structure(buf_structure, seqnum_nack)==NULL){
                         fprintf(stderr, "there is no structure in buffer with seqnum %u\n", seqnum_nack);
                     }
+                    pkt_del(pkt_ack);
                 }
             }
             else{

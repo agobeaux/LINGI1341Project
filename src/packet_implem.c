@@ -35,8 +35,8 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 		pkt_del(pkt);
 		return E_NOHEADER;
 	}
-	
-	
+
+
 	memcpy(pkt, data, sizeof(uint8_t)); // window trFlag type
 	if(pkt->type < 1 || pkt->type > 3){
 		pkt_del(pkt);
@@ -84,7 +84,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 		return E_UNCONSISTENT;
 	}
 	//TODO : if payload NULL malloc, if not, realloc
-	if(!pkt->payload){
+	if(pkt->payload){
 		fprintf(stderr, "packet_implem.c : decode : pkt->payload already malloced !!!!\n");
 		char* newPayload = realloc(pkt->payload, pkt->length);
 		if(!newPayload){
