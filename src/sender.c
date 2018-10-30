@@ -110,6 +110,10 @@ void read_write_loop(const int sfd, int fd){
                     fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
                 else if(rd == 0){// && queue_isempty(buf_structure)){
+					
+					//reset the transmission timer because there is still something to write
+					clock_gettime(CLOCK_REALTIME, tpGlobal);
+					
                     fprintf(stderr, "There is no more payloads to read!\n"); // and buffer is empty!\n");
                     pkt_t* pkt = pkt_new();
                     if(pkt == NULL){
@@ -141,6 +145,9 @@ void read_write_loop(const int sfd, int fd){
                     fprintf(stderr, "\n\n\n\n Just after sending the 0 payload \n\n\n\n");
                     continue;
                 }
+                
+                //reset the transmission timer because there is still something to write
+				clock_gettime(CLOCK_REALTIME, tpGlobal);
 
                 //encode a new structure
                 pkt_t* pkt = pkt_new();
@@ -181,6 +188,9 @@ void read_write_loop(const int sfd, int fd){
                     fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
                     */
                     if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
+						//reset the transmission timer because there is still something to write
+						clock_gettime(CLOCK_REALTIME, tpGlobal);
+						
                         fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
                         // condition run1540534356->tp->tv_sec == 0 will happen when we receive a NACK
                         // because we set tv_sec to 0 when we receive a NACK.
@@ -261,7 +271,7 @@ void read_write_loop(const int sfd, int fd){
 
                         fprintf(stderr, "before accessing time_node->tp\n");
                         fprintf(stderr, "TIMER : %d\n",timer);
-                        timer = 2+(time_now - time_node->tp->tv_sec - time_node->tp->tv_nsec/1000000000);
+                        timer = 2*(time_now - time_node->tp->tv_sec - time_node->tp->tv_nsec/1000000000);
                         fprintf(stderr, "time_now : %d, time_node->tp->tv_sec : %ld, time_node->tp->tv_nsec/1000000000 : %ld\n, dif : %ld", time_now, time_node->tp->tv_sec, time_node->tp->tv_nsec, time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
                         fprintf(stderr, "TIMER : %d\n",timer);
                         fprintf(stderr, "after accessing time_node->tp\n");
