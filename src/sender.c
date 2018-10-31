@@ -176,6 +176,7 @@ void read_write_loop(const int sfd, int fd){
             //check if there is still element that wasn't resent or their timer is out
             /*else{*/
             /*else{*/
+            
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
 
@@ -183,36 +184,48 @@ void read_write_loop(const int sfd, int fd){
                     clock_gettime(CLOCK_REALTIME, tp);
                     int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
                     free(tp);
-                     /*
-                    fprintf(stderr, "time_now : %d, run->tp->tv_sec : %ld, run->tp->tv->nsec/10^9 : %ld, timer : %d\n", time_now, run->tp->tv_sec, run->tp->tv_nsec/1000000000, timer);
-                    fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
-                    */
-                    if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
+					 /*
+					fprintf(stderr, "time_now : %d, run->tp->tv_sec : %ld, run->tp->tv->nsec/10^9 : %ld, timer : %d\n", time_now, run->tp->tv_sec, run->tp->tv_nsec/1000000000, timer);
+					fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
+					*/
+					if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
+						
+						pRet = poll(pfds, 1, 500);
+						if(pRet == -1){
+							fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
+							return;
+						}
+						
+						if(pfds[0].revents & POLLOUT){
 
-                        fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
-                        // condition run->tp->tv_sec == 0 will happen when we receive a NACK
-                        // because we set tv_sec to 0 when we receive a NACK.
-                        // it won't be true otherwise because 0 sec is on the 1st of January 1970
-                        size_t len = 528;
-                        char *buf = (char*)malloc(528);
-                        if(buf==NULL){
-                            fprintf(stderr, "sender : read_while_loop : error with malloc\n");
-                        }
+							fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
+							// condition run->tp->tv_sec == 0 will happen when we receive a NACK
+							// because we set tv_sec to 0 when we receive a NACK.
+							// it won't be true otherwise because 0 sec is on the 1st of January 1970
+							size_t len = 528;
+							char *buf = (char*)malloc(528);
+							if(buf == NULL){
+								fprintf(stderr, "sender : read_while_loop : error with malloc\n");
+								continue;
+							}
 
-                        clock_gettime(CLOCK_REALTIME, run->tp);
+							clock_gettime(CLOCK_REALTIME, run->tp);
 
-                        if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
-                            fprintf(stderr, "sender : read_while_loop : error with encode\n");
-                        }
-                        int wr = write(sfd, buf, len);
-                        if(wr == -1){
-                            fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
-                        }
-                        free(buf);
-                        break;
-                    }
-                    run = run->next;
-                }
+							if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
+								fprintf(stderr, "sender : read_while_loop : error with encode\n");
+								free(buf);
+								continue;
+							}
+							int wr = write(sfd, buf, len);
+							if(wr == -1){
+								fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+							}
+							free(buf);
+							break;
+						}
+					}
+					run = run->next;
+				}
             /*}*/
         }
 
