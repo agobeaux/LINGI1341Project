@@ -23,7 +23,17 @@ pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
 
     pkt_set_type(pkt, PTYPE_DATA);
     pkt_set_tr(pkt, 0);
-    pkt_set_timestamp(pkt, 0);
+
+    struct timespec *timePkt = malloc(sizeof(struct timespec));
+    if(!timePkt){
+        fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
+        return NULL;
+    }
+    clock_gettime(CLOCK_REALTIME, timePkt);
+
+    pkt_set_timestamp(pkt, timePkt->tv_sec);
+    free(timePkt);
+    
     if(pkt_set_window(pkt, 1)!=PKT_OK){
         fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
@@ -327,6 +337,10 @@ int main(int argc, char *argv[]){
     int socket_fd;//socket file descriptor
     int f_option = 0;//if there is (not) f_option
     tpGlobal = malloc(sizeof(struct timespec));
+    if(!tpGlobal){
+        fprintf(stderr, "sender : main : couldn't malloc tpGlobal\n");
+        return 0;
+    }
     clock_gettime(CLOCK_REALTIME, tpGlobal);
 
     //check if there is enough arguments to continue
