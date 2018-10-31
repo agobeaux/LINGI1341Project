@@ -11,6 +11,12 @@ si paquet TR : congestion du réseaux => si on renvoit direct on sature le rése
 
 rapport + suite de tests + makefile
 
+tests : queue + ordered queue
+        script bash amélioré avec + de commentaires etc (et les différents flags sur un fichier de 2 ou 3 paquets)
+        encode decode sur un pkt normal
+        encode sur un paquet qui pue => error et print l'erreur
+        decode sur une data qui pue (difficile à faire)
+
 FICHIERS .h : mettre les fonctions avec commentaires
 
 Retransmission timer : pas 2 sec mais plutôt 1.5x ou 2x le RTT (mais condition pour le nbre de pkt / 2 sec à régler)
@@ -30,3 +36,5 @@ queue_payload_write : il faut refaire un check de poll pour voir si on peut écr
 sender : renvoi des fichiers après timeout : poll pour vérifier à chaque fois !!!
 
 problème : si receiver ne reçoit rien dès le début, il ne se connecte pas et donc le timer ne peut pas le timeout. Mettre dans rapport ou corriger ?
+
+GERER TIME OUT ! en fonction du délai et jitter etc.
