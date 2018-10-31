@@ -43,7 +43,7 @@ void read_write_loop(const int sfd, const int fd){
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
 		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
-		if(difftime>5){
+		if(difftime>10){
 			return;
 		}
 
