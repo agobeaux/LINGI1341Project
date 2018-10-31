@@ -139,6 +139,7 @@ struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
         {
             run->tp->tv_sec = 0;
             run->tp->tv_nsec = 0;
+            run->pkt->timestamp = 0;
             return run;
         }
         run = run->next;

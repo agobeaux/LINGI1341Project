@@ -1,8 +1,6 @@
 POLL ERR !!! voir l'utilité
 
-
 POUR LES DEUX : définir des constantes : 12 = size header, 2 et 3 sont des TYPE_ACK DATA etc
-
 
 PROBLEME ! Il y a une limite au nombre de paquets à envoyer en 2sec (2sec = temps de vie d'un paquet). Car si on a 2 ack 1 envoyés (réception d'un pkt 0 + ack1 arrivé mais mal formaté => ack 0). Si on a déjà fait une boucle (0->255 envoyés en moins de 2sec), le ack1 va dire qu'on a reçu le paquet alros que pas d'office, il s'agit du mauvais paquet... => 123 (nbre à vérifier) paquets chaque 2 sec max (à envoyer, sender)
 PAS 123
@@ -31,10 +29,10 @@ On donne un gros poids aux derniers ! Utiliser une queue pour garder les
 RTT reçus ? Comme ça on pop le premier et rajouter le dernier pour calculer le temps ?
 ça peut être intéressant.
 
-queue_payload_write : il faut refaire un check de poll pour voir si on peut écrire à chaque fois.
-
-sender : renvoi des fichiers après timeout : poll pour vérifier à chaque fois !!!
+sender : renvoi des fichiers après timeout : poll pour vérifier à chaque fois !!! VERIFIER
 
 problème : si receiver ne reçoit rien dès le début, il ne se connecte pas et donc le timer ne peut pas le timeout. Mettre dans rapport ou corriger ?
 
 GERER TIME OUT ! en fonction du délai et jitter etc.
+
+Enlever la partie 'tp' des noeuds de sender et queue_sender. Remplacer le 'tp->tv_sec' par pkt->timestamp.

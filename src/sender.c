@@ -33,7 +33,7 @@ pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
 
     pkt_set_timestamp(pkt, timePkt->tv_sec);
     free(timePkt);
-    
+
     if(pkt_set_window(pkt, 1)!=PKT_OK){
         fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
@@ -136,6 +136,17 @@ void read_write_loop(const int sfd, int fd){
                     //TODO : pkt_set_window ? and timestamp ?
                     pkt_set_seqnum(pkt, seqNum++); // does %(2^8) since type(seqNum) : uint8_t
                     //seqNum ++ because last ack's number will be seqNum+1
+
+                    struct timespec *timePkt = malloc(sizeof(struct timespec));
+                    if(!timePkt){
+                        fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
+                        return NULL;
+                    }
+                    clock_gettime(CLOCK_REALTIME, timePkt);
+
+                    pkt_set_timestamp(pkt, timePkt->tv_sec);
+                    free(timePkt);
+
                     isLastAckNum = 1;
                     if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                         fprintf(stderr, "sender : read_while_loop : error with encode\n");
@@ -188,7 +199,7 @@ void read_write_loop(const int sfd, int fd){
             //check if there is still element that wasn't resent or their timer is out
             /*else{*/
             /*else{*/
-            
+
                 node_t *run = buf_structure->head;
                 while(run!=NULL){
 
@@ -201,13 +212,13 @@ void read_write_loop(const int sfd, int fd){
 					fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
 					*/
 					if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
-						
+
 						pRet = poll(pfds, 1, 500);
 						if(pRet == -1){
 							fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
 							return;
 						}
-						
+
 						if(pfds[0].revents & POLLOUT){
 
 							fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
@@ -222,6 +233,16 @@ void read_write_loop(const int sfd, int fd){
 							}
 
 							clock_gettime(CLOCK_REALTIME, run->tp);
+
+                            struct timespec *timePkt = malloc(sizeof(struct timespec));
+                            if(!timePkt){
+                                fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
+                                return NULL;
+                            }
+                            clock_gettime(CLOCK_REALTIME, timePkt);
+
+                            pkt_set_timestamp(run->pkt, timePkt->tv_sec);
+                            free(timePkt);
 
 							if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
 								fprintf(stderr, "sender : read_while_loop : error with encode\n");
