@@ -102,6 +102,7 @@ void read_write_loop(const int sfd, int fd){
         }
 
         //try to write to the socket
+        fprintf(stderr, "pfds[0].revents & POLLOUT : %d\n",pfds[0].revents & POLLOUT);
         if(pfds[0].revents & POLLOUT){
             if(buf_structure->size < size_buffer && isLastAckNum == 0){
                 size_t len = 528;
@@ -116,6 +117,7 @@ void read_write_loop(const int sfd, int fd){
                 fprintf(stderr,"before read\n");
                 int rd = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 fprintf(stderr,"after read\n");
+                fprintf(stderr, "READ : %d\n",rd);
                 if(rd == -1){
                     fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
