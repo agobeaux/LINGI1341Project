@@ -294,6 +294,7 @@ void read_write_loop(const int sfd, int fd){
                         if(time_pkt==NULL){
                             fprintf(stderr, "there is no structure in buffer with seqnum %u\n", pkt_ack->seqNum-1);
                             pkt_del(pkt_ack);
+                            free(tp);
                             continue; // TODO : verify
                         }
                         fprintf(stderr, "after queue_find_ack_structure\n");

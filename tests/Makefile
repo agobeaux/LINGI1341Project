@@ -18,11 +18,11 @@ all: clean tests
 # If we run `make debug` instead, keep the debug symbols for gdb
 # and define the DEBUG macro.
 debug: CFLAGS += -g -DDEBUG -Wno-unused-parameter -fno-omit-frame-pointer
-debug: clean srcmake_debug test
+debug: clean srcmake_debug run
 
-.PHONY: tests
+.PHONY: tests run
 
-tests: srcmake test
+tests: srcmake run
 
 srcmake:
 	cd ../src && $(MAKE) && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
@@ -31,6 +31,9 @@ srcmake_debug:
 	cd ../src && $(MAKE) debug && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
 
 test : test.o packet_implem.o queue_sender.o real_address.o create_socket.o wait_for_client.o -lcunit -lz
+
+run : test
+		./test
 
 .PHONY: clean
 
