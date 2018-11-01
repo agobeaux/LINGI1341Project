@@ -4,12 +4,12 @@
 #include "packet_interface.h"
 #include <stdio.h>
 
-/*buffer to stock all structures ready to send*/
+/*node structure*/
 typedef struct node {
     pkt_t *pkt;
     struct node *next;
 } node_t;
-
+/*buffer to stock all structures ready to send*/
 typedef struct queue{
     struct node* head;
     int size;
@@ -30,6 +30,8 @@ int queue_push(queue_t *queue, pkt_t *pkt);
  *
  * @queue : the queue on which we have to push a node containing pkt
  * @pkt : the content of the new node to push on the queue
+ * @waitedSeqNum : waited seqNum
+ * @realWindowSize : window size
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
@@ -39,21 +41,23 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t
 /**
  * Removes and returns a pkt from the queue.
  *
- * @head : the head of the queue
+ * @queue : the queue from which we have to pop the first node
  *
- * @return the most recently added pkt on the queue, NULL if queue is empty
+ * @return : the latest added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *queue);
 
 /**
  * Initialises an empty queue
  *
- * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
+ * @return : pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
 queue_t* queue_init();
 
 /**
- * @return 0 if the queue is empty, 1 otherwise
+ * Checks if queue is empty
+ * 
+ * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue);
 
@@ -70,6 +74,11 @@ int queue_isempty(queue_t *queue);
  */
 uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum, uint32_t *lastTimeStamp);
 
+/**
+ * Prints all queue's seqNum
+ * 
+ * @queue : the queue to print
+ */
 void queue_print_seqNum(queue_t *queue);
 
 #endif /* queue_receiver_h */

@@ -1,4 +1,4 @@
-#include "sender.h"
+#include "receiver.h"
 #include <poll.h>
 #include "packet_interface.h"
 #include "real_address.h"
@@ -7,15 +7,15 @@
 #include "queue_receiver.h"
 #include <time.h>
 
-#define ser_PORT 12345 // to change. Should be an argument
 struct timespec *tpGlobal;
 
-//TODO : numseq à garder en mémoire, window : nombre élts restants, queue + vérification écriture
-//écrire sur le fichier (stdout etc)
-//demande de déconnexion à faire
-// timestamp ? après 2000ms, assuré que le packet disparaît ou il faut le discard ?
 
-//TODO : déconnexion
+/**
+ *Loop for writing packets and reading the acks/nacks
+ *
+ * @sfd socket's file descriptor
+ * @fd file descriptor containing the informations to send
+ */
 void read_write_loop(const int sfd, const int fd){
     struct pollfd pfds[1];
     pfds[0].fd = sfd;
@@ -93,29 +93,6 @@ void read_write_loop(const int sfd, const int fd){
                 }
             }
         }
-        // TODO on process tous les ACK et NACK de la queue ! on envoie tous les acks ou seulement le dernier ?
-        // si on process tous les ACK et NACK, il faut vérifier qu'on a assez de place sinon on fait un appel bloquant...
-        // donc il faut refaire un poll à chaque fois ??? Et si on décide de refaire
-        // 1 ack puis 1 dl de payload à chaque itération, le dl prend + de temps donc
-        // potentiellement un prolème car envois d'acks trop lents
-
-        //QUESTIONS : 1 : poll fonctionne même s'il n'y a qu'1 byte de libre pour écrire
-        // => problème, si on n'écrit pas tout, il va y avoir un problème quand l'autre va essayer de lire
-        // le paquet... il faudrait pouvoir enlever ce qui a été écrit, comment ? ...
-        // 2 : si on a plusieurs ACK à envoyer, on envoie normalement ou alors on fait la synthèse
-        // des acks pour envoyer seulement le dernier (+ les nacks)
-        // 3 : si on reçoit un paquet avec TR = 1 mais length != 0, et CRC1 est bon (alors que le paquet a été modifié)
-        // si ça tombe c'est un paquet tronqué ou alors un paquet avec payload donc on devrait discard tt le socket ?
-        // car pas sûr de la place sur le payload... pareil quand le paquet a un mauvais header...
-        // à chaque fois il faut discard tous les paquets du socket du coup ? ...
-
-        // REPONSES : à nous de gérer la window. -> d'abord taille fixe, ou même en argument du programme
-        //            gérer le changement de taille par après
-        //            poll assure qu'on peut écrire ou lire un paquet UDP entier car protocole UDP -> noworries pour écrire
-        //            plusieurs acks : notre choix : plus facile de juste renvoyer d'abord mais on peut sélectionner le meilleur
-        //            si on a plusieurs ack à envoyer (si 3 acks, on peut en envoyer un seul ou alors en envoyer 3 fois le meilleur)
-        //            paquet tronqué ? erreur etc ? pas grave car on lit paquet par paquet grâce à UDP
-        //            ATTENTION : READ on met la longueur max d'un paquet.
 
         if(pfds[0].revents&POLLIN){
 
@@ -182,7 +159,7 @@ void read_write_loop(const int sfd, const int fd){
                     if(distInf < realWindowSize && distSup < realWindowSize){
                         fprintf(stderr, "packet in window size, receiver.c, seqnum = %u, waited : %u\n", pkt->seqNum, waitedSeqNum);
                         // packet received
-                        if(pkt->length == 0){ //WARNING TODO : interopérabilité, ce sera pas pareil...
+                        if(pkt->length == 0){
                             //end of transmission packet
                             fprintf(stderr, "End of transmission packet, pkt->length = 0\n");
                             pkt_t *ack = pkt_new();
@@ -272,7 +249,6 @@ int main(int argc, char *argv[]){
 
     int fd = STDOUT_FILENO; //file from command line
     char *res_hostname; //hostname from command line
-    //char *ser_hostname = "::1"; //useless ?
     int src_port; //port from command line
     int socket_fd; //socket file descriptor
 

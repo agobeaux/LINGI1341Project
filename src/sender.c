@@ -349,7 +349,6 @@ int main(int argc, char *argv[]){
 
     int fd = STDIN_FILENO;//file from command line
     char *res_hostname;//hostname from command line
-    char *ser_hostname = "::1";
     int dst_port;//port from command line
     int socket_fd;//socket file descriptor
     int f_option = 0;//if there is (not) f_option
@@ -402,12 +401,7 @@ int main(int argc, char *argv[]){
     if(check_message){
         fprintf(stderr, "sender : main : error in real_address : %s!\n",check_message);
     }
-    //Resolve the resource name to an usable IPv6 address for sender
-    struct sockaddr_in6 source_addr;
-    check_message = real_address(ser_hostname, &source_addr);
-    if(check_message){
-        fprintf(stderr, "sender : main : error in real_address : %s!\n",check_message);
-    }
+
 
     //Creates a socket and initializes it
 

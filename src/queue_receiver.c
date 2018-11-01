@@ -45,6 +45,8 @@ int queue_push(queue_t *queue, pkt_t *pkt){
  *
  * @queue : the queue on which we have to push a node containing pkt
  * @pkt : the content of the new node to push on the queue
+ * @waitedSeqNum : waited seqNum
+ * @realWindowSize : window size
  *
  * @return : 0 if the pkt if successful, -1 otherwise
  */
@@ -155,9 +157,9 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t
 /**
  * Removes and returns a pkt from the queue.
  *
- * @head : the head of the queue
+ * @queue : the queue from which we have to pop the first node
  *
- * @return the most recently added pkt on the queue, NULL if queue is empty
+ * @return : the latest added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *queue){
     if(queue->size == 0){
@@ -175,7 +177,7 @@ pkt_t *queue_pop(queue_t *queue){
 /**
  * Initialises an empty queue
  *
- * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
+ * @return : pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
 queue_t* queue_init(){
     queue_t *newqueue = calloc(1,sizeof(queue_t)); // next and size set to 0
@@ -187,7 +189,9 @@ queue_t* queue_init(){
 }
 
 /**
- * @return 0 if the queue is empty, 1 otherwise
+ * Checks if queue is empty
+ * 
+ * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue){
     return queue->size = 0;
