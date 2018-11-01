@@ -112,7 +112,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 
 }
 
-pkt_status_code pkt_encode(const pkt_t* pkt, char *buf, size_t *len)
+pkt_status_code pkt_encode(pkt_t* pkt, char *buf, size_t *len)
 {
 	if(!pkt){
 		return E_UNCONSISTENT; // sure ?
@@ -140,6 +140,7 @@ pkt_status_code pkt_encode(const pkt_t* pkt, char *buf, size_t *len)
 	uint8_t bufTTWT = typeTrWinTmp & oneWithoutTr;
 	memcpy(buf, &bufTTWT, sizeof(uint8_t));
 	uint32_t sCrc1 = crc32(0, (Bytef *)buf, 8);
+	pkt_set_crc1(pkt, sCrc1);
 	sCrc1 = htonl(sCrc1);
 	memcpy(buf+8, &sCrc1, sizeof(uint32_t)); // crc1
 
@@ -153,6 +154,7 @@ pkt_status_code pkt_encode(const pkt_t* pkt, char *buf, size_t *len)
 		memcpy(buf+12, pkt->payload, pkt->length); // payload
 		//pkt->crc2 = crc32(0, pkt+12, pkt->length);
 		uint32_t sCrc2 = crc32(0, (Bytef *)pkt->payload, pkt->length);
+		pkt_set_crc2(pkt, sCrc2);
 		sCrc2 = htonl(sCrc2);
 		memcpy(buf+12+pkt->length, &sCrc2, sizeof(uint32_t)); // crc2
 	}

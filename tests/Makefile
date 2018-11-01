@@ -10,21 +10,29 @@ CFLAGS += -D_POSIX_C_SOURCE=201112L -D_XOPEN_SOURCE # feature_test_macros for ge
 
 LDFLAGS= -rdynamic
 LDFLAGS += -lz
+LDFLAGS += -lcunit
 
 # Default target
-all: clean
+all: clean tests
 
 # If we run `make debug` instead, keep the debug symbols for gdb
 # and define the DEBUG macro.
 debug: CFLAGS += -g -DDEBUG -Wno-unused-parameter -fno-omit-frame-pointer
-debug: clean
+debug: clean srcmake_debug test
 
 .PHONY: tests
 
-tests:
-	@rm -f test
+tests: srcmake test
+
+srcmake:
+	cd ../src && $(MAKE) && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
+
+srcmake_debug:
+	cd ../src && $(MAKE) debug && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
+
+test : test.o packet_implem.o queue_sender.o real_address.o create_socket.o wait_for_client.o -lcunit -lz
 
 .PHONY: clean
 
 clean:
-	@rm -f test
+	@rm -f test test.o packet_implem.o sender.o queue_sender.o

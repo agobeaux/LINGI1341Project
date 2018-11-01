@@ -18,8 +18,10 @@ all: clean srcmake
 srcmake:
 	cd src && $(MAKE) && mv receiver .. && mv sender ..
 
-debug:
+srcmake_debug :
 	cd src && $(MAKE) debug && mv receiver .. && mv sender ..
+	
+debug: clean srcmake_debug
 
 .PHONY: tests
 
