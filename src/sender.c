@@ -1,23 +1,25 @@
 #include "sender.h"
 #include <poll.h>
-#include "packet_interface.h"
+
 #include "real_address.h"
 #include "create_socket.h"
 #include "queue_sender.h"
 #include <time.h>
 
-static int size_buffer = 1;
-static int timer = 3; //define a random value for the first time, to be sure receive the first packet
-static uint8_t seqNum = 0;
-struct timespec *tpGlobal;
+static int size_buffer = 1; //buffer's size limitation (limited by the value of window)
+static int timer = 3; //the transmission timeout (3s is the default value)
+static uint8_t seqNum = 0; //seqNum of the next packet to send
+struct timespec *tpGlobal; //timer to disconnect if there is no more information to send
 
 
 /**
- * Create a new structure pkt.
+ * Initialize a new packet.
  *
- * @param f is a payload to be added to the structure pkt.
+ * @pkt packet to initialize
+ * @payload payload to add to the packet
+ * @payload the payload's length
  *
- * @return If the payload is succesfully added onto the pkt, returns pkt. If not, the returned value is NULL.
+ * @return : pkt if the payload is succesfully added onto the pkt, Null otherwise.
  */
 pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
 
@@ -54,12 +56,10 @@ pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
 
 
 /**
- *Loop reading a socket and printing to stdout,
- *while reading stdin and writing to the socket
+ *Loop for writing packets and reading the acks/nacks
  *
- * @param The socket file descriptor. It is both bound and connected.
- *        And a file descriptor with the information to send
- *
+ * @sfd socket's file descriptor
+ * @fd file descriptor containing the informations to send
  */
 void read_write_loop(const int sfd, int fd){
     uint8_t seqnum_delete; // sequence number of the payload to delete
@@ -82,11 +82,10 @@ void read_write_loop(const int sfd, int fd){
 
     while(1){
 
-		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
+		//check if there are still some exchange between sender and receiver, if it is not the case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
 		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
-		fprintf(stderr, "diff time : %d\n", difftime);
 		if(difftime>10){
 			return;
 		}
@@ -102,18 +101,13 @@ void read_write_loop(const int sfd, int fd){
         }
 
         //try to write to the socket
-        fprintf(stderr, "pfds[0].revents & POLLOUT : %d\n",pfds[0].revents & POLLOUT);
         if(pfds[0].revents & POLLOUT){
             if(buf_structure->size < size_buffer && isLastAckNum == 0){
                 size_t len = 528;
                 char *buf = (char*)malloc(528);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
-                struct timespec *tp = malloc(sizeof(struct timespec));
-                if(tp == NULL){
-                    fprintf(stderr, "sender : read_while_loop : error with malloc!\n");
-                }
 
-                //try to have a new payload
+                //read a new payload
                 fprintf(stderr,"before read\n");
                 int rd = read(fd, (void *)new_payload, MAX_PAYLOAD_SIZE);
                 fprintf(stderr,"after read\n");
@@ -121,7 +115,7 @@ void read_write_loop(const int sfd, int fd){
                 if(rd == -1){
                     fprintf(stderr, "sender : read_while_loop : error with read!\n");
                 }
-                else if(rd == 0){// && queue_isempty(buf_structure)){
+                else if(rd == 0){//no more information to send
 
 					//reset the transmission timer because there is still something to write
 					clock_gettime(CLOCK_REALTIME, tpGlobal);
@@ -130,17 +124,16 @@ void read_write_loop(const int sfd, int fd){
                     pkt_t* pkt = pkt_new();
                     if(pkt == NULL){
                         fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
+                        continue;
                     }
+                    
                     pkt_set_type(pkt, PTYPE_DATA);
-                    //TODO : if doesn't go well ? should never happen
-                    //TODO : pkt_set_window ? and timestamp ?
-                    pkt_set_seqnum(pkt, seqNum++); // does %(2^8) since type(seqNum) : uint8_t
-                    //seqNum ++ because last ack's number will be seqNum+1
+                    pkt_set_seqnum(pkt, seqNum++);
 
                     struct timespec *timePkt = malloc(sizeof(struct timespec));
                     if(!timePkt){
                         fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
-                        return NULL;
+                        return;
                     }
                     clock_gettime(CLOCK_REALTIME, timePkt);
 
@@ -151,9 +144,7 @@ void read_write_loop(const int sfd, int fd){
                     if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                         fprintf(stderr, "sender : read_while_loop : error with encode\n");
                     }
-                    clock_gettime(CLOCK_REALTIME, tp);
-                    if(queue_push(buf_structure, pkt, tp)==-1){
-						free(tp);
+                    if(queue_push(buf_structure, pkt)==-1){
 						free(pkt);
                         fprintf(stderr, "sender : read_while_loop : error with push\n");
                     }
@@ -177,16 +168,16 @@ void read_write_loop(const int sfd, int fd){
                 if(pkt == NULL){
                     fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
                 }
+                
                 pkt = create_packet(new_payload, pkt, rd);
                 if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                     fprintf(stderr, "sender : read_while_loop : error with encode\n");
                 }
-                clock_gettime(CLOCK_REALTIME, tp);
-                if(queue_push(buf_structure, pkt, tp)==-1){
+                
+                if(queue_push(buf_structure, pkt)==-1){
                     fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
-
-
+                
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
@@ -197,69 +188,60 @@ void read_write_loop(const int sfd, int fd){
             } // end if(buf_structure->size < size_buffer)
 
             //check if there is still element that wasn't resent or their timer is out
-            /*else{*/
-            /*else{*/
+			node_t *run = buf_structure->head;
+			while(run!=NULL){
 
-                node_t *run = buf_structure->head;
-                while(run!=NULL){
+				struct timespec *tp = malloc(sizeof(struct timespec));
+				clock_gettime(CLOCK_REALTIME, tp);
+				int time_now = tp->tv_sec;
+				free(tp);
+				
+				if(((time_now - (int)(run->pkt->timestamp)) > timer) || (run->pkt->timestamp == 0)){
 
-                    struct timespec *tp = malloc(sizeof(struct timespec));
-                    clock_gettime(CLOCK_REALTIME, tp);
-                    int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
-                    free(tp);
-					 /*
-					fprintf(stderr, "time_now : %d, run->tp->tv_sec : %ld, run->tp->tv->nsec/10^9 : %ld, timer : %d\n", time_now, run->tp->tv_sec, run->tp->tv_nsec/1000000000, timer);
-					fprintf(stderr, "time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) : %ld\n", time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000));
-					*/
-					if((time_now - (run->tp->tv_sec + (run->tp->tv_nsec)/1000000000) > timer) || (run->tp->tv_sec == 0)){
+					pRet = poll(pfds, 1, 500);
+					if(pRet == -1){
+						fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
+						return;
+					}
 
-						pRet = poll(pfds, 1, 500);
-						if(pRet == -1){
-							fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
+					if(pfds[0].revents & POLLOUT){
+
+						fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
+						// condition run->pkt->timestamp_sec == 0 will happen when we receive a NACK
+						// because we set tv_sec to 0 when we receive a NACK.
+						// it won't be true otherwise because 0 sec is on the 1st of January 1970
+						size_t len = 528;
+						char *buf = (char*)malloc(528);
+						if(buf == NULL){
+							fprintf(stderr, "sender : read_while_loop : error with malloc\n");
+							continue;
+						}
+
+						struct timespec *timePkt = malloc(sizeof(struct timespec));
+						if(!timePkt){
+							fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
 							return;
 						}
+						clock_gettime(CLOCK_REALTIME, timePkt);
 
-						if(pfds[0].revents & POLLOUT){
+						pkt_set_timestamp(run->pkt, timePkt->tv_sec);
+						free(timePkt);
 
-							fprintf(stderr, "\n\n\n\n\n\n j'ai trouvé l'élement avec le retransmission timeout, %d \n\n\n\n\n\n", run->pkt->seqNum);
-							// condition run->tp->tv_sec == 0 will happen when we receive a NACK
-							// because we set tv_sec to 0 when we receive a NACK.
-							// it won't be true otherwise because 0 sec is on the 1st of January 1970
-							size_t len = 528;
-							char *buf = (char*)malloc(528);
-							if(buf == NULL){
-								fprintf(stderr, "sender : read_while_loop : error with malloc\n");
-								continue;
-							}
-
-							clock_gettime(CLOCK_REALTIME, run->tp);
-
-                            struct timespec *timePkt = malloc(sizeof(struct timespec));
-                            if(!timePkt){
-                                fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
-                                return NULL;
-                            }
-                            clock_gettime(CLOCK_REALTIME, timePkt);
-
-                            pkt_set_timestamp(run->pkt, timePkt->tv_sec);
-                            free(timePkt);
-
-							if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
-								fprintf(stderr, "sender : read_while_loop : error with encode\n");
-								free(buf);
-								continue;
-							}
-							int wr = write(sfd, buf, len);
-							if(wr == -1){
-								fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
-							}
+						if(pkt_encode(run->pkt, buf, &len)!=PKT_OK){
+							fprintf(stderr, "sender : read_while_loop : error with encode\n");
 							free(buf);
-							break;
+							continue;
 						}
+						int wr = write(sfd, buf, len);
+						if(wr == -1){
+							fprintf(stderr, "Stdin->socket : Write error : %s\n", strerror(errno));
+						}
+						free(buf);
+						break;
 					}
-					run = run->next;
 				}
-            /*}*/
+				run = run->next;
+			}
         }
 
 
@@ -301,8 +283,8 @@ void read_write_loop(const int sfd, int fd){
                         struct timespec *tp = malloc(sizeof(struct timespec));
 
                         fprintf(stderr, "before queue_find_ack_structure\n");
-                        struct node *time_node = queue_find_ack_structure(buf_structure, pkt_ack->seqNum-1);
-                        if(time_node==NULL){
+                        pkt_t *time_pkt = queue_find_ack_structure(buf_structure, pkt_ack->seqNum-1);
+                        if(time_pkt==NULL){
                             fprintf(stderr, "there is no structure in buffer with seqnum %u\n", pkt_ack->seqNum-1);
                             pkt_del(pkt_ack);
                             continue; // TODO : verify
@@ -311,12 +293,11 @@ void read_write_loop(const int sfd, int fd){
 
                         clock_gettime(CLOCK_REALTIME, tp);
                         fprintf(stderr, "after clock gettime\n");
-                        int time_now = tp->tv_sec + (tp->tv_nsec)/1000000000;
+                        int time_now = tp->tv_sec;
 
                         fprintf(stderr, "before accessing time_node->tp\n");
                         fprintf(stderr, "TIMER : %d\n",timer);
-                        timer = 2*(time_now - time_node->tp->tv_sec - time_node->tp->tv_nsec/1000000000);
-                        fprintf(stderr, "time_now : %d, time_node->tp->tv_sec : %ld, time_node->tp->tv_nsec/1000000000 : %ld\n, dif : %ld", time_now, time_node->tp->tv_sec, time_node->tp->tv_nsec, time_now - time_node->tp->tv_sec + time_node->tp->tv_nsec/1000000000);
+                        timer = 2*(time_now - (int)(time_pkt->timestamp));
                         fprintf(stderr, "TIMER : %d\n",timer);
                         fprintf(stderr, "after accessing time_node->tp\n");
                         free(tp);

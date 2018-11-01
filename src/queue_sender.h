@@ -3,13 +3,13 @@
 
 #include "packet_interface.h"
 
-/*buffer to stock all structures ready to send*/
+/*node structure*/
 typedef struct node {
     pkt_t *pkt;
     struct node *next;
-    struct timespec *tp;
 } node_t;
 
+/*queue to stock all structures ready to send*/
 typedef struct queue{
     struct node *head;
     struct node *last;
@@ -20,59 +20,84 @@ typedef struct queue{
  * Adds a pkt to the queue.
  *
  * @queue : the queue on which we have to push a node containing pkt
- * @pkt : the content of the new node to push on the queue
+ * @pkt : the packet of the new node to push on the queue
  *
- * @return : 0 if the pkt if successful, -1 otherwise
+ * @return : 0 if the push if successful, -1 otherwise
  */
-int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp);
+int queue_push(queue_t *queue, pkt_t *pkt);
 
 /**
- * Removes and returns a pkt from the queue.
+ * Removes and returns the first packet from the queue.
  *
- * @head : the head of the queue
+ * @queue : the queue from which we have to pop the first node
  *
- * @return the most recently added pkt on the queue, NULL if queue is empty
+ * @return : the first added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *queue);
 
 /**
- * Removes and returns a pkt from the queue.
+ * Deletes all packets from pkt with the seqnum <= seqNum
  *
- * @head : the head of the queue
+ * @queue : the queue from which we have to delete the packet with seqNum
+ * @seqNum : the seqnum of the packet
  *
- * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
+ * @return : number of deleted packets
  */
 int queue_delete(queue_t *queue, uint8_t seqNum);
 
-struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum);
+/**
+ * Finds and returns the packet from pkt with the seqNum and also reset the time
+ *
+ * @queue : the queue where we try to find the packet
+ * @seqNum : the seqNum of the packet
+ *
+ * @return : return the structure with seqnum
+ */
+pkt_t *queue_find_nack_structure(queue_t *queue, uint8_t seqNum);
 
 /**
- * Reset the timer.
+ * Finds and returns the packet from pkt with the seqNum
  *
- * @head : the head of the queue
+ * @queue : the queue where we try to find the packet
+ * @seqNum : the seqNum of the packet
  *
- * @return return the structure with seqnum
+ * @return : the packet with seqNum, NULL otherwise
  */
-struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum);
+pkt_t *queue_find_ack_structure(queue_t *queue, uint8_t seqNum);
 
 /**
  * Initialises an empty queue
  *
- * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
+ * @return : pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
 queue_t* queue_init();
 
 /**
- * @return 0 if the queue is empty, 1 otherwise
+ * Checks if queue is empty
+ * 
+ * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue);
 
+/**
+ * Prints all queue's seqNum
+ * 
+ * @queue : the queue to print
+ */
 void queue_print_seqNum(queue_t *queue);
 
-// TODO delete ?
+/**
+ * Prints the first and the last queue's seqNum
+ * 
+ * @queue : the queue to print
+ */
 void queue_print_first_last_seqNum(queue_t *queue);
 
-
+/**
+ * Frees queue
+ * 
+ * @queue : the queue to free
+ */
 void queue_free(queue_t *queue);
 
 #endif /* queue_sender_h */

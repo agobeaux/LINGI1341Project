@@ -6,12 +6,11 @@
  * Adds a pkt to the queue.
  *
  * @queue : the queue on which we have to push a node containing pkt
- * @pkt : the content of the new node to push on the queue
+ * @pkt : the packet of the new node to push on the queue
  *
- * @return : 0 if the pkt if successful, -1 otherwise
+ * @return : 0 if the push if successful, -1 otherwise
  */
-int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
-    fprintf(stderr, "QUEUE SENDER PUSH : tp->tv_sec : %ld, tp->tv_nsec/1000000000 : %ld\n", tp->tv_sec, tp->tv_nsec/1000000000);
+int queue_push(queue_t *queue, pkt_t *pkt){
     if (pkt == NULL){
         fprintf(stderr, "Error, NULL pkt in push, queue. \n");
         return -1;
@@ -25,7 +24,6 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
 
     if(queue->size == 0){
         newnode->pkt = pkt;
-        newnode->tp = tp;
         queue->last = newnode;
         queue->head = newnode;
         newnode->next = NULL;
@@ -34,7 +32,6 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
     }
 
     newnode->pkt = pkt;
-    newnode->tp = tp;
     queue->last->next = newnode;
     queue->last = newnode;
     queue->last->next = NULL;
@@ -43,11 +40,11 @@ int queue_push(queue_t *queue, pkt_t *pkt, struct timespec *tp){
 }
 
 /**
- * Removes and returns a pkt from the queue.
+ * Removes and returns the first packet from the queue.
  *
- * @head : the head of the queue
+ * @queue : the queue from which we have to pop the first node
  *
- * @return the most recently added pkt on the queue, NULL if queue is empty
+ * @return : the first added pkt on the queue, NULL if queue is empty
  */
 pkt_t *queue_pop(queue_t *queue){
     if(queue->size == 0){
@@ -57,18 +54,18 @@ pkt_t *queue_pop(queue_t *queue){
     pkt_t *pkt = queue->head->pkt;
     node_t *save = queue->head;
     queue->head = queue->head->next;
-    free(save->tp);
     free(save);
     queue->size -= 1;
     return pkt;
 }
 
 /**
- * Removes and returns a pkt from the queue.
+ * Delete all packets from pkt with the seqnum <= seqNum
  *
- * @head : the number of deleted packets
+ * @queue : the queue from which we have to delete the packet with seqNum
+ * @seqNum : the seqnum of the packet
  *
- * @return delete the pkt with the seqNum on the queue, NULL if queue is empty
+ * @return : number of deleted packets
  */
 int queue_delete(queue_t *queue, uint8_t seqNum){
 	int number = 0;
@@ -119,13 +116,14 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
 
 
 /**
- * Reset the timer.
+ * Find and returns the packet from pkt with the seqNum and also reset the time
  *
- * @head : the head of the queue
+ * @queue : the queue where we try to find the packet
+ * @seqNum : the seqNum of the packet
  *
- * @return return the structure with seqnum
+ * @return : return the structure with seqnum
  */
-struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
+pkt_t *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
     printf("========= seqNum : %u ============\n", seqNum);
     struct node *run = queue->head;
     if(run == NULL){
@@ -137,10 +135,8 @@ struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
         pkt_print(run->pkt);
         if (run->pkt->seqNum==seqNum)
         {
-            run->tp->tv_sec = 0;
-            run->tp->tv_nsec = 0;
             run->pkt->timestamp = 0;
-            return run;
+            return run->pkt;
         }
         run = run->next;
     }
@@ -148,12 +144,14 @@ struct node *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
 }
 
 /**
+ * Find and returns the packet from pkt with the seqNum
  *
- * @queue : the queue
+ * @queue : the queue where we try to find the packet
+ * @seqNum : the seqNum of the packet
  *
- * @return return the structure with seqnum
+ * @return : the packet with seqNum, NULL otherwise
  */
-struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
+pkt_t *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
     printf("========= seqNum : %u ============\n", seqNum);
     struct node *run = queue->head;
     if(run == NULL){
@@ -163,7 +161,7 @@ struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
         printf("run->pkt\n");
         pkt_print(run->pkt);
         if (run->pkt->seqNum==seqNum){
-            return run;
+            return run->pkt;
         }
         run = run->next;
     }
@@ -173,7 +171,7 @@ struct node *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
 /**
  * Initialises an empty queue
  *
- * @return pointer to the newly allocated queue (head node) if successful, NULL otherwise.
+ * @return : pointer to the newly allocated queue (head node) if successful, NULL otherwise.
  */
 queue_t* queue_init(){
     queue_t *newqueue = calloc(1,sizeof(queue_t)); // next and size set to 0
@@ -185,12 +183,19 @@ queue_t* queue_init(){
 }
 
 /**
- * @return 0 if the queue is empty, 1 otherwise
+ * Checks if queue is empty
+ * 
+ * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue){
     return queue->size = 0;
 }
 
+/**
+ * Prints all queue's seqNum
+ * 
+ * @queue : the queue to print
+ */
 void queue_print_seqNum(queue_t *queue){
     node_t *runner = queue->head;
     fprintf(stderr, "Printing queue seqNums :\n");
@@ -201,7 +206,11 @@ void queue_print_seqNum(queue_t *queue){
     fprintf(stderr, "\n");
 }
 
-//TODO : delete ?
+/**
+ * Prints the first and the last queue's seqNum
+ * 
+ * @queue : the queue to print
+ */
 void queue_print_first_last_seqNum(queue_t *queue){
     fprintf(stderr, "queue_print_first_last_seqNum : ");
     if(queue->head){
@@ -214,7 +223,9 @@ void queue_print_first_last_seqNum(queue_t *queue){
 
 
 /**
- * free queue
+ * Frees queue
+ * 
+ * @queue : the queue to free
  */
 void queue_free(queue_t *queue){
     if(queue->head != NULL){
@@ -224,7 +235,6 @@ void queue_free(queue_t *queue){
 			delete = run;
 			run = run->next;
 			pkt_del(delete->pkt);
-			free(delete->tp);
 			free(delete);
 		}
 	}
