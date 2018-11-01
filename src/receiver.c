@@ -113,7 +113,7 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "receiver, read_write_loop, rd == 0\n");
             }
             else{
-                //TODO : put this uint somewhere else
+                //TODO : put this uint somewhere else, replace it with a #define
                 uint8_t realWindowSize = 31;
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
@@ -129,7 +129,7 @@ void read_write_loop(const int sfd, const int fd){
                         break;
                     }
                     ack->type = PTYPE_ACK;
-                    ack->window = 31 - pktQueue->size; // TODO : test
+                    ack->window = 31;
                     ack->seqNum = waitedSeqNum;
                     ack->timestamp = 0;
                     queue_push(ackQueue, ack);
@@ -143,13 +143,12 @@ void read_write_loop(const int sfd, const int fd){
                         break;
                     }
                     nack->type = PTYPE_NACK;
-                    nack->window = 31 - pktQueue->size; // TODO : test
+                    nack->window = 31;
                     nack->seqNum = pkt->seqNum;
                     nack->timestamp = pkt->timestamp;
                     pkt_del(pkt);
                     queue_push(ackQueue, nack);
                 }
-                //TODO 31 : windowsize, window size (the real one)
                 else{
                     //here, check if pkt is included in the window.
                     // Useful variables to know if the pk(s seqNum lies in the window or not
@@ -175,7 +174,7 @@ void read_write_loop(const int sfd, const int fd){
                                 ack->trFlag = 1; //TODO : I defined this to know which ack should be the last one
                                 waitedSeqNum++;
                             }
-                            ack->window = 31 - pktQueue->size; // TODO : test
+                            ack->window = 31;
                             ack->seqNum = waitedSeqNum;
                             ack->timestamp = pkt->timestamp;
                             queue_push(ackQueue, ack);
@@ -200,7 +199,7 @@ void read_write_loop(const int sfd, const int fd){
                             break;
                         }
                         ack->type = PTYPE_ACK;
-                        ack->window = 31 - pktQueue->size; // TODO : test
+                        ack->window = 31;
                         ack->timestamp = lastTimeStamp;
                         if(isFinalSeqNum == 1 && waitedSeqNum == finalSeqNum){
                             fprintf(stderr, "Gonna end, pushing ack of end of transmission soon\n");
@@ -226,7 +225,7 @@ void read_write_loop(const int sfd, const int fd){
                             break;
                         }
                         ack->type = PTYPE_ACK;
-                        ack->window = 31 - pktQueue->size; // TODO : test
+                        ack->window = 31;
                         ack->seqNum = waitedSeqNum;
                         ack->timestamp = pkt->timestamp;
                         pkt_del(pkt);

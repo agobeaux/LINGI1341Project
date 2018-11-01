@@ -15,9 +15,9 @@ struct timespec *tpGlobal; //timer to disconnect if there is no more information
 /**
  * Initialize a new packet.
  *
- * @pkt packet to initialize
- * @payload payload to add to the packet
- * @payload the payload's length
+ * @pkt : packet to initialize
+ * @payload : payload to add to the packet
+ * @len : the payload's length
  *
  * @return : pkt if the payload is succesfully added onto the pkt, Null otherwise.
  */
@@ -36,7 +36,8 @@ pkt_t *create_packet(char *payload, pkt_t *pkt, int len){
     pkt_set_timestamp(pkt, timePkt->tv_sec);
     free(timePkt);
 
-    if(pkt_set_window(pkt, 1)!=PKT_OK){
+    // in our code, the size of the window of the sender is always 31.
+    if(pkt_set_window(pkt, 31)!=PKT_OK){
         fprintf(stderr, "sender : create_packet : error with window\n");
         return NULL;
     }
@@ -126,7 +127,7 @@ void read_write_loop(const int sfd, int fd){
                         fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
                         continue;
                     }
-                    
+
                     pkt_set_type(pkt, PTYPE_DATA);
                     pkt_set_seqnum(pkt, seqNum++);
 
@@ -168,16 +169,16 @@ void read_write_loop(const int sfd, int fd){
                 if(pkt == NULL){
                     fprintf(stderr, "sender : read_while_loop : error with create_packet! \n");
                 }
-                
+
                 pkt = create_packet(new_payload, pkt, rd);
                 if(pkt_encode(pkt, buf, &len)!=PKT_OK){
                     fprintf(stderr, "sender : read_while_loop : error with encode\n");
                 }
-                
+
                 if(queue_push(buf_structure, pkt)==-1){
                     fprintf(stderr, "sender : read_while_loop : error with push\n");
                 }
-                
+
                 int wr = write(sfd, (void*)buf, len);
                 if(wr == -1){
                     fprintf(stderr, "sender : read_while_loop : error with write : %s\n", strerror(errno));
@@ -190,12 +191,18 @@ void read_write_loop(const int sfd, int fd){
             //check if there is still element that wasn't resent or their timer is out
 			node_t *run = buf_structure->head;
 			while(run!=NULL){
+                uint8_t diffSeq = run->pkt->seqNum - buf_structure->head->pkt->seqNum;
+                if(diffSeq >= size_buffer){
+                    // we're getting outside of the window of receiver
+                    fprintf(stderr, "Sender : read_write_loop : checking outtimed pkts : getting outside of the window of receiver\n");
+                    break;
+                }
 
 				struct timespec *tp = malloc(sizeof(struct timespec));
 				clock_gettime(CLOCK_REALTIME, tp);
 				int time_now = tp->tv_sec;
 				free(tp);
-				
+
 				if(((time_now - (int)(run->pkt->timestamp)) > timer) || (run->pkt->timestamp == 0)){
 
 					pRet = poll(pfds, 1, 500);
