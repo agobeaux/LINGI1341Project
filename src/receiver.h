@@ -24,6 +24,9 @@
 #include <fcntl.h>
 #include "packet_interface.h"
 
+#define MAX_PACKET_SIZE 528
+#define ACK_SIZE 12
+#define MAX_BUFFER_SIZE 31
 
 /**
  * Resolve the resource name to an usable IPv6 address

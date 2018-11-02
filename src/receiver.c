@@ -64,13 +64,13 @@ void read_write_loop(const int sfd, const int fd){
             }
             int trFlag = ack->trFlag;
             ack->trFlag = 0;
-            char ackBuf[12];
-            size_t ackLen = 12;
+            char ackBuf[ACK_SIZE];
+            size_t ackLen = ACK_SIZE;
             if(pkt_encode(ack, ackBuf, &ackLen) != PKT_OK){
                 pkt_del(ack);
                 fprintf(stderr, "encode error in receiver, read_write_loop, encode != PKT_OK\n");
             }
-            else if(ackLen != 12){
+            else if(ackLen != ACK_SIZE){
 				pkt_del(ack);
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
@@ -103,8 +103,8 @@ void read_write_loop(const int sfd, const int fd){
             fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
             // read the max size of a packet cause we'll read one packet at a time
             // we won't read a packet and then a part of another. Source : obo
-            char buf[528];
-            int rd = read(sfd, buf, 528);
+            char buf[MAX_PACKET_SIZE];
+            int rd = read(sfd, buf, MAX_PACKET_SIZE);
             if(rd == -1){
                 fprintf(stderr, "Error while reading\n");
             }
@@ -114,7 +114,7 @@ void read_write_loop(const int sfd, const int fd){
             }
             else{
                 //TODO : put this uint somewhere else, replace it with a #define
-                uint8_t realWindowSize = 31;
+                uint8_t realWindowSize = MAX_BUFFER_SIZE;
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
                     fprintf(stderr, "Malloc error in receiver, read_write_loop, creating pkt\n");
@@ -129,7 +129,7 @@ void read_write_loop(const int sfd, const int fd){
                         break;
                     }
                     ack->type = PTYPE_ACK;
-                    ack->window = 31;
+                    ack->window = MAX_BUFFER_SIZE;
                     ack->seqNum = waitedSeqNum;
                     ack->timestamp = 0;
                     queue_push(ackQueue, ack);
@@ -143,7 +143,7 @@ void read_write_loop(const int sfd, const int fd){
                         break;
                     }
                     nack->type = PTYPE_NACK;
-                    nack->window = 31;
+                    nack->window = MAX_BUFFER_SIZE;
                     nack->seqNum = pkt->seqNum;
                     nack->timestamp = pkt->timestamp;
                     pkt_del(pkt);
@@ -174,7 +174,7 @@ void read_write_loop(const int sfd, const int fd){
                                 ack->trFlag = 1; //TODO : I defined this to know which ack should be the last one
                                 waitedSeqNum++;
                             }
-                            ack->window = 31;
+                            ack->window = MAX_BUFFER_SIZE;
                             ack->seqNum = waitedSeqNum;
                             ack->timestamp = pkt->timestamp;
                             queue_push(ackQueue, ack);
@@ -199,7 +199,7 @@ void read_write_loop(const int sfd, const int fd){
                             break;
                         }
                         ack->type = PTYPE_ACK;
-                        ack->window = 31;
+                        ack->window = MAX_BUFFER_SIZE;
                         ack->timestamp = lastTimeStamp;
                         if(isFinalSeqNum == 1 && waitedSeqNum == finalSeqNum){
                             fprintf(stderr, "Gonna end, pushing ack of end of transmission soon\n");
@@ -225,7 +225,7 @@ void read_write_loop(const int sfd, const int fd){
                             break;
                         }
                         ack->type = PTYPE_ACK;
-                        ack->window = 31;
+                        ack->window = MAX_BUFFER_SIZE;
                         ack->seqNum = waitedSeqNum;
                         ack->timestamp = pkt->timestamp;
                         pkt_del(pkt);

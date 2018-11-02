@@ -6,10 +6,12 @@
 #include "queue_sender.h"
 #include <time.h>
 
+
 static int size_buffer = 1; //buffer's size limitation (limited by the value of window)
 static int timer = 3; //the transmission timeout (3s is the default value)
 static uint8_t seqNum = 0; //seqNum of the next packet to send
 struct timespec *tpGlobal; //timer to disconnect if there is no more information to send
+
 
 
 /**
@@ -68,7 +70,7 @@ void read_write_loop(const int sfd, int fd){
     int firstAck = 1; // indicates if first ack so that we can compute the retransmission timer
     int isLastAckNum = 0;
 
-    char buf_ack[12];//buffer for (n)ack
+    char buf_ack[ACK_SIZE];//buffer for (n)ack
     queue_t *buf_structure = queue_init();//stock all structures to send
     if(buf_structure == NULL){
         fprintf(stderr,"sender : read_write_loop : buf_structure malloc error \n");
@@ -104,8 +106,8 @@ void read_write_loop(const int sfd, int fd){
         //try to write to the socket
         if(pfds[0].revents & POLLOUT){
             if(buf_structure->size < size_buffer && isLastAckNum == 0){
-                size_t len = 528;
-                char *buf = (char*)malloc(528);
+                size_t len = MAX_PACKET_SIZE;
+                char *buf = (char*)malloc(MAX_PACKET_SIZE);
                 char *new_payload=(char *)malloc(MAX_PAYLOAD_SIZE);
 
                 //read a new payload
@@ -217,8 +219,8 @@ void read_write_loop(const int sfd, int fd){
 						// condition run->pkt->timestamp_sec == 0 will happen when we receive a NACK
 						// because we set tv_sec to 0 when we receive a NACK.
 						// it won't be true otherwise because 0 sec is on the 1st of January 1970
-						size_t len = 528;
-						char *buf = (char*)malloc(528);
+						size_t len = MAX_PACKET_SIZE;
+						char *buf = (char*)malloc(MAX_PACKET_SIZE);
 						if(buf == NULL){
 							fprintf(stderr, "sender : read_while_loop : error with malloc\n");
 							continue;
@@ -261,11 +263,11 @@ void read_write_loop(const int sfd, int fd){
             fprintf(stderr, "I'm in\n");
             //analyse the (n)ack
             pkt_t* pkt_ack = pkt_new();
-            int rd = read(sfd, (void*)buf_ack, 12);
+            int rd = read(sfd, (void*)buf_ack, ACK_SIZE);
             if(rd == -1){
                 fprintf(stderr, "Socket->Stdout : Read error : %s\n", strerror(errno));
             }
-            pkt_status_code code = pkt_decode(buf_ack, 12, pkt_ack);
+            pkt_status_code code = pkt_decode(buf_ack, ACK_SIZE, pkt_ack);
             if(code == PKT_OK){
                 if(isLastAckNum == 1 && pkt_ack->seqNum == seqNum){
                     fprintf(stderr, "pkt_ack seqNum : %u, isLastAckNum : %d, lastAckNum : %u\n", pkt_ack->seqNum, isLastAckNum, seqNum);
@@ -276,7 +278,7 @@ void read_write_loop(const int sfd, int fd){
                 fprintf(stderr, "pkt_ack->seqNum : %u, isLastAckNum : %d, lastAckNum : %u\n",pkt_ack->seqNum, isLastAckNum, seqNum);
                 fprintf(stderr, "Decoded pkt, OK\n");
                 //we have an ack
-                if(pkt_ack->type == 2){
+                if(pkt_ack->type == PTYPE_ACK){
                     fprintf(stderr, "pkt_ack : PTYPE_ACK\n");
                     seqnum_delete = pkt_ack->seqNum-1;
                     //setting the max buffer size
@@ -333,7 +335,7 @@ void read_write_loop(const int sfd, int fd){
                 }
                  //end of if(pkt_ack->type == 2)
                 // we have a nack
-                else if(pkt_ack->type == 3){
+                else if(pkt_ack->type == PTYPE_NACK){
                     fprintf(stderr, "pkt_ack : PTYPE_NACK\n");
                     seqnum_nack = pkt_ack->seqNum;
                     if(queue_find_nack_structure(buf_structure, seqnum_nack)==NULL){
