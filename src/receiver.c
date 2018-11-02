@@ -25,7 +25,6 @@ void read_write_loop(const int sfd, const int fd){
     uint8_t waitedSeqNum = 0; // first packet has seqNum 0. uint8_t so that we won't need %(2^8)
     uint8_t finalSeqNum = -1;
     uint32_t lastTimeStamp = 0;
-    fprintf(stderr, "finalSeqNum = -1 -> %u\n",finalSeqNum);
     int isFinalSeqNum = 0;
     queue_t *pktQueue = queue_init();
     if(pktQueue == NULL){
@@ -39,6 +38,7 @@ void read_write_loop(const int sfd, const int fd){
         return;
     }
     while(1){
+		
 		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
@@ -46,21 +46,20 @@ void read_write_loop(const int sfd, const int fd){
 		if(difftime>10){
 			return;
 		}
-
 		free(tpNow);
 
         if(poll(pfds, 1, 5) == -1){
             fprintf(stderr, "Error poll call : %s\n", strerror(errno));
         }
-
-        //fprintf(stderr, "pfds[0].revents&POLLOUT : %d, &POLLIN : %d\n", pfds[0].revents&POLLOUT, pfds[0].revents&POLLIN);
-        while(pfds[0].revents&POLLOUT && ackQueue->size > 0){ // write on socket
-            fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
-            fprintf(stderr, "Writing on the socket\n");
+		
+		//try to write to the socket
+        while(pfds[0].revents&POLLOUT && ackQueue->size > 0){
+			
+			//encode and send an ack
             pkt_t *ack = queue_pop(ackQueue);
             if(ack == NULL){
                 fprintf(stderr, "receiver : read_write_loop, ack == NULL when queue_pop(ackQueue)\n");
-                continue; //TODO : continue or break ? ack shouldn't be null if queue isn't empty
+                continue;
             }
             int trFlag = ack->trFlag;
             ack->trFlag = 0;
@@ -75,15 +74,12 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "receiver : read_write_loop, ackLen != 12. ack not send.\n");
             }
             else{
-                fprintf(stderr, "I'm really writing\n");
                 int wr = write(sfd, ackBuf, ackLen);
-                fprintf(stderr, "Wrote %d bytes. Seqnum sent : %u\n", wr, ack->seqNum);
                 pkt_del(ack);
                 if(wr == -1){
                     fprintf(stderr, "code : %d, %s\n", errno, gai_strerror(errno));
                 }
                 if(trFlag == 1){
-                    fprintf(stderr, "trFlag == 1\n");
                     if(pktQueue->size != 0 || ackQueue->size != 0){
 						fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
 					}
@@ -93,16 +89,14 @@ void read_write_loop(const int sfd, const int fd){
                 }
             }
         }
-
+        
+		//try to read from the socket
         if(pfds[0].revents&POLLIN){
 
 			//reset the transmission timer because there is still something to read
 			clock_gettime(CLOCK_REALTIME, tpGlobal);
 
-            fprintf(stderr,"=============== HERE ==============\n");
-            fprintf(stderr, "size of pkt queue : %d, ack queue : %d\n", pktQueue->size, ackQueue->size);
-            // read the max size of a packet cause we'll read one packet at a time
-            // we won't read a packet and then a part of another. Source : obo
+            // read the packet
             char buf[MAX_PACKET_SIZE];
             int rd = read(sfd, buf, MAX_PACKET_SIZE);
             if(rd == -1){
@@ -113,7 +107,6 @@ void read_write_loop(const int sfd, const int fd){
                 fprintf(stderr, "receiver, read_write_loop, rd == 0\n");
             }
             else{
-                //TODO : put this uint somewhere else, replace it with a #define
                 uint8_t realWindowSize = MAX_BUFFER_SIZE;
                 pkt_t *pkt = pkt_new();
                 if(!pkt){
@@ -121,6 +114,8 @@ void read_write_loop(const int sfd, const int fd){
                     break;
                 }
                 pkt_status_code code = pkt_decode(buf, rd, pkt);
+                
+                // not a valid packet, discard it and send ack
                 if(code != PKT_OK){
 
                     pkt_t *ack = pkt_new();
@@ -134,8 +129,8 @@ void read_write_loop(const int sfd, const int fd){
                     ack->timestamp = 0;
                     queue_push(ackQueue, ack);
                 }
+                // truncated packet, discard it and send ack
                 else if(pkt->trFlag == 1){
-                    // truncated packet, discard it and send ack
                     pkt_t *nack = pkt_new();
                     if(!nack){
                         fprintf(stderr, "Malloc error in receiver, read_write_loop, creating nack\n");
@@ -150,23 +145,24 @@ void read_write_loop(const int sfd, const int fd){
                     queue_push(ackQueue, nack);
                 }
                 else{
-                    //here, check if pkt is included in the window.
-                    // Useful variables to know if the pk(s seqNum lies in the window or not
-                    // uint8_t so that 1-2 = 255 for example.
+					
+                    // check if the pkt's seqNum is in the window or not
+                    // uint8_t allow us to pass easier from 0 to 255, for exemple : 1-2 = 255
                     uint8_t distInf = pkt->seqNum - waitedSeqNum; // distance between the beginning of the window and the seqNum
                     uint8_t distSup = (waitedSeqNum+realWindowSize-1) - pkt->seqNum; // distance between the end of the window and the seqNum
+                    
                     if(distInf < realWindowSize && distSup < realWindowSize){
-                        fprintf(stderr, "packet in window size, receiver.c, seqnum = %u, waited : %u\n", pkt->seqNum, waitedSeqNum);
-                        // packet received
+						
+						//if length == 0, end of the transmission
                         if(pkt->length == 0){
-                            //end of transmission packet
-                            fprintf(stderr, "End of transmission packet, pkt->length = 0\n");
+							
                             pkt_t *ack = pkt_new();
                             if(!ack){
                                 fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
                                 pkt_del(pkt);
                                 break;
                             }
+                            //create a new ack and push it on the 
                             ack->type = PTYPE_ACK;
                             isFinalSeqNum = 1;
                             finalSeqNum = pkt->seqNum;
@@ -178,19 +174,18 @@ void read_write_loop(const int sfd, const int fd){
                             ack->seqNum = waitedSeqNum;
                             ack->timestamp = pkt->timestamp;
                             queue_push(ackQueue, ack);
-                            fprintf(stderr, "before continue\n");
                             pkt_del(pkt);
                             continue;
                         }
+                        
+                        //push the new pkt on the queue
                         if(queue_ordered_push(pktQueue, pkt, waitedSeqNum, realWindowSize) == 0){
-                            // pkt successfully added on the queue
                             queue_print_seqNum(pktQueue);
                             waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum, &lastTimeStamp);
                             queue_print_seqNum(pktQueue);
                         }
                         else{
                             fprintf(stderr, "receiver : read_write_loop : couldn't push pkt on pktQueue\n");
-                            //TODO : WARNING : it sends the ack with timestamp but the packet isn't stocked in this else...
                             pkt_del(pkt);
                         }
                         pkt_t *ack = pkt_new();
@@ -198,6 +193,8 @@ void read_write_loop(const int sfd, const int fd){
                             fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
                             break;
                         }
+                        
+                        //push the new ack on the queue
                         ack->type = PTYPE_ACK;
                         ack->window = MAX_BUFFER_SIZE;
                         ack->timestamp = lastTimeStamp;
@@ -210,13 +207,7 @@ void read_write_loop(const int sfd, const int fd){
                         queue_push(ackQueue, ack);
                     }
                     else{
-                        fprintf(stderr, "Receiver : read_write_loop : received pkt outside of the window\n");
-                        fprintf(stderr, "pkt->seqNum : %u, waitedSeqNum : %u, realWindowSize : %u\n", pkt->seqNum, waitedSeqNum, realWindowSize);
-                        uint8_t stockValue = (waitedSeqNum+realWindowSize-1) - pkt->seqNum;
-                        fprintf(stderr, "(waitedSeqNum+realWindowSize-1) - pkt->seqNum : %u\n",(waitedSeqNum+realWindowSize-1) - pkt->seqNum);
-                        fprintf(stderr, "stockValue : %u\n", stockValue);
-                        fprintf(stderr, "pkt->seqNum - waitedSeqNum : %u\n", pkt->seqNum - waitedSeqNum);
-                        fprintf(stderr, "pkt->seqNum - waitedSeqNum < realWindowSize : %u ;(waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize : %u\n", pkt->seqNum - waitedSeqNum < realWindowSize, (waitedSeqNum+realWindowSize-1) - pkt->seqNum < realWindowSize);
+                        //uint8_t stockValue = (waitedSeqNum+realWindowSize-1) - pkt->seqNum;
 
                         pkt_t *ack = pkt_new();
                         if(!ack){
@@ -233,8 +224,8 @@ void read_write_loop(const int sfd, const int fd){
                     }
                 }
             }
-        } // end of if(pfds[0].revents&POLLIN)
-    } // end of while(1)
+        }
+    }
     if(pktQueue->size != 0 || ackQueue->size != 0){
 		fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
 	}
@@ -242,8 +233,6 @@ void read_write_loop(const int sfd, const int fd){
 	free(ackQueue);
 }
 
-//TODO : ne pas oublier : taille de fenêtre 2^(n-1) au max.
-// comment la taille de fenêtre varie ? Dépend de nous ? sert à quoi ?
 int main(int argc, char *argv[]){
 
     int fd = STDOUT_FILENO; //file from command line
@@ -253,8 +242,6 @@ int main(int argc, char *argv[]){
 
     tpGlobal = malloc(sizeof(struct timespec));
     clock_gettime(CLOCK_REALTIME, tpGlobal);
-
-
 
     //check if there is enough arguments to continue
     if (argc<2){
@@ -271,7 +258,6 @@ int main(int argc, char *argv[]){
                 f_option = 1;
                 //if file doesn't exist : create it, otherwise, reset it
                 fd = open(optarg, O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU);
-                fprintf(stderr, "Find an f option!\n");
                 if(fd == -1){
                     fprintf(stderr, "Can't open the file!\n");
                     exit(EXIT_FAILURE);
@@ -284,15 +270,12 @@ int main(int argc, char *argv[]){
     }
     //register hostname && port
     if(f_option==0){
-        fprintf(stderr, "I'm in no-f option!\n");
         res_hostname = argv[1];
         src_port = atoi(argv[2]);
     }
     else{
-        fprintf(stderr, "I'm in f option!\n");
         res_hostname = argv[3];
         src_port = atoi(argv[4]);
-        fprintf(stderr, "I'm leaving f option!\n");
     }
 
 
@@ -311,13 +294,11 @@ int main(int argc, char *argv[]){
     }
 
     if (socket_fd > 0 && wait_for_client(socket_fd) < 0) { /* Connected */
-        fprintf(stderr,
-                "Could not connect the socket after the first message.\n");
+        fprintf(stderr,"Could not connect the socket after the first message.\n");
         close(socket_fd);
         return EXIT_FAILURE;
     }
 
-    fprintf(stderr, "Before read_write_loop in main\n");
     read_write_loop(socket_fd, fd);
 
 
