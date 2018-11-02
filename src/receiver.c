@@ -11,7 +11,7 @@ struct timespec *tpGlobal;
 
 
 /**
- *Loop for writing packets and reading the acks/nacks
+ * Loop for writing packets and reading the acks/nacks
  *
  * @sfd socket's file descriptor
  * @fd file descriptor containing the informations to send
@@ -38,12 +38,14 @@ void read_write_loop(const int sfd, const int fd){
         return;
     }
     while(1){
-		
+
 		//check if there are still some exchange between sender and receiver, if it is not a case then close the socket
 		struct timespec *tpNow = malloc(sizeof(struct timespec));
 		clock_gettime(CLOCK_REALTIME, tpNow);
 		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
 		if(difftime>10){
+            // TODO : free les queue et leur contenu !
+            free(tpNow);
 			return;
 		}
 		free(tpNow);
@@ -51,14 +53,15 @@ void read_write_loop(const int sfd, const int fd){
         if(poll(pfds, 1, 5) == -1){
             fprintf(stderr, "Error poll call : %s\n", strerror(errno));
         }
-		
+
 		//try to write to the socket
         while(pfds[0].revents&POLLOUT && ackQueue->size > 0){
-			
+
 			//encode and send an ack
             pkt_t *ack = queue_pop(ackQueue);
             if(ack == NULL){
                 fprintf(stderr, "receiver : read_write_loop, ack == NULL when queue_pop(ackQueue)\n");
+                pkt_del(ack);
                 continue;
             }
             int trFlag = ack->trFlag;
@@ -89,7 +92,7 @@ void read_write_loop(const int sfd, const int fd){
                 }
             }
         }
-        
+
 		//try to read from the socket
         if(pfds[0].revents&POLLIN){
 
@@ -114,7 +117,7 @@ void read_write_loop(const int sfd, const int fd){
                     break;
                 }
                 pkt_status_code code = pkt_decode(buf, rd, pkt);
-                
+
                 // not a valid packet, discard it and send ack
                 if(code != PKT_OK){
 
@@ -145,24 +148,24 @@ void read_write_loop(const int sfd, const int fd){
                     queue_push(ackQueue, nack);
                 }
                 else{
-					
+
                     // check if the pkt's seqNum is in the window or not
-                    // uint8_t allow us to pass easier from 0 to 255, for exemple : 1-2 = 255
+                    // uint8_t makes it easier to go from 255 to 0, for exemple : 1-2 = 255
                     uint8_t distInf = pkt->seqNum - waitedSeqNum; // distance between the beginning of the window and the seqNum
                     uint8_t distSup = (waitedSeqNum+realWindowSize-1) - pkt->seqNum; // distance between the end of the window and the seqNum
-                    
+
                     if(distInf < realWindowSize && distSup < realWindowSize){
-						
+
 						//if length == 0, end of the transmission
                         if(pkt->length == 0){
-							
+
                             pkt_t *ack = pkt_new();
                             if(!ack){
                                 fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
                                 pkt_del(pkt);
                                 break;
                             }
-                            //create a new ack and push it on the 
+                            //create a new ack and push it on the queue 'ackQueue'
                             ack->type = PTYPE_ACK;
                             isFinalSeqNum = 1;
                             finalSeqNum = pkt->seqNum;
@@ -177,8 +180,8 @@ void read_write_loop(const int sfd, const int fd){
                             pkt_del(pkt);
                             continue;
                         }
-                        
-                        //push the new pkt on the queue
+
+                        //push the new pkt on the queue 'pktQueue'
                         if(queue_ordered_push(pktQueue, pkt, waitedSeqNum, realWindowSize) == 0){
                             queue_print_seqNum(pktQueue);
                             waitedSeqNum += queue_payload_write(pktQueue, fd, waitedSeqNum, &lastTimeStamp);
@@ -193,8 +196,8 @@ void read_write_loop(const int sfd, const int fd){
                             fprintf(stderr, "Malloc error in receiver, read_write_loop, creating ack\n");
                             break;
                         }
-                        
-                        //push the new ack on the queue
+
+                        //push the new ack on the queue 'ackQueue'
                         ack->type = PTYPE_ACK;
                         ack->window = MAX_BUFFER_SIZE;
                         ack->timestamp = lastTimeStamp;

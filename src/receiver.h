@@ -1,6 +1,6 @@
 //
 //  receiver.h
-//  
+//
 //
 //  Created by Лилия Семерикова on 14/10/2018.
 //
@@ -51,7 +51,7 @@ const char * real_address(const char *address, struct sockaddr_in6 *rval);
 int create_socket(struct sockaddr_in6 *source_addr, int src_port, struct sockaddr_in6 *dest_addr, int dst_port);
 
 /**
- *Loop for writing packets and reading the acks/nacks
+ * Loop for writing packets and reading the acks/nacks
  *
  * @sfd socket's file descriptor
  * @fd file descriptor containing the informations to send
