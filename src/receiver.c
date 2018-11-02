@@ -44,7 +44,8 @@ void read_write_loop(const int sfd, const int fd){
 		clock_gettime(CLOCK_REALTIME, tpNow);
 		int difftime = tpNow->tv_sec - tpGlobal->tv_sec;
 		if(difftime>10){
-            // TODO : free les queue et leur contenu !
+            queue_free(pktQueue);
+            queue_free(ackQueue);
             free(tpNow);
 			return;
 		}
@@ -86,8 +87,8 @@ void read_write_loop(const int sfd, const int fd){
                     if(pktQueue->size != 0 || ackQueue->size != 0){
 						fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
 					}
-                    free(pktQueue);
-                    free(ackQueue);
+                    queue_free(pktQueue);
+                    queue_free(ackQueue);
                     return;
                 }
             }
@@ -232,8 +233,8 @@ void read_write_loop(const int sfd, const int fd){
     if(pktQueue->size != 0 || ackQueue->size != 0){
 		fprintf(stderr, "Error : receiver.c, read_write_loop : gonna return and at least one of the queue is not empty !!!\n");
 	}
-	free(pktQueue);
-	free(ackQueue);
+	queue_free(pktQueue);
+	queue_free(ackQueue);
 }
 
 int main(int argc, char *argv[]){

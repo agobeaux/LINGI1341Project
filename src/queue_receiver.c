@@ -73,7 +73,7 @@ int queue_ordered_push(queue_t *queue, pkt_t *pkt, uint8_t waitedSeqNum, uint8_t
     if(waitedSeqNum >= 255 - (realWindowSize-1) && pkt->seqNum < realWindowSize-1){
         // we have something like 245.. 255 0 ... 3.
         // the pkt to insert has a seqNum that is in [0 ,realWindowSize-1[
-        
+
         while(runner != NULL && (runner->pkt)->seqNum >= 255 - (realWindowSize-1)){
             before = runner;
             runner = runner->next;
@@ -190,7 +190,7 @@ queue_t* queue_init(){
 
 /**
  * Checks if queue is empty
- * 
+ *
  * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue){
@@ -249,4 +249,23 @@ void queue_print_seqNum(queue_t *queue){
         runner = runner->next;
     }
     fprintf(stderr, "\n");
+}
+
+/**
+ * Frees queue
+ *
+ * @queue : the queue to free
+ */
+void queue_free(queue_t *queue){
+    if(queue->head != NULL){
+		struct node *run = queue->head;
+		struct node *delete = NULL;
+		while(run != NULL){
+			delete = run;
+			run = run->next;
+			pkt_del(delete->pkt);
+			free(delete);
+		}
+	}
+	free(queue);
 }

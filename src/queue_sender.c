@@ -1,5 +1,4 @@
 #include "queue_sender.h"
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 /**
@@ -184,7 +183,7 @@ queue_t* queue_init(){
 
 /**
  * Checks if queue is empty
- * 
+ *
  * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue){
@@ -193,7 +192,7 @@ int queue_isempty(queue_t *queue){
 
 /**
  * Prints all queue's seqNum
- * 
+ *
  * @queue : the queue to print
  */
 void queue_print_seqNum(queue_t *queue){
@@ -208,7 +207,7 @@ void queue_print_seqNum(queue_t *queue){
 
 /**
  * Prints the first and the last queue's seqNum
- * 
+ *
  * @queue : the queue to print
  */
 void queue_print_first_last_seqNum(queue_t *queue){
@@ -224,7 +223,7 @@ void queue_print_first_last_seqNum(queue_t *queue){
 
 /**
  * Frees queue
- * 
+ *
  * @queue : the queue to free
  */
 void queue_free(queue_t *queue){

@@ -56,7 +56,7 @@ queue_t* queue_init();
 
 /**
  * Checks if queue is empty
- * 
+ *
  * @return : 0 if the queue is empty, 1 otherwise
  */
 int queue_isempty(queue_t *queue);
@@ -76,9 +76,16 @@ uint8_t queue_payload_write(queue_t *queue, int fd, uint8_t seqNum, uint32_t *la
 
 /**
  * Prints all queue's seqNum
- * 
+ *
  * @queue : the queue to print
  */
 void queue_print_seqNum(queue_t *queue);
+
+/**
+ * Frees queue
+ *
+ * @queue : the queue to free
+ */
+void queue_free(queue_t *queue);
 
 #endif /* queue_receiver_h */
