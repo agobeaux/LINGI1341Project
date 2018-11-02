@@ -123,14 +123,14 @@ int queue_delete(queue_t *queue, uint8_t seqNum){
  * @return : return the structure with seqnum
  */
 pkt_t *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
-    printf("========= seqNum : %u ============\n", seqNum);
+    fprintf(stderr,"queue_find_nack_structure : ========= seqNum : %u ============\n", seqNum);
     struct node *run = queue->head;
     if(run == NULL){
-        printf("queue->head = NULL ! queue_find_nack_structure\n");
+        fprintf(stderr, "queue_find_nack_structure : queue->head = NULL ! queue_find_nack_structure\n");
     }
     while (run != NULL)
     {
-        printf("run->pkt\n");
+        fprintf(stderr, "queue_find_nack_structure : run->pkt\n");
         pkt_print(run->pkt);
         if (run->pkt->seqNum==seqNum)
         {
@@ -151,13 +151,13 @@ pkt_t *queue_find_nack_structure(queue_t *queue, uint8_t seqNum){
  * @return : the packet with seqNum, NULL otherwise
  */
 pkt_t *queue_find_ack_structure(queue_t *queue, uint8_t seqNum){
-    printf("========= seqNum : %u ============\n", seqNum);
+    fprintf(stderr, "queue_find_ack_structure : ========= seqNum : %u ============\n", seqNum);
     struct node *run = queue->head;
     if(run == NULL){
-        printf("queue->head = NULL ! queue_find_ack_structure\n");
+        fprintf(stderr, "queue_find_ack_structure : queue->head = NULL ! queue_find_ack_structure\n");
     }
     while (run != NULL){
-        printf("run->pkt\n");
+        fprintf(stderr, "queue_find_ack_structure : run->pkt\n");
         pkt_print(run->pkt);
         if (run->pkt->seqNum==seqNum){
             return run->pkt;

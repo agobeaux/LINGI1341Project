@@ -244,8 +244,6 @@ int main(int argc, char *argv[]){
     int src_port; //port from command line
     int socket_fd; //socket file descriptor
 
-    tpGlobal = malloc(sizeof(struct timespec));
-    clock_gettime(CLOCK_REALTIME, tpGlobal);
 
     //check if there is enough arguments to continue
     if (argc<2){
@@ -302,6 +300,9 @@ int main(int argc, char *argv[]){
         close(socket_fd);
         return EXIT_FAILURE;
     }
+    
+    tpGlobal = malloc(sizeof(struct timespec));
+    clock_gettime(CLOCK_REALTIME, tpGlobal);
 
     read_write_loop(socket_fd, fd);
 

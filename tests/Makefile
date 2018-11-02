@@ -25,17 +25,19 @@ debug: clean srcmake_debug run
 tests: srcmake run
 
 srcmake:
-	cd ../src && $(MAKE) && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
+	cd ../src && $(MAKE) && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests && cp sender ../tests && cp receiver ../tests
 
 srcmake_debug:
-	cd ../src && $(MAKE) debug && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests
+	cd ../src && $(MAKE) debug && cp packet_implem.o ../tests && cp queue_sender.o ../tests && cp real_address.o ../tests && cp create_socket.o ../tests && cp wait_for_client.o ../tests && cp sender ../tests && cp receiver ../tests
 
 test : test.o packet_implem.o queue_sender.o real_address.o create_socket.o wait_for_client.o -lcunit -lz
 
 run : test
 		./test
+		./test.sh
 
 .PHONY: clean
 
 clean:
-	@rm -f test test.o packet_implem.o sender.o queue_sender.o
+	cd ../src && $(MAKE) clean
+	@rm -f test test.o packet_implem.o queue_sender.o real_address.o create_socket.o wait_for_client.o link.log receiver.log sender.log sender receiver received_file

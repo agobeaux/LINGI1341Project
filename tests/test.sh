@@ -3,11 +3,11 @@
 # cleanup d'un test précédent
 rm -f received_file input_file
 
-# Fichier au contenu aléatoire de 512 octets
-dd if=/dev/urandom of=input_file bs=1 count=512 &> /dev/null
+# Fichier au contenu aléatoire de 2000 octets (plus de 3 paquets)
+dd if=/dev/urandom of=input_file bs=1 count=2000 &> /dev/null
 
-# On lance le simulateur de lien avec 10% de pertes et un délais de 50ms
-./link_sim -p 1341 -P 2456 -l 10 -d 50 -R  &> link.log &
+# On lance le simulateur de lien avec un délai de 50ms, un jitter de 20ms, un taux d'erreur de 20%, un taux de perte de 20% et un taux de troncation de 20% dans les deux sens
+./link_sim -p 1341 -P 2456 -d 50 -j 20 -e 20 -l 20 -c 20 -R  &> link.log &
 link_pid=$!
 
 # On lance le receiver et capture sa sortie standard
@@ -31,7 +31,7 @@ fi
 
 echo "Sender a bien fonctionné"
 
-sleep 5 # On attend 5 seconde que le receiver finisse
+sleep 10 # On attend 10 secondes que le receiver finisse
 
 if kill -0 $receiver_pid &> /dev/null ; then
   echo "Le receiver ne s'est pas arreté à la fin du transfert!"

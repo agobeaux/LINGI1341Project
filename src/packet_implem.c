@@ -296,15 +296,15 @@ pkt_status_code pkt_set_payload(pkt_t *pkt,
 }
 
 void pkt_print(pkt_t* pkt){
-	printf("Type : %d\n",pkt->type);
-	printf("tr : %d\n",pkt->trFlag);
-	printf("window : %d\n",pkt->window);
-	printf("seqnum : %d\n",pkt->seqNum);
-	printf("length : %d\n",pkt->length);
-	printf("timestamp : %d\n",pkt->timestamp);
-	printf("crc1 : %u\n",pkt->crc1);
-	printf("payload : %.*s\n",pkt->length,pkt->payload);
-	printf("crc2 : %u\n",pkt->crc2);
+	fprintf(stderr, "Type : %d\n",pkt->type);
+	fprintf(stderr, "tr : %d\n",pkt->trFlag);
+	fprintf(stderr, "window : %d\n",pkt->window);
+	fprintf(stderr, "seqnum : %d\n",pkt->seqNum);
+	fprintf(stderr, "length : %d\n",pkt->length);
+	fprintf(stderr, "timestamp : %d\n",pkt->timestamp);
+	fprintf(stderr, "crc1 : %u\n",pkt->crc1);
+	fprintf(stderr, "payload : %.*s\n",pkt->length,pkt->payload);
+	fprintf(stderr, "crc2 : %u\n",pkt->crc2);
 }
 
 /*int main (int argc, char* argv[]){
@@ -318,29 +318,29 @@ void pkt_print(pkt_t* pkt){
 	pkt->length = htons(pkt->length);*/
 
 	/*
-	printf("JUST BEFORE CALCULATING CRC1 :\n");pkt_print(pkt);
+	fprintf(stderr, "JUST BEFORE CALCULATING CRC1 :\n");pkt_print(pkt);
 	pkt_set_crc1(pkt, crc32(0, (const Bytef*)pkt, 8));
-	printf("CRC CALCULATED %u, crc32 : %u\n",pkt->crc1,crc32(0, (const Bytef*)pkt, 8));
+	fprintf(stderr, "CRC CALCULATED %u, crc32 : %u\n",pkt->crc1,crc32(0, (const Bytef*)pkt, 8));
 	*/
 	/*pkt->crc1 = 0;
 	pkt->length = ntohs(pkt->length);
 	int ret = pkt_set_payload(pkt, "hello world",12);
-	printf("============ ret pkt : %d ========\n",ret);
+	fprintf(stderr, "============ ret pkt : %d ========\n",ret);
 	pkt_set_crc2(pkt, crc32(0, (const Bytef*)pkt->payload, pkt->length));
-	printf("pkt1 :\n"); pkt_print(pkt);
-	printf("crc32(payload : %.*s) : %u\n",12,pkt->payload,crc32(0,(const Bytef*)pkt->payload,12));
+	fprintf(stderr, "pkt1 :\n"); pkt_print(pkt);
+	fprintf(stderr, "crc32(payload : %.*s) : %u\n",12,pkt->payload,crc32(0,(const Bytef*)pkt->payload,12));
 
-	printf("\n\n\n");
+	fprintf(stderr, "\n\n\n");
 
 	pkt_t *pkt2 = pkt_new();
 	char *buf = malloc(90);
 	size_t len = 90;
-	printf("====== Result of encode : %d\n",pkt_encode(pkt,buf,&len));
-	printf("pkt1 :\n"); pkt_print(pkt);
-	//printf("buf : %.*s\n",len,buf);
-	printf("crc32(payload : %.*s) : %u\n",12,pkt->payload,crc32(0,(const Bytef*)pkt->payload,12));
-	printf("====== Result of decode : %d\n",pkt_decode(buf,len,pkt2));
-	printf("pkt1 :\n"); pkt_print(pkt);
-	printf("pkt2 :\n"); pkt_print(pkt2);
+	fprintf(stderr, "====== Result of encode : %d\n",pkt_encode(pkt,buf,&len));
+	fprintf(stderr, "pkt1 :\n"); pkt_print(pkt);
+	//fprintf(stderr, "buf : %.*s\n",len,buf);
+	fprintf(stderr, "crc32(payload : %.*s) : %u\n",12,pkt->payload,crc32(0,(const Bytef*)pkt->payload,12));
+	fprintf(stderr, "====== Result of decode : %d\n",pkt_decode(buf,len,pkt2));
+	fprintf(stderr, "pkt1 :\n"); pkt_print(pkt);
+	fprintf(stderr, "pkt2 :\n"); pkt_print(pkt2);
 	return 0;
 }*/

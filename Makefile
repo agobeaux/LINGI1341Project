@@ -20,7 +20,7 @@ srcmake:
 
 srcmake_debug :
 	cd src && $(MAKE) debug && mv receiver .. && mv sender ..
-	
+
 debug: clean srcmake_debug
 
 .PHONY: tests
@@ -33,3 +33,4 @@ tests:
 clean:
 	@rm -f sender receiver
 	+$(MAKE) clean -C src
+	+$(MAKE) clean -C tests
