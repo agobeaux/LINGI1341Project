@@ -100,6 +100,7 @@ void read_write_loop(const int sfd, int fd){
         int pRet = poll(pfds, 1, 500);
         if(pRet == -1){
             fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
+            queue_free(buf_structure);
             return;
         }
 
@@ -134,6 +135,7 @@ void read_write_loop(const int sfd, int fd){
                     struct timespec *timePkt = malloc(sizeof(struct timespec));
                     if(!timePkt){
                         fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
+                        queue_free(buf_structure);
                         return;
                     }
                     clock_gettime(CLOCK_REALTIME, timePkt);
@@ -211,6 +213,7 @@ void read_write_loop(const int sfd, int fd){
 					pRet = poll(pfds, 1, 500);
 					if(pRet == -1){
 						fprintf(stderr, "sender : read_while_loop : error with poll : %s\n", strerror(errno));
+                        queue_free(buf_structure);
 						return;
 					}
 
@@ -228,6 +231,7 @@ void read_write_loop(const int sfd, int fd){
 						struct timespec *timePkt = malloc(sizeof(struct timespec));
 						if(!timePkt){
 							fprintf(stderr, "sender : create_packet : couldn't malloc tpGlobal\n");
+                            queue_free(buf_structure);
 							return;
 						}
 						clock_gettime(CLOCK_REALTIME, timePkt);

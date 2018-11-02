@@ -18,6 +18,7 @@ int queue_push(queue_t *queue, pkt_t *pkt){
     node_t *newnode = malloc(sizeof(struct node));
     if (newnode == NULL){
         fprintf(stderr, "Error with malloc in push, queue. \n");
+        pkt_del(pkt);
         return -1;
     }
 
